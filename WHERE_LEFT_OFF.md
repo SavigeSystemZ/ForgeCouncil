@@ -13,29 +13,30 @@ app repositories.
 
 ## Session Snapshot
 
-- Current phase: Control-plane API with **SQLite** + **gated subprocess dispatch** + **run steps**
+- Current phase: Control-plane API with **async dispatch queue**, **log artifacts**, **OpenAPI Bearer on /v1**
 - Working branch or lane: `main`
-- Completion status: `FC_STATE_DB`, ledger-safe upsert, `FC_ALLOW_SUBPROCESS_DISPATCH` + allowlist runner, `run_steps` persistence
+- Completion status: `dispatch_jobs` + worker loop, `execution: async`, `FC_ARTIFACT_ROOT`, per-route OpenAPI security when `FC_API_TOKEN` set
 - Resume confidence: high
 
 ## Last Completed Work
 
-- `RunLedgerRunStepStore`, `run_steps` in `SqliteStore` / `MemoryStore`, `GET /v1/runs/{id}/run-steps`.
-- `POST /v1/runs/{id}/dispatch` with `action=subprocess` (async subprocess, ledger `tool_invocation_meta`, run status terminal); `noop` / `subprocess_stub` remain audit-only (202).
-- `local_runner.py`, `NFR` SEC-12, `RUNBOOK` operator env table; tests for gates and SQLite steps.
+- `RunLedgerRunStepJobStore`, `dispatch_jobs` (SQLite + memory), `dispatch_worker` + app `lifespan`, `GET /v1/dispatch-jobs/{id}`.
+- `POST .../dispatch` with `execution: async` + `FC_ALLOW_ASYNC_DISPATCH`; sync path uses shared `dispatch_execution.execute_subprocess_dispatch`.
+- `FC_ARTIFACT_ROOT` log files, ledger `stdout_artifact_relpath` / `stderr_artifact_relpath`, `FC_DISPATCH_MAX_QUEUED`.
+- OpenAPI attaches `bearerAuth` to each `/v1/*` operation when the API token env is set; health flags for async + artifact root.
 
 ## Validation Run
 
-- `.venv/bin/pytest` — pass
+- `.venv/bin/pytest` — 26 passed
 - `bootstrap/validate-system.sh .` — run after `generate-system-registry.sh --write` (expect `system_ok`)
 
 ## Next Best Step
 
-- **Async job queue** (background worker) so long subprocesses do not block the HTTP request; poll or SSE for step status.  
-- **Artifact refs** for full stdout/stderr (object store or workspace path) instead of only ledger snippets.  
-- **OpenAPI** `securitySchemes` when `FC_API_TOKEN` is set (dynamic schema) and richer route descriptions.
+- **SSE or WebSocket** for job completion instead of polling `GET /v1/dispatch-jobs/{id}`.  
+- **Multi-instance** queue (Redis / separate worker process) — current worker is in-process with SQLite row locking.  
+- **Rate limits** and **per-project** queue quotas.
 
-**Done recently:** Gated in-process subprocess dispatch, `run_steps` API + SQLite, health flags for operator posture.
+**Done recently:** In-process async queue + artifacts + OpenAPI per-route Bearer when token configured.
 
 ## Handoff Packet
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import datetime as dt
 import json
 import sqlite3
 import threading
@@ -49,6 +50,18 @@ class SqliteStore:
                         PRIMARY KEY (run_id, step_id)
                     );
                     CREATE INDEX IF NOT EXISTS idx_run_steps_run ON run_steps(run_id);
+                    CREATE TABLE IF NOT EXISTS dispatch_jobs (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        job_id TEXT NOT NULL UNIQUE,
+                        run_id TEXT NOT NULL REFERENCES runs(run_id) ON DELETE CASCADE,
+                        status TEXT NOT NULL,
+                        body_json TEXT NOT NULL,
+                        result_json TEXT,
+                        created_at TEXT NOT NULL,
+                        started_at TEXT,
+                        finished_at TEXT
+                    );
+                    CREATE INDEX IF NOT EXISTS idx_dispatch_jobs_q ON dispatch_jobs(status, id);
                     """
                 )
 
@@ -139,3 +152,92 @@ class SqliteStore:
                     (run_id,),
                 ).fetchall()
         return [json.loads(r["body_json"]) for r in rows]
+
+    def enqueue_dispatch_job(
+        self, job_id: str, run_id: str, body: dict[str, Any], *, created_at: str
+    ) -> dict[str, Any]:
+        body_j = json.dumps(body, sort_keys=True)
+        with self._lock:
+            with self._connect() as conn:
+                cur = conn.execute("SELECT 1 FROM runs WHERE run_id = ?", (run_id,))
+                if cur.fetchone() is None:
+                    raise KeyError(f"unknown run_id: {run_id}")
+                conn.execute(
+                    """
+                    INSERT INTO dispatch_jobs (job_id, run_id, status, body_json, created_at)
+                    VALUES (?, ?, 'queued', ?, ?)
+                    """,
+                    (job_id, run_id, body_j, created_at),
+                )
+        return self.get_dispatch_job(job_id) or {}
+
+    def get_dispatch_job(self, job_id: str) -> dict[str, Any] | None:
+        with self._lock:
+            with self._connect() as conn:
+                row = conn.execute(
+                    "SELECT job_id, run_id, status, body_json, result_json, created_at, started_at, finished_at "
+                    "FROM dispatch_jobs WHERE job_id = ?",
+                    (job_id,),
+                ).fetchone()
+        if row is None:
+            return None
+        body = json.loads(row["body_json"])
+        result = json.loads(row["result_json"]) if row["result_json"] else None
+        out: dict[str, Any] = {
+            "job_id": row["job_id"],
+            "run_id": row["run_id"],
+            "status": row["status"],
+            "created_at": row["created_at"],
+            "started_at": row["started_at"],
+            "finished_at": row["finished_at"],
+            "result": result,
+        }
+        out.update(body)
+        return out
+
+    def claim_next_dispatch_job(self) -> dict[str, Any] | None:
+        now_s = dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
+        with self._lock:
+            with self._connect() as conn:
+                conn.execute("BEGIN IMMEDIATE")
+                row = conn.execute(
+                    "SELECT job_id, run_id, body_json FROM dispatch_jobs WHERE status = 'queued' ORDER BY id ASC LIMIT 1"
+                ).fetchone()
+                if row is None:
+                    conn.commit()
+                    return None
+                job_id = row["job_id"]
+                cur = conn.execute(
+                    "UPDATE dispatch_jobs SET status = 'running', started_at = ? WHERE job_id = ? AND status = 'queued'",
+                    (now_s, job_id),
+                )
+                if cur.rowcount != 1:
+                    conn.commit()
+                    return None
+                conn.commit()
+                body = json.loads(row["body_json"])
+                return {"job_id": job_id, "run_id": row["run_id"], **body}
+
+    def finish_dispatch_job(
+        self,
+        job_id: str,
+        *,
+        status: str,
+        result: dict[str, Any] | None,
+        finished_at: str,
+    ) -> None:
+        res_j = json.dumps(result, sort_keys=True) if result is not None else None
+        with self._lock:
+            with self._connect() as conn:
+                conn.execute(
+                    "UPDATE dispatch_jobs SET status = ?, result_json = ?, finished_at = ? WHERE job_id = ?",
+                    (status, res_j, finished_at, job_id),
+                )
+
+    def count_dispatch_jobs_queued(self) -> int:
+        with self._lock:
+            with self._connect() as conn:
+                row = conn.execute(
+                    "SELECT COUNT(*) AS c FROM dispatch_jobs WHERE status = 'queued'"
+                ).fetchone()
+        return int(row["c"]) if row else 0

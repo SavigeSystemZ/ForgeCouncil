@@ -13,6 +13,8 @@ Use this file for meaningful repo-visible change history. Keep transient task ch
 - `POST /v1/runs/{id}/dispatch` (202) + ledger `event_type` `dispatch_requested`
 - Gated local `subprocess` dispatch (`local_runner.py`): `FC_ALLOW_SUBPROCESS_DISPATCH`, `FC_EXEC_ALLOWLIST`, `FC_DISPATCH_KILL_SWITCH`, `FC_EXEC_*`; `GET /v1/runs/{id}/run-steps`; `run_steps` table in SQLite; `RunLedgerRunStepStore`
 - OpenAPI `components.securitySchemes.bearerAuth` for documented Bearer usage with `FC_API_TOKEN`
+- Async dispatch queue: `execution: async`, `FC_ALLOW_ASYNC_DISPATCH`, `dispatch_jobs` table, background worker, `GET /v1/dispatch-jobs/{id}`
+- `FC_ARTIFACT_ROOT` full stdout/stderr logs + ledger artifact relpaths; `FC_DISPATCH_MAX_QUEUED`; `dispatch_execution` module
 - FastAPI control-plane stub: `GET /health`, `POST/GET /v1/runs`, ledger event routes; `forge-council-api` CLI; `schema_util`, `memory_store`; tests in `tests/test_api.py`
 - Optional `[api]` extra (`fastapi`, `uvicorn`, `jsonschema`); `tests/conftest.py` sets `FORGE_COUNCIL_REPO_ROOT`
 - Forge Council product SSoT docs: `PRD.md`, `ARCHITECTURE.md`, `DATA_MODEL.md`, `NFR.md`, `RUNBOOK.md`, `GPT54.md`, `EXTENSION_ROADMAP.md`

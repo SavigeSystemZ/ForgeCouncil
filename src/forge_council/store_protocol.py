@@ -25,3 +25,27 @@ class RunLedgerRunStepStore(RunLedgerStore, Protocol):
     def put_run_step(self, run_id: str, payload: dict[str, Any]) -> dict[str, Any]: ...
 
     def list_run_steps(self, run_id: str) -> list[dict[str, Any]]: ...
+
+
+@runtime_checkable
+class RunLedgerRunStepJobStore(RunLedgerRunStepStore, Protocol):
+    """Adds durable dispatch job queue for async subprocess execution."""
+
+    def enqueue_dispatch_job(
+        self, job_id: str, run_id: str, body: dict[str, Any], *, created_at: str
+    ) -> dict[str, Any]: ...
+
+    def get_dispatch_job(self, job_id: str) -> dict[str, Any] | None: ...
+
+    def claim_next_dispatch_job(self) -> dict[str, Any] | None: ...
+
+    def finish_dispatch_job(
+        self,
+        job_id: str,
+        *,
+        status: str,
+        result: dict[str, Any] | None,
+        finished_at: str,
+    ) -> None: ...
+
+    def count_dispatch_jobs_queued(self) -> int: ...

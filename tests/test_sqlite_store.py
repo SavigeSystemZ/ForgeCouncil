@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 from forge_council.sqlite_store import SqliteStore
@@ -141,3 +142,47 @@ def test_sqlite_run_steps_upsert(tmp_path: Path) -> None:
     rows = store.list_run_steps("r1")
     assert len(rows) == 1
     assert rows[0]["status"] == "succeeded"
+
+
+def test_sqlite_dispatch_job_enqueue_claim_finish(tmp_path: Path) -> None:
+    db = tmp_path / "jobs.db"
+    store = SqliteStore(str(db))
+    store.put_run(
+        "r1",
+        {
+            "schema_version": "1",
+            "run_id": "r1",
+            "project_id": "p1",
+            "status": "pending",
+            "mode": "local",
+            "started_at": "2026-04-04T12:00:00Z",
+            "cost_summary_json": {},
+        },
+    )
+    store.enqueue_dispatch_job(
+        "job-a",
+        "r1",
+        {
+            "dispatch_id": "d1",
+            "argv": [sys.executable, "-c", "raise SystemExit(0)"],
+            "workspace_id": "w",
+            "project_id": "p1",
+            "step_id": "s1",
+        },
+        created_at="2026-04-04T12:01:00Z",
+    )
+    assert store.count_dispatch_jobs_queued() == 1
+    claimed = store.claim_next_dispatch_job()
+    assert claimed is not None
+    assert claimed["job_id"] == "job-a"
+    assert claimed["argv"][0] == sys.executable
+    assert store.get_dispatch_job("job-a")["status"] == "running"
+    store.finish_dispatch_job(
+        "job-a",
+        status="completed",
+        result={"exit_code": 0},
+        finished_at="2026-04-04T12:02:00Z",
+    )
+    final = store.get_dispatch_job("job-a")
+    assert final["status"] == "completed"
+    assert final["result"]["exit_code"] == 0

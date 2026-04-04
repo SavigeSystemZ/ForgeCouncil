@@ -2,7 +2,7 @@
 
 **Generated/refreshed by:** `bootstrap/fc-repo-ingestion.sh`
 **Machine-oriented summary:** `_system/REPO_OPERATING_PROFILE.md`
-**Last scan (UTC):** 2026-04-04T19:32:30Z
+**Last scan (UTC):** 2026-04-04T19:40:06Z
 
 ## Summary
 

@@ -7,11 +7,18 @@ import os
 from pathlib import Path
 
 _OUTPUT_CAP = 65536
+_ARTIFACT_MAX_BYTES = 16 * 1024 * 1024  # per stream cap when writing to disk
 
 
 def dispatch_kill_switch_active() -> bool:
     """When true, dispatch must refuse new execution (operator kill-switch)."""
     v = os.environ.get("FC_DISPATCH_KILL_SWITCH", "").strip().lower()
+    return v in ("1", "true", "yes", "on")
+
+
+def async_dispatch_enabled() -> bool:
+    """Opt-in for ``execution: async`` queued subprocess dispatch."""
+    v = os.environ.get("FC_ALLOW_ASYNC_DISPATCH", "").strip().lower()
     return v in ("1", "true", "yes", "on")
 
 
@@ -42,6 +49,27 @@ def exec_timeout_sec() -> float:
         return max(1.0, min(float(raw), 3600.0))
     except ValueError:
         return 60.0
+
+
+def resolve_artifact_root() -> Path | None:
+    """Directory for full stdout/stderr logs; unset → no files (snippets only in ledger)."""
+    p = os.environ.get("FC_ARTIFACT_ROOT", "").strip()
+    if not p:
+        return None
+    root = Path(p).resolve()
+    root.mkdir(parents=True, exist_ok=True)
+    return root
+
+
+def dispatch_max_queued() -> int | None:
+    raw = os.environ.get("FC_DISPATCH_MAX_QUEUED", "").strip()
+    if not raw:
+        return None
+    try:
+        n = int(raw)
+        return max(1, min(n, 100_000))
+    except ValueError:
+        return None
 
 
 def resolve_workdir() -> Path:
@@ -75,6 +103,40 @@ def validate_subprocess_argv(argv: list[str]) -> None:
     c_str = str(candidate)
     if c_str not in allowed_resolved and exe not in allowlist:
         raise PermissionError(f"executable not allowlisted: {exe}")
+
+
+def write_dispatch_log_artifacts(
+    *,
+    run_id: str,
+    step_id: str,
+    stdout_text: str,
+    stderr_text: str,
+) -> tuple[str | None, str | None]:
+    """Write full logs under FC_ARTIFACT_ROOT/{run_id}/{step_id}/; return repo-relative refs."""
+    root = resolve_artifact_root()
+    if root is None:
+        return None, None
+    base = root / run_id / step_id
+    try:
+        base.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        return None, None
+    rel_prefix = f"{run_id}/{step_id}"
+    out_path = base / "stdout.log"
+    err_path = base / "stderr.log"
+    try:
+        out_b = stdout_text.encode("utf-8", errors="replace")[:_ARTIFACT_MAX_BYTES]
+        err_b = stderr_text.encode("utf-8", errors="replace")[:_ARTIFACT_MAX_BYTES]
+        out_path.write_bytes(out_b)
+        err_path.write_bytes(err_b)
+    except OSError:
+        return None, None
+    try:
+        out_path.resolve().relative_to(root)
+        err_path.resolve().relative_to(root)
+    except ValueError:
+        return None, None
+    return f"{rel_prefix}/stdout.log", f"{rel_prefix}/stderr.log"
 
 
 def truncate_output(text: str, limit: int = _OUTPUT_CAP) -> str:

@@ -42,17 +42,20 @@ forge-council-api
 # or: .venv/bin/python -m forge_council.server
 ```
 
-- `GET /health` — liveness (`persistence`, `auth_required`, `dispatch_kill_switch`, `subprocess_dispatch_enabled`)  
+- `GET /health` — liveness (`persistence`, `auth_required`, `dispatch_kill_switch`, `subprocess_dispatch_enabled`, `async_dispatch_enabled`, `artifact_root_configured`)  
 - `POST /v1/runs` — create run (body validated against `schemas/forge_council/v1/run.json`)  
 - `PATCH /v1/runs/{run_id}` — partial update (`status`, `mode`, `milestone_id`, `workspace_id`, `finished_at`, `started_at`, `trace_id`, `cost_summary_json`, `initiated_by`, `project_id`)  
 - `GET /v1/runs/{run_id}` — fetch run  
 - `GET /v1/runs` — list runs  
 - `POST /v1/runs/{run_id}/ledger-events` — append ledger event (`ledger_event.json`)  
 - `GET /v1/runs/{run_id}/ledger-events` — list events  
-- `POST /v1/runs/{run_id}/dispatch` — always appends `dispatch_requested` to the ledger.  
+- `POST /v1/runs/{run_id}/dispatch` — always appends `dispatch_requested` to the ledger. Optional `execution`: `sync` (default) or `async`.  
   - `action`: `noop` or `subprocess_stub` → **202** (audit only; no subprocess).  
-  - `action`: `subprocess` → **200** when execution finishes in-process: runs `argv` with **no shell** (`asyncio.create_subprocess_exec`), updates run `status` to `completed` or `failed`, upserts a `run_step` (`run_step.json`), appends `tool_invocation_meta` with truncated stdout/stderr. **Gated** (see below).  
+  - `action`: `subprocess` + `execution: sync` → **200** when the subprocess finishes **in the HTTP request** (same persistence as below).  
+  - `action`: `subprocess` + `execution: async` → **202** with `job_id` (**requires** `FC_ALLOW_ASYNC_DISPATCH=1`); a background worker claims jobs from SQLite (or in-memory) and runs the same completion path. Poll `GET /v1/dispatch-jobs/{job_id}`.  
+  - Subprocess path: **no shell**, `run_step` + terminal run + `tool_invocation_meta` (snippets + byte counts; full logs optional under `FC_ARTIFACT_ROOT`). **Gated** (see below).  
 - `GET /v1/runs/{run_id}/run-steps` — list persisted steps for the run  
+- `GET /v1/dispatch-jobs/{job_id}` — job status (`queued` \| `running` \| `completed` \| `failed`) and `result` payload when finished  
 
 **Subprocess dispatch gates (secure default: off):**  
 
@@ -64,12 +67,15 @@ forge-council-api
 | `FC_EXEC_WORKDIR` | Process working directory (default: `FORGE_COUNCIL_REPO_ROOT`, else cwd). |
 | `FC_EXEC_TIMEOUT_SEC` | Wall-clock cap per subprocess (default 60, max 3600). |
 | `FC_EXEC_INHERIT_ENV` | Default `1`: merge `env` from the request onto the server environment. Set `0` for a minimal `PATH`-only baseline plus request `env`. |
+| `FC_ALLOW_ASYNC_DISPATCH` | Must be `1`/`true`/`yes`/`on` to use `execution: async` on subprocess dispatch (**403** otherwise). |
+| `FC_DISPATCH_MAX_QUEUED` | Optional positive cap on **queued** jobs; enqueue returns **503** when full. |
+| `FC_ARTIFACT_ROOT` | If set, writes full `stdout.log` / `stderr.log` under `{root}/{run_id}/{step_id}/` (16 MiB cap per stream); ledger carries `stdout_artifact_relpath` / `stderr_artifact_relpath`. |
 
 **Backup:** copy the SQLite file while the process is stopped or use SQLite backup API; `data/` is gitignored by default.  
 
 Set `OTEL_EXPORTER_OTLP_ENDPOINT` to enable OTLP export (optional `pip install -e ".[otel]"`).  
 Optional CORS: `FC_CORS_ORIGINS=http://127.0.0.1:3000`.  
-Optional auth: set `FC_API_TOKEN` to a long random secret; send `Authorization: Bearer <token>` on all `/v1/*` requests (`/health` remains open for load balancers).  
+Optional auth: set `FC_API_TOKEN` to a long random secret; send `Authorization: Bearer <token>` on all `/v1/*` requests (`/health` remains open for load balancers). When the token is set, **OpenAPI** marks each `/v1/*` operation with `bearerAuth` security.  
 Schemas resolve via `FORGE_COUNCIL_REPO_ROOT` (defaults to parent of `src/` in dev).
 
 ## 4. Kill-switch and escalation
