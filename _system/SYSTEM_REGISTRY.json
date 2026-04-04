@@ -400,7 +400,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "CHANGELOG.md",
-      "size_bytes": 1951
+      "size_bytes": 2237
     },
     {
       "category": "entrypoint",
@@ -454,7 +454,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "PLAN.md",
-      "size_bytes": 2483
+      "size_bytes": 2568
     },
     {
       "category": "working-state",
@@ -496,7 +496,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "TEST_STRATEGY.md",
-      "size_bytes": 1820
+      "size_bytes": 1915
     },
     {
       "category": "working-state",
@@ -508,7 +508,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "WHERE_LEFT_OFF.md",
-      "size_bytes": 3996
+      "size_bytes": 2815
     },
     {
       "category": "entrypoint",

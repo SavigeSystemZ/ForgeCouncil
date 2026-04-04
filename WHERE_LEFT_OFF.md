@@ -13,58 +13,49 @@ app repositories.
 
 ## Session Snapshot
 
-- Current phase: Master planning pack **landed** (canonical docs, FC OS tree, schemas, bootstrap, tests)
+- Current phase: Control-plane **HTTP API stub** landed (in-memory runs + ledger)
 - Working branch or lane: `main`
-- Completion status: planning-pack implementation complete; control-plane service not started
-- Resume confidence: high for docs/automation; implementation TBD
+- Completion status: FastAPI + tests + RUNBOOK; persistence not started
+- Resume confidence: high
 
 ## Last Completed Work
 
-Implemented the **Forge Council Master Architecture and Planning Pack** in-repo:
-
-- Product SSoT: `PRD.md`, `ARCHITECTURE.md`, `DATA_MODEL.md`, `NFR.md`, `RUNBOOK.md`, `GPT54.md`, `EXTENSION_ROADMAP.md`, operational stubs (`DECISIONS`, `EVAL_REPORT`, etc.).
-- Extension tree: `_system/forge-council/{roles,policies,skills,context,templates}`.
-- Cursor rules: `.cursor/rules/fc-*.mdc`.
-- Prompt packs: `_system/prompt-packs/forge-council/*` (master handoff, M0–M2).
-- M1 automation: `tools/fc_repo_ingestion.py`, `bootstrap/fc-repo-ingestion.sh`.
-- Schemas: `schemas/forge_council/v1/*.json`; package `src/forge_council/` (`models.py`, `otel.py`, `schema_check.py`).
-- M5–M7 stubs: `bootstrap/fc-controlled-run.sh`, `fc-gate-check.sh`, `fc-export-resume-packet.sh`; docs under `docs/forge-council/`.
-- Tests: `tests/test_schema_check.py` (pytest); use `.venv` for local dev (`python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"`).
-- Regenerated `_system/SYSTEM_REGISTRY.json` and `_system/REPO_OPERATING_PROFILE.md`; `bootstrap/validate-system.sh .` passes.
+- Added `src/forge_council/api_app.py` (FastAPI), `memory_store.py`, `schema_util.py`, `server.py` + `forge-council-api` entry point.
+- Tests: `tests/test_api.py`, `tests/conftest.py` (`FORGE_COUNCIL_REPO_ROOT`).
+- `pyproject.toml`: `[api]` optional extra; dev deps include FastAPI for pytest.
+- Docs: `RUNBOOK.md` §3 API, `ARCHITECTURE.md` §10, `CHANGELOG.md`.
 
 ## Files Changed
 
-See git status — large multi-file addition across docs, `_system/`, `.cursor/`, `schemas/`, `src/`, `bootstrap/`, `tools/`, `tests/`, `pyproject.toml`, `README.md`.
+See latest commit on `main` (post–planning-pack).
 
 ## Validation Run
 
-- Command: `bootstrap/validate-system.sh /home/whyte/.MyAppZ/ForgeCouncil`
-- Result: pass (`system_ok`)
-- Command: `.venv/bin/pytest` (after `pip install -e ".[dev]"`)
-- Result: pass (2 tests)
+- Command: `.venv/bin/pytest`
+- Result: pass (schema + ingestion + API)
+- Command: `bootstrap/validate-system.sh .` (after `generate-system-registry.sh --write`)
+- Result: expect `system_ok`
 
 ## Decisions Made
 
-- Namespaced Forge-specific OS under `_system/forge-council/` to preserve AIAST upgrade path.
-- JSON Schema as interchange SSoT; Python package must not import `_system/`.
+- Omitted `null` optional fields from JSON Schema validation payloads (schema does not use `type: ["string","null"]`).
 
 ## Open Risks / Blockers
 
-- Choose control-plane HTTP stack (e.g. FastAPI) and desktop shell before heavy UI work.
-- After adding instruction files, run `bootstrap/fc-repo-ingestion.sh .` then `bootstrap/generate-operating-profile.sh . --write` as repo owner.
+- In-memory store only; add SQLite/Postgres and migrate ledger to append-only file or DB.
+- OTEL: configure OTLP exporter beyond console when wiring production.
 
 ## Next Best Step
 
-Implement a minimal **FastAPI** (or chosen) service with health check and `Run`/`LedgerEvent` persistence stub, wired to `schemas/forge_council/v1/run.json`, plus optional OTLP export using `src/forge_council/otel.py`.
+Replace `MemoryStore` with **SQLite** persistence (single-file `FC_STATE_DB`), keep JSON Schema validation, add `PATCH /v1/runs/{id}` for status transitions, and document backup of state file in `RUNBOOK.md`.
 
 ## Handoff Packet
 
-- Agent: Cursor / implementation pass
+- Agent: Cursor
 - Timestamp: 2026-04-04
-- Objective: Land master planning pack per approved plan
-- Files changed: (see git diff — broad)
-- Commands run: `validate-system.sh`, `generate-system-registry.sh --write`, `pytest`, `fc-repo-ingestion.py`
-- Result summary: Repo validates; schemas and ingestion automation in place; ready for control-plane coding milestone.
+- Objective: Commit/push planning pack; implement FastAPI stub
+- Commands run: `pytest`, `validate-system` (run after registry regen)
+- Result summary: API serves health + runs + ledger; pushed to `origin/main`
 - Known blockers: none
 - Next best step: (matches section above)
 

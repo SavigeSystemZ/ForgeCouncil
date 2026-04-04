@@ -28,25 +28,46 @@
 
 Full system validation: `bootstrap/validate-system.sh .` (expect `system_ok`).
 
-## 3. Kill-switch and escalation
+## 3. Control plane HTTP API (M5+ stub)
+
+Default bind: `127.0.0.1:8010` (override with `FC_API_HOST`, `FC_API_PORT`).
+
+```bash
+.venv/bin/pip install -e ".[api]"
+forge-council-api
+# or: .venv/bin/python -m forge_council.server
+```
+
+- `GET /health` — liveness  
+- `POST /v1/runs` — create run (body validated against `schemas/forge_council/v1/run.json`)  
+- `GET /v1/runs/{run_id}` — fetch run  
+- `GET /v1/runs` — list runs (in-memory store)  
+- `POST /v1/runs/{run_id}/ledger-events` — append ledger event (`ledger_event.json`)  
+- `GET /v1/runs/{run_id}/ledger-events` — list events  
+
+Set `OTEL_EXPORTER_OTLP_ENDPOINT` to enable OTLP export (optional `pip install -e ".[otel]"`).  
+Optional CORS: `FC_CORS_ORIGINS=http://127.0.0.1:3000`.  
+Schemas resolve via `FORGE_COUNCIL_REPO_ROOT` (defaults to parent of `src/` in dev).
+
+## 4. Kill-switch and escalation
 
 1. **Stop new runs:** set workspace flag (future UI); today: document in `WHERE_LEFT_OFF.md` and cease dispatch manually.  
 2. **Revoke API keys** at provider if abuse suspected.  
 3. **Disable MCP servers** in workspace manifest.  
 4. Follow `_system/forge-council/policies/escalation_policy.md`.
 
-## 4. Backup and recovery
+## 5. Backup and recovery
 
 - **Git:** Canonical docs and `_system/forge-council/` are versioned; commit often.  
 - **Local DB** (when introduced): backup file path documented in deployment section of `ARCHITECTURE.md` (update when DB lands).  
 - **Artifacts:** sync object store per operator policy.
 
-## 5. Telemetry
+## 6. Telemetry
 
 - Set `OTEL_EXPORTER_OTLP_ENDPOINT` when OTLP backend available.  
 - Use `src/forge_council/otel.py` helpers; never attach raw prompts to spans.
 
-## 6. Incident response (secrets)
+## 7. Incident response (secrets)
 
 If a secret is committed:
 
@@ -54,7 +75,7 @@ If a secret is committed:
 2. Purge from git history if required by policy (use org-standard tools).  
 3. Record in `RISK_REGISTER.md` and governance notes.
 
-## 7. Release checklist (high level)
+## 8. Release checklist (high level)
 
 - `bootstrap/validate-system.sh .` passes.  
 - `REPO_PROFILE.md` / `CONFLICT_MAP.md` current.  
@@ -62,7 +83,7 @@ If a secret is committed:
 - No secrets in diff.  
 - `TEST_STRATEGY.md` reflects executed validations.
 
-## 8. Contacts and ownership
+## 9. Contacts and ownership
 
 - Product docs: repo maintainers per `AGENTS.md` handoff rules.  
 - Security policy: `_system/forge-council/policies/`.

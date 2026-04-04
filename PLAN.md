@@ -31,13 +31,13 @@
 4. ~~Ingestion script + profile/conflict refresh~~  
 5. ~~Schemas + `forge_council` package + OTel stub~~  
 6. ~~fc bootstrap stubs (run, gate, resume)~~  
-7. Next: implement minimal FastAPI health + run record API (future milestone)
+7. ~~Minimal FastAPI control plane (`forge_council.api_app`) with `/health`, runs, ledger events~~ — extend with persistence (SQLite) and auth next
 
 ## Validation plan
 
 - `bootstrap/validate-system.sh .`  
 - `bootstrap/fc-repo-ingestion.sh .`  
-- `pip install -e ".[dev]" && python -m forge_council.schema_check`  
+- `pip install -e ".[dev]" && pytest` and `python -m forge_council.schema_check`  
 - `shellcheck bootstrap/fc-*.sh` (if available)
 
 ## Risks

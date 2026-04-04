@@ -12,11 +12,25 @@ license = { text = "Apache-2.0" }
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["jsonschema>=4.21", "pytest>=8.0"]
+api = [
+  "fastapi>=0.115.0",
+  "uvicorn[standard]>=0.30.0",
+  "jsonschema>=4.21",
+]
+dev = [
+  "jsonschema>=4.21",
+  "pytest>=8.0",
+  "httpx>=0.27.0",
+  "fastapi>=0.115.0",
+  "uvicorn[standard]>=0.30.0",
+]
 otel = [
   "opentelemetry-api>=1.24.0",
   "opentelemetry-sdk>=1.24.0",
 ]
+
+[project.scripts]
+forge-council-api = "forge_council.server:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -129,7 +129,11 @@ Uniform **scheduler contract**: job spec (image/command, env, mounts, secrets re
 
 See `NFR.md` and `_system/forge-council/policies/`. Principles: repo-local precedence, instruction conflict scan before execution, allowlisted tools, path-scoped FS, branch-scoped git, human approval for destructive ops, per-project memory isolation, redacted telemetry.
 
-## 10. Evolution
+## 10. Control plane API (stub)
+
+An optional **FastAPI** service lives in `src/forge_council/api_app.py` with in-memory `Run` / `LedgerEvent` storage, JSON Schema validation against `schemas/forge_council/v1/`, and optional request spans via `otel.py`. Entry: `forge-council-api` (see `RUNBOOK.md`).
+
+## 11. Evolution
 
 M0–M4: docs, ingestion, blueprints, packets.  
 M5–M7: execution, gates, memory/resume.  

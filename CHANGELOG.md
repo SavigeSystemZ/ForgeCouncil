@@ -6,6 +6,8 @@ Use this file for meaningful repo-visible change history. Keep transient task ch
 
 ### Added
 
+- FastAPI control-plane stub: `GET /health`, `POST/GET /v1/runs`, ledger event routes; `forge-council-api` CLI; `schema_util`, `memory_store`; tests in `tests/test_api.py`
+- Optional `[api]` extra (`fastapi`, `uvicorn`, `jsonschema`); `tests/conftest.py` sets `FORGE_COUNCIL_REPO_ROOT`
 - Forge Council product SSoT docs: `PRD.md`, `ARCHITECTURE.md`, `DATA_MODEL.md`, `NFR.md`, `RUNBOOK.md`, `GPT54.md`, `EXTENSION_ROADMAP.md`
 - `_system/forge-council/` operating extension (roles, policies, skills, context, templates)
 - `.cursor/rules/fc-*.mdc` and `_system/prompt-packs/forge-council/` (M0–M2 + master handoff)

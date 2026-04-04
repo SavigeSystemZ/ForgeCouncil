@@ -12,7 +12,7 @@ Use this file to define the repo's confidence model, validation lanes, and known
 
 - format or lint: no format or lint command inferred yet; confirm manually
 - typecheck: no typecheck command inferred yet; confirm manually
-- unit tests: no unit-test command inferred yet; confirm manually
+- unit tests: `python3 -m venv .venv && .venv/bin/pip install -e ".[dev]" && .venv/bin/pytest` (schema check, repo ingestion smoke, FastAPI `TestClient` routes)
 - integration tests: no integration-test command inferred yet; confirm manually
 - end-to-end or smoke: no smoke command inferred yet; confirm manually
 - build or packaging checks: no build or packaging command inferred yet; confirm manually
