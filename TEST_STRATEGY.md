@@ -10,9 +10,10 @@ Use this file to define the repo's confidence model, validation lanes, and known
 
 ## Validation lanes
 
-- format or lint: no format or lint command inferred yet; confirm manually
-- typecheck: no typecheck command inferred yet; confirm manually
-- unit tests: `python3 -m venv .venv && .venv/bin/pip install -e ".[dev]" && .venv/bin/pytest` (schema check, repo ingestion smoke, FastAPI `TestClient` routes)
+- format: `.venv/bin/ruff format src tests` (after `pip install -e ".[dev]"`)
+- lint: `.venv/bin/ruff check src tests`
+- typecheck: no mypy/pyright lane configured yet; optional follow-up
+- unit tests: `python3 -m venv .venv && .venv/bin/pip install -e ".[dev]" && .venv/bin/pytest` (schema check, FastAPI `TestClient` routes, SQLite store)
 - integration tests: no integration-test command inferred yet; confirm manually
 - end-to-end or smoke: no smoke command inferred yet; confirm manually
 - build or packaging checks: no build or packaging command inferred yet; confirm manually

@@ -259,6 +259,44 @@ def test_openapi_v1_operations_require_bearer_when_token_set(monkeypatch) -> Non
     assert any("bearerAuth" in str(s) for s in runs_post.get("security", []))
 
 
+def test_dispatch_job_sse_stream_completes(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setenv("FC_ALLOW_SUBPROCESS_DISPATCH", "1")
+    monkeypatch.setenv("FC_ALLOW_ASYNC_DISPATCH", "1")
+    monkeypatch.setenv("FC_EXEC_ALLOWLIST", str(Path(sys.executable).resolve()))
+    monkeypatch.setenv("FC_EXEC_WORKDIR", str(tmp_path))
+    with TestClient(create_app(MemoryStore())) as client:
+        rid = client.post("/v1/runs", json={"project_id": "p"}).json()["run_id"]
+        r = client.post(
+            f"/v1/runs/{rid}/dispatch",
+            json={
+                "action": "subprocess",
+                "execution": "async",
+                "argv": [sys.executable, "-c", "print('sse_ok')"],
+            },
+        )
+        assert r.status_code == 202
+        job_id = r.json()["job_id"]
+        with client.stream("GET", f"/v1/dispatch-jobs/{job_id}/events") as stream:
+            assert stream.status_code == 200
+            raw = stream.read()
+        assert b"sse_ok" in raw
+        assert b'"status": "completed"' in raw
+        assert job_id.encode() in raw
+
+
+def test_dispatch_job_sse_not_found() -> None:
+    with TestClient(create_app(MemoryStore())) as client:
+        r = client.get("/v1/dispatch-jobs/does-not-exist/events")
+        assert r.status_code == 404
+
+
+def test_dispatch_job_sse_requires_bearer_when_token_set(monkeypatch) -> None:
+    monkeypatch.setenv("FC_API_TOKEN", "tok")
+    with TestClient(create_app(MemoryStore())) as client:
+        r = client.get("/v1/dispatch-jobs/any/events")
+        assert r.status_code == 401
+
+
 def test_bearer_token_when_configured(monkeypatch) -> None:
     monkeypatch.setenv("FC_API_TOKEN", "test-secret")
     client = TestClient(create_app(MemoryStore()))

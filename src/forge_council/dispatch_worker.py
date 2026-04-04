@@ -5,6 +5,8 @@ from __future__ import annotations
 import asyncio
 import datetime as dt
 import logging
+from contextlib import suppress
+
 from fastapi import FastAPI
 
 from forge_council import local_runner
@@ -14,20 +16,28 @@ from forge_council.store_protocol import RunLedgerRunStepJobStore
 logger = logging.getLogger(__name__)
 
 
+async def _emit_job_snapshot(app: FastAPI, store: RunLedgerRunStepJobStore, job_id: str) -> None:
+    bc = getattr(app.state, "dispatch_job_broadcaster", None)
+    if bc is None:
+        return
+    row = store.get_dispatch_job(job_id)
+    if row:
+        await bc.publish(job_id, dict(row))
+
+
 async def run_dispatch_worker_loop(app: FastAPI, stop: asyncio.Event) -> None:
     store: RunLedgerRunStepJobStore = app.state.store
     while not stop.is_set():
         job = store.claim_next_dispatch_job()
         if job is None:
-            try:
+            with suppress(TimeoutError):
                 await asyncio.wait_for(stop.wait(), timeout=0.2)
-            except TimeoutError:
-                pass
             continue
         job_id = str(job["job_id"])
         run_id = str(job["run_id"])
+        await _emit_job_snapshot(app, store, job_id)
         if local_runner.dispatch_kill_switch_active():
-            end = dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
+            end = dt.datetime.now(dt.UTC).isoformat().replace("+00:00", "Z")
             store.finish_dispatch_job(
                 job_id,
                 status="failed",
@@ -41,14 +51,13 @@ async def run_dispatch_worker_loop(app: FastAPI, stop: asyncio.Event) -> None:
                 },
                 finished_at=end,
             )
+            await _emit_job_snapshot(app, store, job_id)
             continue
         try:
             env_raw = job.get("env")
-            env_overlay: dict[str, str] | None
-            if isinstance(env_raw, dict):
-                env_overlay = dict(env_raw)
-            else:
-                env_overlay = None
+            env_overlay: dict[str, str] | None = (
+                dict(env_raw) if isinstance(env_raw, dict) else None
+            )
             result = await execute_subprocess_dispatch(
                 store,
                 run_id=run_id,
@@ -61,13 +70,12 @@ async def run_dispatch_worker_loop(app: FastAPI, stop: asyncio.Event) -> None:
                 step_id=str(job["step_id"]),
             )
             st = "completed" if int(result.get("exit_code", -1)) == 0 else "failed"
-            end = dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
-            store.finish_dispatch_job(
-                job_id, status=st, result=result, finished_at=end
-            )
+            end = dt.datetime.now(dt.UTC).isoformat().replace("+00:00", "Z")
+            store.finish_dispatch_job(job_id, status=st, result=result, finished_at=end)
+            await _emit_job_snapshot(app, store, job_id)
         except Exception as e:  # noqa: BLE001
             logger.exception("dispatch job %s failed", job_id)
-            end = dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
+            end = dt.datetime.now(dt.UTC).isoformat().replace("+00:00", "Z")
             store.finish_dispatch_job(
                 job_id,
                 status="failed",
@@ -81,3 +89,4 @@ async def run_dispatch_worker_loop(app: FastAPI, stop: asyncio.Event) -> None:
                 },
                 finished_at=end,
             )
+            await _emit_job_snapshot(app, store, job_id)

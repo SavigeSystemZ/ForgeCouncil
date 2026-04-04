@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-import threading
 import datetime as dt
+import threading
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -95,7 +95,7 @@ class MemoryStore:
             return self._dispatch_job_public_view(rec)
 
     def claim_next_dispatch_job(self) -> dict[str, Any] | None:
-        now_s = dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
+        now_s = dt.datetime.now(dt.UTC).isoformat().replace("+00:00", "Z")
         with self._lock:
             for jid in self._state.dispatch_order:
                 rec = self._state.dispatch_records.get(jid)
@@ -125,9 +125,7 @@ class MemoryStore:
     def count_dispatch_jobs_queued(self) -> int:
         with self._lock:
             return sum(
-                1
-                for rec in self._state.dispatch_records.values()
-                if rec.get("status") == "queued"
+                1 for rec in self._state.dispatch_records.values() if rec.get("status") == "queued"
             )
 
     @staticmethod

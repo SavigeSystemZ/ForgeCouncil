@@ -11,37 +11,42 @@ maintainer continuity and validation evidence live in **`_META_AGENT_SYSTEM/WHER
 instead of this file. Update this file only for work that ships to downstream
 app repositories.
 
-## Session Snapshot
+## Session snapshot
 
-- Current phase: Control-plane API with **async dispatch queue**, **log artifacts**, **OpenAPI Bearer on /v1**
-- Working branch or lane: `main`
-- Completion status: `dispatch_jobs` + worker loop, `execution: async`, `FC_ARTIFACT_ROOT`, per-route OpenAPI security when `FC_API_TOKEN` set
-- Resume confidence: high
+- **Phase:** Forge Council control-plane API (FastAPI): async dispatch, **SSE** job stream, artifacts, Bearer `/v1`, **host install + desktop launcher**, **Ruff** lint/format.
+- **Branch:** `main` (local commits ahead of `origin/main`; **push when ready**).
+- **Resume confidence:** high.
 
-## Last Completed Work
+## Last completed work
 
-- `RunLedgerRunStepJobStore`, `dispatch_jobs` (SQLite + memory), `dispatch_worker` + app `lifespan`, `GET /v1/dispatch-jobs/{id}`.
-- `POST .../dispatch` with `execution: async` + `FC_ALLOW_ASYNC_DISPATCH`; sync path uses shared `dispatch_execution.execute_subprocess_dispatch`.
-- `FC_ARTIFACT_ROOT` log files, ledger `stdout_artifact_relpath` / `stderr_artifact_relpath`, `FC_DISPATCH_MAX_QUEUED`.
-- OpenAPI attaches `bearerAuth` to each `/v1/*` operation when the API token env is set; health flags for async + artifact root.
+- **API:** `GET /v1/dispatch-jobs/{job_id}/events` (SSE); `dispatch_job_broadcaster.py`; worker publishes snapshots after claim and after `finish_dispatch_job`.
+- **Install:** `bootstrap/fc-host-install.sh` (venv, `pip install -e '.[dev,api]'`, user desktop entry, hicolor SVG icon); `ops/install/launch-forge-council-api.sh` replaces generic `http.server` for desktop/systemd `Exec=`.
+- **Quality:** Ruff in `pyproject.toml` `[dev]` + `tool.ruff`; `sqlite_store` / `dispatch_worker` / OpenAPI tag cleanups; per-file `B008` ignores for FastAPI deps.
+- **Docs:** `README.md` host install section, `RUNBOOK.md` SSE line, `CHANGELOG.md`, `_system/PROJECT_PROFILE.md` validation commands, `packaging/io.aiaast.forge.council.desktop` template note.
 
-## Validation Run
+## Validation run (evidence)
 
-- `.venv/bin/pytest` — 26 passed
-- `bootstrap/validate-system.sh .` — run after `generate-system-registry.sh --write` (expect `system_ok`)
+- `.venv/bin/pytest` — 29 passed
+- `.venv/bin/ruff check src tests` — clean
+- `bootstrap/fc-host-install.sh` + `ops/install/launch-forge-council-api.sh` + `curl http://127.0.0.1:8010/health` — OK (run installer as **desktop user** so `~/.local/share/applications` is yours, not root)
+- `bootstrap/validate-system.sh .` — run after `generate-system-registry.sh --write` when touching registry/system files (expect `system_ok`)
 
-## Next Best Step
+## Next best step
 
-- **SSE or WebSocket** for job completion instead of polling `GET /v1/dispatch-jobs/{id}`.  
-- **Multi-instance** queue (Redis / separate worker process) — current worker is in-process with SQLite row locking.  
-- **Rate limits** and **per-project** queue quotas.
+- **Redis** (or similar) for SSE / queue when **multiple API replicas** exist.
+- **Multi-instance** worker (separate process) + external queue.
+- **Rate limits** and **per-project** dispatch quotas.
+- **Push** `main` to `origin` when you want remote backup: `git push origin main`.
 
-**Done recently:** In-process async queue + artifacts + OpenAPI per-route Bearer when token configured.
+## Stopping now
 
-## Handoff Packet
+- Working tree saved in **git** (single commit after this update). No further edits queued for this session.
+- Re-open with: read this file → `PLAN.md` → `TODO.md` → run validation from `_system/PROJECT_PROFILE.md`.
+
+## Handoff packet
 
 - Timestamp: 2026-04-04
-- Next best step: (matches section above)
+- Git: commit on `main` with message describing SSE + install + Ruff (see `git log -1`)
 
 ## Usage rules
 

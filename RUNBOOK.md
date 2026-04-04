@@ -52,10 +52,11 @@ forge-council-api
 - `POST /v1/runs/{run_id}/dispatch` — always appends `dispatch_requested` to the ledger. Optional `execution`: `sync` (default) or `async`.  
   - `action`: `noop` or `subprocess_stub` → **202** (audit only; no subprocess).  
   - `action`: `subprocess` + `execution: sync` → **200** when the subprocess finishes **in the HTTP request** (same persistence as below).  
-  - `action`: `subprocess` + `execution: async` → **202** with `job_id` (**requires** `FC_ALLOW_ASYNC_DISPATCH=1`); a background worker claims jobs from SQLite (or in-memory) and runs the same completion path. Poll `GET /v1/dispatch-jobs/{job_id}`.  
+  - `action`: `subprocess` + `execution: async` → **202** with `job_id` (**requires** `FC_ALLOW_ASYNC_DISPATCH=1`); a background worker claims jobs from SQLite (or in-memory) and runs the same completion path. Poll `GET /v1/dispatch-jobs/{job_id}` or subscribe to **SSE** `GET /v1/dispatch-jobs/{job_id}/events` (stream ends in terminal state).  
   - Subprocess path: **no shell**, `run_step` + terminal run + `tool_invocation_meta` (snippets + byte counts; full logs optional under `FC_ARTIFACT_ROOT`). **Gated** (see below).  
 - `GET /v1/runs/{run_id}/run-steps` — list persisted steps for the run  
 - `GET /v1/dispatch-jobs/{job_id}` — job status (`queued` \| `running` \| `completed` \| `failed`) and `result` payload when finished  
+- `GET /v1/dispatch-jobs/{job_id}/events` — **text/event-stream** (SSE): JSON snapshots on change until `completed` or `failed` (in-process only; not shared across API replicas)  
 
 **Subprocess dispatch gates (secure default: off):**  
 

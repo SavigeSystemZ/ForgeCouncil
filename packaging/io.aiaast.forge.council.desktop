@@ -3,7 +3,8 @@ Type=Application
 Version=1.0
 Name=Forge Council
 Comment=Launch Forge Council
-Exec=forge-council
+# For source tree + venv, run bootstrap/fc-host-install.sh (installs real desktop entry).
+Exec=forge-council-api
 Icon=io.aiaast.forge.council
 Terminal=false
 Categories=Utility;

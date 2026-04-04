@@ -6,39 +6,39 @@ Use priority signals: **CRITICAL**, **HIGH**, **MEDIUM**, **LOW** (see
 
 ## Bootstrap
 
-- [ ] HIGH: Fill in `_system/PROJECT_PROFILE.md`
+- [ ] HIGH: Finish filling `_system/PROJECT_PROFILE.md` (stack, ports, ops — validation lines now list ruff/pytest)
 - [ ] HIGH: Refine `PRODUCT_BRIEF.md` for Forge Council so the product frame and first build shape are explicit
 - [ ] HIGH: Review the recommended starter blueprint and explicitly apply it if the repo is still greenfield
-- [ ] MEDIUM: Confirm runtime roots, validation commands, packaging targets, and deployment surfaces
+- [ ] MEDIUM: Confirm packaging targets (Flatpak/Snap/AppImage) against current control-plane-only shape
 - [ ] MEDIUM: Confirm MCP server set and scope
-- [ ] MEDIUM: Establish the first real milestone in `PLAN.md`
 - [ ] MEDIUM: Review and refine the seeded first-pass risks in `RISK_REGISTER.md`
 
-## Current Priority
+## Current priority
 
-- [ ] HIGH: Establish the first validated baseline for Forge Council
+- [ ] MEDIUM: Push `main` to `origin` when remote backup is desired (branch was ahead of origin)
 
-## Immediate Queue
+## Immediate queue
 
-Use short, reviewable tasks with priority signals.
+- [ ] MEDIUM: Redis or shared bus for dispatch notifications across **multiple API instances**
+- [ ] MEDIUM: Rate limits + per-project queue quotas for `/v1/.../dispatch`
 
-- [ ] MEDIUM: Finish onboarding and confirm the first working validation path for Forge Council
+## Next queue
 
-## Next Queue
+- [ ] LOW: Optional **mypy** strict lane in `pyproject.toml` + `TEST_STRATEGY.md`
 
-- [ ] MEDIUM: Begin the first product or platform milestone once onboarding is complete
+## Validation debt
 
-## Validation Debt
+- [x] MEDIUM: Record ruff + pytest in `TEST_STRATEGY.md` and `PROJECT_PROFILE.md` (done 2026-04-04)
 
-- [ ] MEDIUM: Record the repo's real validation lane in `TEST_STRATEGY.md` after the first successful repo-local check
+## Documentation debt
 
-## Documentation Debt
-
-- [ ] LOW: Keep design, architecture, research, risk, and release surfaces aligned with repo reality
+- [ ] LOW: Align `RELEASE_NOTES.md` Forge Council section with next tagged release
 
 ## Completed
 
-Move completed items here at session end.
+- Host install path: `bootstrap/fc-host-install.sh`, `launch-forge-council-api.sh`, desktop + icon, `README` section (2026-04-04)
+- Ruff configured; `ruff check` / `ruff format` clean on `src` + `tests` (2026-04-04)
+- SSE `GET /v1/dispatch-jobs/{job_id}/events` + broadcaster + tests (2026-04-04)
 
 ## Usage rules
 

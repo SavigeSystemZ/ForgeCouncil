@@ -38,7 +38,7 @@ async def execute_subprocess_dispatch(
             "stderr_artifact_relpath": None,
         }
 
-    now = dt.datetime.now(dt.timezone.utc)
+    now = dt.datetime.now(dt.UTC)
     now_s = now.isoformat().replace("+00:00", "Z")
     seq = len(store.list_run_steps(run_id))
     step_running: dict[str, Any] = {
@@ -75,7 +75,7 @@ async def execute_subprocess_dispatch(
         out = ""
         err = f"forge_council: subprocess error: {e}"
 
-    end = dt.datetime.now(dt.timezone.utc)
+    end = dt.datetime.now(dt.UTC)
     end_s = end.isoformat().replace("+00:00", "Z")
     term = "succeeded" if code == 0 else "failed"
     step_final = {

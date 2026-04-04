@@ -207,7 +207,7 @@ write_desktop_entry() {
   fi
 
   local path="${desktop_dir}/${APP_ID}.desktop"
-  local exec_line="${ROOT_DIR}/ops/install/install.sh --launch"
+  local exec_line="${ROOT_DIR}/ops/install/launch-forge-council-api.sh"
 
   if [[ "${DRY_RUN:-0}" -eq 1 ]]; then
     printf '[dry-run] write desktop entry %s\n' "${path}"
@@ -219,11 +219,12 @@ write_desktop_entry() {
 Type=Application
 Version=1.0
 Name=${APP_NAME}
-Comment=${APP_NAME} launcher
+Comment=${APP_NAME} control-plane API (FastAPI)
 Exec=${exec_line}
 Icon=${APP_ID}
 Terminal=false
-Categories=Utility;
+Categories=Utility;Development;
+StartupNotify=true
 EOF
 }
 
@@ -240,7 +241,7 @@ generate_systemd_unit() {
 
   run_step mkdir -p "${output_dir}"
 
-  local exec_start="${ROOT_DIR}/ops/install/install.sh --launch"
+  local exec_start="${ROOT_DIR}/ops/install/launch-forge-council-api.sh"
   local user_name="${USER}"
   local group_name=""
   if [[ "${mode}" == "system" ]]; then
@@ -274,13 +275,14 @@ generate_systemd_unit() {
 }
 
 run_launch_command() {
-  if [[ ! -f "${ENV_FILE_ABS}" ]]; then
-    die "missing ${ENV_FILE_PATH}; run install.sh first"
+  local launch="${ROOT_DIR}/ops/install/launch-forge-council-api.sh"
+  if [[ ! -f "${launch}" ]]; then
+    die "missing ${launch}"
   fi
-  # shellcheck disable=SC1090
-  source "${ENV_FILE_ABS}"
-  : "${APP_EXEC_START:=python3 -m http.server ${APP_PORT:-8000} --bind ${APP_BIND_ADDRESS:-127.0.0.1}}"
-  exec bash -lc "${APP_EXEC_START}"
+  if [[ ! -x "${launch}" ]]; then
+    die "launch script not executable: ${launch} (chmod +x or run bootstrap/fc-host-install.sh)"
+  fi
+  exec "${launch}"
 }
 
 best_artifact() {

@@ -31,7 +31,7 @@
 4. ~~Ingestion script + profile/conflict refresh~~  
 5. ~~Schemas + `forge_council` package + OTel stub~~  
 6. ~~fc bootstrap stubs (run, gate, resume)~~  
-7. ~~Minimal FastAPI control plane + SQLite + gated subprocess + async dispatch queue + artifact logs + OpenAPI Bearer on /v1~~ — OAuth, external queue, SSE, multi-tenant quotas
+7. ~~Minimal FastAPI control plane + SQLite + gated subprocess + async dispatch queue + artifact logs + OpenAPI Bearer on /v1 + SSE dispatch job events~~ — OAuth, external queue / multi-replica notifications, multi-tenant quotas
 
 ## Validation plan
 

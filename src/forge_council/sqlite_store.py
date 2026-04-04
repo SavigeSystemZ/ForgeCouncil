@@ -29,10 +29,9 @@ class SqliteStore:
         return conn
 
     def _init_schema(self) -> None:
-        with self._lock:
-            with self._connect() as conn:
-                conn.executescript(
-                    """
+        with self._lock, self._connect() as conn:
+            conn.executescript(
+                """
                     CREATE TABLE IF NOT EXISTS runs (
                         run_id TEXT PRIMARY KEY,
                         body_json TEXT NOT NULL
@@ -63,62 +62,55 @@ class SqliteStore:
                     );
                     CREATE INDEX IF NOT EXISTS idx_dispatch_jobs_q ON dispatch_jobs(status, id);
                     """
-                )
+            )
 
     def put_run(self, run_id: str, payload: dict[str, Any]) -> dict[str, Any]:
         """Upsert run row without deleting the row (preserves ledger FK)."""
         body = json.dumps(payload, sort_keys=True)
-        with self._lock:
-            with self._connect() as conn:
-                cur = conn.execute("SELECT 1 FROM runs WHERE run_id = ?", (run_id,))
-                if cur.fetchone():
-                    conn.execute(
-                        "UPDATE runs SET body_json = ? WHERE run_id = ?",
-                        (body, run_id),
-                    )
-                else:
-                    conn.execute(
-                        "INSERT INTO runs (run_id, body_json) VALUES (?, ?)",
-                        (run_id, body),
-                    )
+        with self._lock, self._connect() as conn:
+            cur = conn.execute("SELECT 1 FROM runs WHERE run_id = ?", (run_id,))
+            if cur.fetchone():
+                conn.execute(
+                    "UPDATE runs SET body_json = ? WHERE run_id = ?",
+                    (body, run_id),
+                )
+            else:
+                conn.execute(
+                    "INSERT INTO runs (run_id, body_json) VALUES (?, ?)",
+                    (run_id, body),
+                )
         return dict(payload)
 
     def get_run(self, run_id: str) -> dict[str, Any] | None:
-        with self._lock:
-            with self._connect() as conn:
-                row = conn.execute(
-                    "SELECT body_json FROM runs WHERE run_id = ?", (run_id,)
-                ).fetchone()
+        with self._lock, self._connect() as conn:
+            row = conn.execute("SELECT body_json FROM runs WHERE run_id = ?", (run_id,)).fetchone()
         if row is None:
             return None
         return json.loads(row["body_json"])
 
     def list_runs(self) -> list[dict[str, Any]]:
-        with self._lock:
-            with self._connect() as conn:
-                rows = conn.execute("SELECT body_json FROM runs ORDER BY run_id").fetchall()
+        with self._lock, self._connect() as conn:
+            rows = conn.execute("SELECT body_json FROM runs ORDER BY run_id").fetchall()
         return [json.loads(r["body_json"]) for r in rows]
 
     def append_ledger_event(self, run_id: str, event: dict[str, Any]) -> dict[str, Any]:
         body = json.dumps(event, sort_keys=True)
-        with self._lock:
-            with self._connect() as conn:
-                cur = conn.execute("SELECT 1 FROM runs WHERE run_id = ?", (run_id,))
-                if cur.fetchone() is None:
-                    raise KeyError(f"unknown run_id: {run_id}")
-                conn.execute(
-                    "INSERT INTO ledger_events (run_id, body_json) VALUES (?, ?)",
-                    (run_id, body),
-                )
+        with self._lock, self._connect() as conn:
+            cur = conn.execute("SELECT 1 FROM runs WHERE run_id = ?", (run_id,))
+            if cur.fetchone() is None:
+                raise KeyError(f"unknown run_id: {run_id}")
+            conn.execute(
+                "INSERT INTO ledger_events (run_id, body_json) VALUES (?, ?)",
+                (run_id, body),
+            )
         return dict(event)
 
     def list_ledger_events(self, run_id: str) -> list[dict[str, Any]]:
-        with self._lock:
-            with self._connect() as conn:
-                rows = conn.execute(
-                    "SELECT body_json FROM ledger_events WHERE run_id = ? ORDER BY id",
-                    (run_id,),
-                ).fetchall()
+        with self._lock, self._connect() as conn:
+            rows = conn.execute(
+                "SELECT body_json FROM ledger_events WHERE run_id = ? ORDER BY id",
+                (run_id,),
+            ).fetchall()
         return [json.loads(r["body_json"]) for r in rows]
 
     def put_run_step(self, run_id: str, payload: dict[str, Any]) -> dict[str, Any]:
@@ -126,59 +118,58 @@ class SqliteStore:
         if not step_id:
             raise ValueError("run step requires step_id")
         body = json.dumps(payload, sort_keys=True)
-        with self._lock:
-            with self._connect() as conn:
-                cur = conn.execute("SELECT 1 FROM runs WHERE run_id = ?", (run_id,))
-                if cur.fetchone() is None:
-                    raise KeyError(f"unknown run_id: {run_id}")
-                conn.execute(
-                    """
+        with self._lock, self._connect() as conn:
+            cur = conn.execute("SELECT 1 FROM runs WHERE run_id = ?", (run_id,))
+            if cur.fetchone() is None:
+                raise KeyError(f"unknown run_id: {run_id}")
+            conn.execute(
+                """
                     INSERT INTO run_steps (run_id, step_id, body_json) VALUES (?, ?, ?)
                     ON CONFLICT(run_id, step_id) DO UPDATE SET body_json = excluded.body_json
                     """,
-                    (run_id, step_id, body),
-                )
+                (run_id, step_id, body),
+            )
         return dict(payload)
 
     def list_run_steps(self, run_id: str) -> list[dict[str, Any]]:
-        with self._lock:
-            with self._connect() as conn:
-                rows = conn.execute(
-                    """
-                    SELECT body_json FROM run_steps
-                    WHERE run_id = ?
-                    ORDER BY COALESCE(CAST(json_extract(body_json, '$.sequence_no') AS INTEGER), 0), step_id
-                    """,
-                    (run_id,),
-                ).fetchall()
+        with self._lock, self._connect() as conn:
+            rows = conn.execute(
+                """
+                SELECT body_json FROM run_steps
+                WHERE run_id = ?
+                ORDER BY COALESCE(
+                    CAST(json_extract(body_json, '$.sequence_no') AS INTEGER), 0
+                ), step_id
+                """,
+                (run_id,),
+            ).fetchall()
         return [json.loads(r["body_json"]) for r in rows]
 
     def enqueue_dispatch_job(
         self, job_id: str, run_id: str, body: dict[str, Any], *, created_at: str
     ) -> dict[str, Any]:
         body_j = json.dumps(body, sort_keys=True)
-        with self._lock:
-            with self._connect() as conn:
-                cur = conn.execute("SELECT 1 FROM runs WHERE run_id = ?", (run_id,))
-                if cur.fetchone() is None:
-                    raise KeyError(f"unknown run_id: {run_id}")
-                conn.execute(
-                    """
+        with self._lock, self._connect() as conn:
+            cur = conn.execute("SELECT 1 FROM runs WHERE run_id = ?", (run_id,))
+            if cur.fetchone() is None:
+                raise KeyError(f"unknown run_id: {run_id}")
+            conn.execute(
+                """
                     INSERT INTO dispatch_jobs (job_id, run_id, status, body_json, created_at)
                     VALUES (?, ?, 'queued', ?, ?)
                     """,
-                    (job_id, run_id, body_j, created_at),
-                )
+                (job_id, run_id, body_j, created_at),
+            )
         return self.get_dispatch_job(job_id) or {}
 
     def get_dispatch_job(self, job_id: str) -> dict[str, Any] | None:
-        with self._lock:
-            with self._connect() as conn:
-                row = conn.execute(
-                    "SELECT job_id, run_id, status, body_json, result_json, created_at, started_at, finished_at "
-                    "FROM dispatch_jobs WHERE job_id = ?",
-                    (job_id,),
-                ).fetchone()
+        q = (
+            "SELECT job_id, run_id, status, body_json, result_json, "
+            "created_at, started_at, finished_at "
+            "FROM dispatch_jobs WHERE job_id = ?"
+        )
+        with self._lock, self._connect() as conn:
+            row = conn.execute(q, (job_id,)).fetchone()
         if row is None:
             return None
         body = json.loads(row["body_json"])
@@ -196,27 +187,29 @@ class SqliteStore:
         return out
 
     def claim_next_dispatch_job(self) -> dict[str, Any] | None:
-        now_s = dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
-        with self._lock:
-            with self._connect() as conn:
-                conn.execute("BEGIN IMMEDIATE")
-                row = conn.execute(
-                    "SELECT job_id, run_id, body_json FROM dispatch_jobs WHERE status = 'queued' ORDER BY id ASC LIMIT 1"
-                ).fetchone()
-                if row is None:
-                    conn.commit()
-                    return None
-                job_id = row["job_id"]
-                cur = conn.execute(
-                    "UPDATE dispatch_jobs SET status = 'running', started_at = ? WHERE job_id = ? AND status = 'queued'",
-                    (now_s, job_id),
-                )
-                if cur.rowcount != 1:
-                    conn.commit()
-                    return None
+        now_s = dt.datetime.now(dt.UTC).isoformat().replace("+00:00", "Z")
+        sel = (
+            "SELECT job_id, run_id, body_json FROM dispatch_jobs "
+            "WHERE status = 'queued' ORDER BY id ASC LIMIT 1"
+        )
+        upd = (
+            "UPDATE dispatch_jobs SET status = 'running', started_at = ? "
+            "WHERE job_id = ? AND status = 'queued'"
+        )
+        with self._lock, self._connect() as conn:
+            conn.execute("BEGIN IMMEDIATE")
+            row = conn.execute(sel).fetchone()
+            if row is None:
                 conn.commit()
-                body = json.loads(row["body_json"])
-                return {"job_id": job_id, "run_id": row["run_id"], **body}
+                return None
+            job_id = row["job_id"]
+            cur = conn.execute(upd, (now_s, job_id))
+            if cur.rowcount != 1:
+                conn.commit()
+                return None
+            conn.commit()
+            body = json.loads(row["body_json"])
+            return {"job_id": job_id, "run_id": row["run_id"], **body}
 
     def finish_dispatch_job(
         self,
@@ -227,17 +220,13 @@ class SqliteStore:
         finished_at: str,
     ) -> None:
         res_j = json.dumps(result, sort_keys=True) if result is not None else None
-        with self._lock:
-            with self._connect() as conn:
-                conn.execute(
-                    "UPDATE dispatch_jobs SET status = ?, result_json = ?, finished_at = ? WHERE job_id = ?",
-                    (status, res_j, finished_at, job_id),
-                )
+        q = "UPDATE dispatch_jobs SET status = ?, result_json = ?, finished_at = ? WHERE job_id = ?"
+        with self._lock, self._connect() as conn:
+            conn.execute(q, (status, res_j, finished_at, job_id))
 
     def count_dispatch_jobs_queued(self) -> int:
-        with self._lock:
-            with self._connect() as conn:
-                row = conn.execute(
-                    "SELECT COUNT(*) AS c FROM dispatch_jobs WHERE status = 'queued'"
-                ).fetchone()
+        with self._lock, self._connect() as conn:
+            row = conn.execute(
+                "SELECT COUNT(*) AS c FROM dispatch_jobs WHERE status = 'queued'"
+            ).fetchone()
         return int(row["c"]) if row else 0

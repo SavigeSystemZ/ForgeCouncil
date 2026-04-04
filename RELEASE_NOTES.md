@@ -12,6 +12,11 @@ Use this file for the current candidate release or milestone summary.
 - Release confidence: high after green mobile downstream proof work plus green
   maintainer and AIAST automation lanes on 2026-03-26
 
+## Forge Council (in-repo development)
+
+- Control-plane API with async dispatch, optional SSE on `GET /v1/dispatch-jobs/{id}/events`, and Linux **desktop launcher** via `bootstrap/fc-host-install.sh` (see `README.md`, `RUNBOOK.md`, `CHANGELOG.md` Unreleased).
+- Validation: `pytest`, `ruff check` (see `TEST_STRATEGY.md`).
+
 ## User-visible changes
 
 - Flutter Android repos now explicitly tell agents to run

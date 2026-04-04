@@ -4,31 +4,32 @@ from __future__ import annotations
 
 import asyncio
 import datetime as dt
+import json
 import os
 import uuid
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager, suppress
-from typing import Any, AsyncIterator
+from typing import Any
 
 from fastapi import APIRouter, Body, Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.utils import get_openapi
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, StreamingResponse
 
-from forge_council.auth import require_api_token
 from forge_council import local_runner
+from forge_council.auth import require_api_token
 from forge_council.dispatch_execution import execute_subprocess_dispatch
+from forge_council.dispatch_job_broadcaster import DispatchJobBroadcaster
 from forge_council.dispatch_worker import run_dispatch_worker_loop
 from forge_council.memory_store import MemoryStore
 from forge_council.otel import configure_tracer, start_run_span
+from forge_council.schema_util import validate_instance_or_raise_http
 from forge_council.sqlite_store import SqliteStore
 from forge_council.store_protocol import RunLedgerRunStepJobStore
-from forge_council.schema_util import validate_instance_or_raise_http
 
 _tracer: Any = None
 
-ALLOWED_DISPATCH_BODY_KEYS = frozenset(
-    {"runner", "action", "note", "argv", "env", "execution"}
-)
+ALLOWED_DISPATCH_BODY_KEYS = frozenset({"runner", "action", "note", "argv", "env", "execution"})
 
 ALLOWED_RUN_PATCH_KEYS = frozenset(
     {
@@ -114,10 +115,14 @@ def create_app(store: RunLedgerRunStepJobStore | None = None) -> FastAPI:
         lifespan=lifespan,
         openapi_tags=[
             {"name": "health", "description": "Liveness and operator flags."},
-            {"name": "v1", "description": "Runs, ledger, dispatch, steps. Requires Bearer token when FC_API_TOKEN is set."},
+            {
+                "name": "v1",
+                "description": ("Runs, ledger, dispatch, steps. Bearer when FC_API_TOKEN is set."),
+            },
         ],
     )
     app.state.store = store if store is not None else default_store()
+    app.state.dispatch_job_broadcaster = DispatchJobBroadcaster()
 
     origins = os.environ.get("FC_CORS_ORIGINS", "").strip()
     if origins:
@@ -158,7 +163,7 @@ def create_app(store: RunLedgerRunStepJobStore | None = None) -> FastAPI:
     @v1.post("/runs", status_code=201)
     async def create_run(request: Request, body: dict[str, Any]) -> dict[str, Any]:
         store: RunLedgerRunStepJobStore = request.app.state.store
-        now = dt.datetime.now(dt.timezone.utc)
+        now = dt.datetime.now(dt.UTC)
         run_id = (body.get("run_id") or "").strip() or str(uuid.uuid4())
         payload: dict[str, Any] = {
             "schema_version": body.get("schema_version") or "1",
@@ -221,7 +226,7 @@ def create_app(store: RunLedgerRunStepJobStore | None = None) -> FastAPI:
         request: Request, run_id: str, body: dict[str, Any]
     ) -> dict[str, Any]:
         store: RunLedgerRunStepJobStore = request.app.state.store
-        now = dt.datetime.now(dt.timezone.utc)
+        now = dt.datetime.now(dt.UTC)
         event_id = (body.get("event_id") or "").strip() or str(uuid.uuid4())
         payload = {
             "schema_version": body.get("schema_version") or "1",
@@ -274,7 +279,7 @@ def create_app(store: RunLedgerRunStepJobStore | None = None) -> FastAPI:
             raise HTTPException(status_code=400, detail=str(e)) from e
         dispatch_id = str(uuid.uuid4())
         dispatch_payload["dispatch_id"] = dispatch_id
-        now = dt.datetime.now(dt.timezone.utc)
+        now = dt.datetime.now(dt.UTC)
         now_s = now.isoformat().replace("+00:00", "Z")
         ws_id = str(run.get("workspace_id") or "default-workspace")
         proj_id = str(run.get("project_id") or "default-project")
@@ -397,14 +402,67 @@ def create_app(store: RunLedgerRunStepJobStore | None = None) -> FastAPI:
         return {"steps": store.list_run_steps(run_id)}
 
     @v1.get("/dispatch-jobs/{job_id}")
-    async def get_dispatch_job_route(
-        request: Request, job_id: str
-    ) -> dict[str, Any]:
+    async def get_dispatch_job_route(request: Request, job_id: str) -> dict[str, Any]:
         store: RunLedgerRunStepJobStore = request.app.state.store
         row = store.get_dispatch_job(job_id)
         if row is None:
             raise HTTPException(status_code=404, detail="job not found")
         return row
+
+    @v1.get("/dispatch-jobs/{job_id}/events")
+    async def dispatch_job_event_stream(request: Request, job_id: str) -> StreamingResponse:
+        """Server-Sent Events stream of dispatch job snapshots until terminal state."""
+        store: RunLedgerRunStepJobStore = request.app.state.store
+        bc: DispatchJobBroadcaster = request.app.state.dispatch_job_broadcaster
+        initial = store.get_dispatch_job(job_id)
+        if initial is None:
+            raise HTTPException(status_code=404, detail="job not found")
+
+        async def gen() -> AsyncIterator[str]:
+            last_emitted: str | None = None
+
+            def format_sse(snap: dict[str, Any]) -> str | None:
+                nonlocal last_emitted
+                j = json.dumps(snap, sort_keys=True, default=str)
+                if j != last_emitted:
+                    last_emitted = j
+                    return f"data: {j}\n\n"
+                return None
+
+            row0 = dict(initial)
+            if chunk := format_sse(row0):
+                yield chunk
+            if row0.get("status") in ("completed", "failed"):
+                return
+
+            q, unsub = await bc.subscribe(job_id)
+            try:
+                while True:
+                    try:
+                        await asyncio.wait_for(q.get(), timeout=25.0)
+                    except TimeoutError:
+                        yield ": keepalive\n\n"
+                    cur = store.get_dispatch_job(job_id)
+                    if cur is None:
+                        yield f"data: {json.dumps({'error': 'job_not_found'})}\n\n"
+                        break
+                    snap = dict(cur)
+                    if ch := format_sse(snap):
+                        yield ch
+                    if snap.get("status") in ("completed", "failed"):
+                        break
+            finally:
+                await unsub()
+
+        return StreamingResponse(
+            gen(),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no",
+            },
+        )
 
     app.include_router(v1)
 
@@ -422,9 +480,7 @@ def create_app(store: RunLedgerRunStepJobStore | None = None) -> FastAPI:
             routes=app.routes,
             tags=app.openapi_tags,
         )
-        schemes = openapi_schema.setdefault("components", {}).setdefault(
-            "securitySchemes", {}
-        )
+        schemes = openapi_schema.setdefault("components", {}).setdefault("securitySchemes", {})
         schemes["bearerAuth"] = {
             "type": "http",
             "scheme": "bearer",
@@ -450,9 +506,7 @@ def create_app(store: RunLedgerRunStepJobStore | None = None) -> FastAPI:
                         continue
                     op_obj = path_item[method]
                     sec = op_obj.setdefault("security", [])
-                    if not any(
-                        isinstance(x, dict) and "bearerAuth" in x for x in sec
-                    ):
+                    if not any(isinstance(x, dict) and "bearerAuth" in x for x in sec):
                         sec.append({"bearerAuth": []})
         app.openapi_schema = openapi_schema
         return app.openapi_schema

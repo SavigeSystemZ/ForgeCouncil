@@ -126,4 +126,4 @@ fi
 
 log "selected bind address ${BIND_ADDRESS}"
 log "persisted app port $(current_port)"
-log "review ${ENV_FILE_PATH} and replace APP_EXEC_START before enabling the service"
+log "review ${ENV_FILE_PATH}; API launches via ops/install/launch-forge-council-api.sh (after bootstrap/fc-host-install.sh)"

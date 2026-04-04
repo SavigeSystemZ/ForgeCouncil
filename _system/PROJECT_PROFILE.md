@@ -78,10 +78,10 @@ Fill this file in immediately after copying the operating system into a real rep
 
 ## Validation commands
 
-- Format:
-- Lint:
+- Format: `.venv/bin/ruff format src tests`
+- Lint: `.venv/bin/ruff check src tests`
 - Typecheck:
-- Unit tests:
+- Unit tests: `.venv/bin/pytest`
 - Integration tests:
 - End-to-end or smoke:
 - Build:

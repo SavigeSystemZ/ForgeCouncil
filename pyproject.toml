@@ -23,6 +23,7 @@ dev = [
   "httpx>=0.27.0",
   "fastapi>=0.115.0",
   "uvicorn[standard]>=0.30.0",
+  "ruff>=0.8.0",
 ]
 otel = [
   "opentelemetry-api>=1.24.0",
@@ -38,3 +39,18 @@ where = ["src"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/forge_council/api_app.py" = ["B008"]
+"src/forge_council/auth.py" = ["B008"]
+
+[tool.ruff.format]
+quote-style = "double"

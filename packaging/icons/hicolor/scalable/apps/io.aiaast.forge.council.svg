@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Forge Council">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3d5a80"/>
+      <stop offset="100%" style="stop-color:#293241"/>
+    </linearGradient>
+  </defs>
+  <rect width="128" height="128" rx="24" fill="url(#g)"/>
+  <path fill="#e0fbfc" d="M32 78h64v8H32zm8-36h48l-6 28H46z" opacity="0.95"/>
+  <rect x="44" y="86" width="40" height="10" rx="3" fill="#98c1d9"/>
+</svg>
