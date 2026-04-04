@@ -13,50 +13,29 @@ app repositories.
 
 ## Session Snapshot
 
-- Current phase: Control-plane **HTTP API stub** landed (in-memory runs + ledger)
+- Current phase: Control-plane API with **SQLite** persistence + **PATCH** runs
 - Working branch or lane: `main`
-- Completion status: FastAPI + tests + RUNBOOK; persistence not started
+- Completion status: `FC_STATE_DB`, `sqlite_store`, ledger preserved on run update; smoke script added
 - Resume confidence: high
 
 ## Last Completed Work
 
-- Added `src/forge_council/api_app.py` (FastAPI), `memory_store.py`, `schema_util.py`, `server.py` + `forge-council-api` entry point.
-- Tests: `tests/test_api.py`, `tests/conftest.py` (`FORGE_COUNCIL_REPO_ROOT`).
-- `pyproject.toml`: `[api]` optional extra; dev deps include FastAPI for pytest.
-- Docs: `RUNBOOK.md` §3 API, `ARCHITECTURE.md` §10, `CHANGELOG.md`.
-
-## Files Changed
-
-See latest commit on `main` (post–planning-pack).
+- `SqliteStore`, `RunLedgerStore` protocol, `PATCH /v1/runs/{id}`, health `persistence`, UPSERT fix (ledger survives run updates).
+- `tests/test_sqlite_store.py`, extended `test_api.py`; `bootstrap/fc-api-smoke.sh`.
+- Docs: `RUNBOOK`, `ARCHITECTURE`, `DATA_MODEL`, `CHANGELOG`; `.gitignore` `data/`.
 
 ## Validation Run
 
-- Command: `.venv/bin/pytest`
-- Result: pass (schema + ingestion + API)
-- Command: `bootstrap/validate-system.sh .` (after `generate-system-registry.sh --write`)
-- Result: expect `system_ok`
-
-## Decisions Made
-
-- Omitted `null` optional fields from JSON Schema validation payloads (schema does not use `type: ["string","null"]`).
-
-## Open Risks / Blockers
-
-- In-memory store only; add SQLite/Postgres and migrate ledger to append-only file or DB.
-- OTEL: configure OTLP exporter beyond console when wiring production.
+- `.venv/bin/pytest` — pass
+- `bootstrap/validate-system.sh .` — run after `generate-system-registry.sh --write` (expect `system_ok`)
 
 ## Next Best Step
 
-Replace `MemoryStore` with **SQLite** persistence (single-file `FC_STATE_DB`), keep JSON Schema validation, add `PATCH /v1/runs/{id}` for status transitions, and document backup of state file in `RUNBOOK.md`.
+Add **API authentication** (shared secret header or bearer token), document in `NFR.md`, and wire **OpenAPI** `securitySchemes`. Then stub **POST /v1/runs/{id}/dispatch** → runner queue (local process first).
 
 ## Handoff Packet
 
-- Agent: Cursor
 - Timestamp: 2026-04-04
-- Objective: Commit/push planning pack; implement FastAPI stub
-- Commands run: `pytest`, `validate-system` (run after registry regen)
-- Result summary: API serves health + runs + ledger; pushed to `origin/main`
-- Known blockers: none
 - Next best step: (matches section above)
 
 ## Usage rules

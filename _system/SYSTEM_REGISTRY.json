@@ -400,7 +400,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "CHANGELOG.md",
-      "size_bytes": 2237
+      "size_bytes": 2471
     },
     {
       "category": "entrypoint",
@@ -454,7 +454,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "PLAN.md",
-      "size_bytes": 2568
+      "size_bytes": 2574
     },
     {
       "category": "working-state",
@@ -508,7 +508,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "WHERE_LEFT_OFF.md",
-      "size_bytes": 2815
+      "size_bytes": 2081
     },
     {
       "category": "entrypoint",
@@ -2211,6 +2211,12 @@
     {
       "category": "bootstrap",
       "kind": "file",
+      "path": "bootstrap/fc-api-smoke.sh",
+      "size_bytes": 295
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
       "path": "bootstrap/fc-controlled-run.sh",
       "size_bytes": 1396
     },
@@ -2911,7 +2917,7 @@
       "size_bytes": 2932
     }
   ],
-  "managed_file_count": 485,
+  "managed_file_count": 486,
   "system_readme_path": "README.md",
   "template_name": "AIAST",
   "template_version": "1.19.2"

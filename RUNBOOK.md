@@ -32,18 +32,25 @@ Full system validation: `bootstrap/validate-system.sh .` (expect `system_ok`).
 
 Default bind: `127.0.0.1:8010` (override with `FC_API_HOST`, `FC_API_PORT`).
 
+**Persistence:** unset `FC_STATE_DB` → in-memory (lost on restart). Set `FC_STATE_DB` to a file path (e.g. `data/forge-council/state.db`) for **SQLite** (WAL) runs + ledger events.
+
 ```bash
 .venv/bin/pip install -e ".[api]"
+export FC_STATE_DB="${PWD}/data/forge-council/state.db"
+mkdir -p "$(dirname "$FC_STATE_DB")"
 forge-council-api
 # or: .venv/bin/python -m forge_council.server
 ```
 
-- `GET /health` — liveness  
+- `GET /health` — liveness (`persistence`: `memory` or `sqlite`)  
 - `POST /v1/runs` — create run (body validated against `schemas/forge_council/v1/run.json`)  
+- `PATCH /v1/runs/{run_id}` — partial update (`status`, `mode`, `milestone_id`, `workspace_id`, `finished_at`, `started_at`, `trace_id`, `cost_summary_json`, `initiated_by`, `project_id`)  
 - `GET /v1/runs/{run_id}` — fetch run  
-- `GET /v1/runs` — list runs (in-memory store)  
+- `GET /v1/runs` — list runs  
 - `POST /v1/runs/{run_id}/ledger-events` — append ledger event (`ledger_event.json`)  
 - `GET /v1/runs/{run_id}/ledger-events` — list events  
+
+**Backup:** copy the SQLite file while the process is stopped or use SQLite backup API; `data/` is gitignored by default.  
 
 Set `OTEL_EXPORTER_OTLP_ENDPOINT` to enable OTLP export (optional `pip install -e ".[otel]"`).  
 Optional CORS: `FC_CORS_ORIGINS=http://127.0.0.1:3000`.  
@@ -59,7 +66,7 @@ Schemas resolve via `FORGE_COUNCIL_REPO_ROOT` (defaults to parent of `src/` in d
 ## 5. Backup and recovery
 
 - **Git:** Canonical docs and `_system/forge-council/` are versioned; commit often.  
-- **Local DB** (when introduced): backup file path documented in deployment section of `ARCHITECTURE.md` (update when DB lands).  
+- **Control-plane state:** if using `FC_STATE_DB`, include that file in backups (see §3).  
 - **Artifacts:** sync object store per operator policy.
 
 ## 6. Telemetry
@@ -98,3 +105,4 @@ If a secret is committed:
 | `bootstrap/fc-controlled-run.sh` | Placeholder for single-milestone dispatch contract |
 | `bootstrap/fc-gate-check.sh` | Placeholder validation/review gate driver |
 | `bootstrap/fc-export-resume-packet.sh` | Emit `RESUME_PACKET.md` skeleton from repo state |
+| `bootstrap/fc-api-smoke.sh` | `curl` `/health` (server must be running) |

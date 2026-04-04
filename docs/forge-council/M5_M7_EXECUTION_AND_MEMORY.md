@@ -4,6 +4,7 @@
 
 - **Contract:** `bootstrap/fc-controlled-run.sh` (stub) documents dispatch steps.  
 - **Implementation:** control-plane service opens OTel span (`src/forge_council/otel.py`), loads `TaskPacket`, verifies `CONFLICT_MAP.md` has no blocking rows, dispatches to runner adapter.  
+- **Persistence:** `FC_STATE_DB` → `SqliteStore` for `Run` + append-only `LedgerEvent` (ledger rows survive `PATCH` / run body updates).  
 - **Artifacts:** all outputs registered with `artifact.json` metadata; `run_step.json` per step.
 
 ## M6 — Validation and review gates

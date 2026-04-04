@@ -81,6 +81,10 @@ All MemoryItem, Run, Artifact, and ledger events **must** include `workspace_id`
 
 ---
 
+## Persistence (control plane)
+
+The reference API may persist `Run` and append-only `LedgerEvent` rows in **SQLite** when `FC_STATE_DB` is set; otherwise it uses an in-memory store for development. Replace with PostgreSQL when multi-instance or HA is required.
+
 ## Document references
 
 - Runtime types: `src/forge_council/models.py` (mirrors schema intent; schemas remain normative for interchange).

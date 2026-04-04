@@ -131,7 +131,7 @@ See `NFR.md` and `_system/forge-council/policies/`. Principles: repo-local prece
 
 ## 10. Control plane API (stub)
 
-An optional **FastAPI** service lives in `src/forge_council/api_app.py` with in-memory `Run` / `LedgerEvent` storage, JSON Schema validation against `schemas/forge_council/v1/`, and optional request spans via `otel.py`. Entry: `forge-council-api` (see `RUNBOOK.md`).
+An optional **FastAPI** service lives in `src/forge_council/api_app.py` with **in-memory** or **SQLite** (`FC_STATE_DB`) `Run` / `LedgerEvent` storage (`memory_store.py`, `sqlite_store.py`), JSON Schema validation against `schemas/forge_council/v1/`, and optional request spans via `otel.py`. Entry: `forge-council-api` (see `RUNBOOK.md`).
 
 ## 11. Evolution
 

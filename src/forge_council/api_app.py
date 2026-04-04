@@ -14,9 +14,34 @@ from fastapi.responses import JSONResponse
 
 from forge_council.memory_store import MemoryStore
 from forge_council.otel import configure_tracer, start_run_span
+from forge_council.sqlite_store import SqliteStore
+from forge_council.store_protocol import RunLedgerStore
 from forge_council.schema_util import validate_instance_or_raise_http
 
 _tracer: Any = None
+
+ALLOWED_RUN_PATCH_KEYS = frozenset(
+    {
+        "status",
+        "mode",
+        "milestone_id",
+        "workspace_id",
+        "finished_at",
+        "started_at",
+        "trace_id",
+        "cost_summary_json",
+        "initiated_by",
+        "project_id",
+    }
+)
+
+
+def default_store() -> RunLedgerStore:
+    """Use ``FC_STATE_DB`` for SQLite; otherwise in-memory (dev/tests)."""
+    path = os.environ.get("FC_STATE_DB", "").strip()
+    if path:
+        return SqliteStore(path)
+    return MemoryStore()
 
 
 @asynccontextmanager
@@ -27,13 +52,13 @@ async def _make_lifespan() -> AsyncIterator[None]:
     yield
 
 
-def create_app(store: MemoryStore | None = None) -> FastAPI:
+def create_app(store: RunLedgerStore | None = None) -> FastAPI:
     app = FastAPI(
         title="Forge Council Control Plane",
         version="0.1.0",
         lifespan=_make_lifespan,
     )
-    app.state.store = store if store is not None else MemoryStore()
+    app.state.store = store if store is not None else default_store()
 
     origins = os.environ.get("FC_CORS_ORIGINS", "").strip()
     if origins:
@@ -54,12 +79,14 @@ def create_app(store: MemoryStore | None = None) -> FastAPI:
             return await call_next(request)
 
     @app.get("/health")
-    async def health() -> dict[str, str]:
-        return {"status": "ok", "service": "forge-council"}
+    async def health(request: Request) -> dict[str, str]:
+        store = request.app.state.store
+        mode = "sqlite" if isinstance(store, SqliteStore) else "memory"
+        return {"status": "ok", "service": "forge-council", "persistence": mode}
 
     @app.post("/v1/runs", status_code=201)
     async def create_run(request: Request, body: dict[str, Any]) -> dict[str, Any]:
-        store: MemoryStore = request.app.state.store
+        store: RunLedgerStore = request.app.state.store
         now = dt.datetime.now(dt.timezone.utc)
         run_id = (body.get("run_id") or "").strip() or str(uuid.uuid4())
         payload: dict[str, Any] = {
@@ -87,9 +114,27 @@ def create_app(store: MemoryStore | None = None) -> FastAPI:
             raise HTTPException(status_code=400, detail=str(e)) from e
         return store.put_run(run_id, payload)
 
+    @app.patch("/v1/runs/{run_id}")
+    async def patch_run(request: Request, run_id: str, body: dict[str, Any]) -> dict[str, Any]:
+        store: RunLedgerStore = request.app.state.store
+        current = store.get_run(run_id)
+        if not current:
+            raise HTTPException(status_code=404, detail="run not found")
+        merged = dict(current)
+        for key, value in body.items():
+            if key in ALLOWED_RUN_PATCH_KEYS and value is not None:
+                merged[key] = value
+        merged["run_id"] = run_id
+        merged.setdefault("schema_version", current.get("schema_version") or "1")
+        try:
+            validate_instance_or_raise_http("run", merged)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e)) from e
+        return store.put_run(run_id, merged)
+
     @app.get("/v1/runs/{run_id}")
     async def get_run(request: Request, run_id: str) -> dict[str, Any]:
-        store: MemoryStore = request.app.state.store
+        store: RunLedgerStore = request.app.state.store
         r = store.get_run(run_id)
         if not r:
             raise HTTPException(status_code=404, detail="run not found")
@@ -97,14 +142,14 @@ def create_app(store: MemoryStore | None = None) -> FastAPI:
 
     @app.get("/v1/runs")
     async def list_runs(request: Request) -> dict[str, list[dict[str, Any]]]:
-        store: MemoryStore = request.app.state.store
+        store: RunLedgerStore = request.app.state.store
         return {"runs": store.list_runs()}
 
     @app.post("/v1/runs/{run_id}/ledger-events", status_code=201)
     async def append_ledger_event(
         request: Request, run_id: str, body: dict[str, Any]
     ) -> dict[str, Any]:
-        store: MemoryStore = request.app.state.store
+        store: RunLedgerStore = request.app.state.store
         now = dt.datetime.now(dt.timezone.utc)
         event_id = (body.get("event_id") or "").strip() or str(uuid.uuid4())
         payload = {
@@ -133,7 +178,7 @@ def create_app(store: MemoryStore | None = None) -> FastAPI:
 
     @app.get("/v1/runs/{run_id}/ledger-events")
     async def list_ledger(request: Request, run_id: str) -> dict[str, list[dict[str, Any]]]:
-        store: MemoryStore = request.app.state.store
+        store: RunLedgerStore = request.app.state.store
         if store.get_run(run_id) is None:
             raise HTTPException(status_code=404, detail="run not found")
         return {"events": store.list_ledger_events(run_id)}

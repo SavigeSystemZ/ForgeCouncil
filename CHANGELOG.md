@@ -6,6 +6,9 @@ Use this file for meaningful repo-visible change history. Keep transient task ch
 
 ### Added
 
+- SQLite persistence via `FC_STATE_DB` (`sqlite_store.py`), `RunLedgerStore` protocol, `PATCH /v1/runs/{id}`, health `persistence` field; tests `test_sqlite_store.py`
+- `.gitignore` `data/` and `.forge-council/` for local state files
+- `bootstrap/fc-api-smoke.sh` for `/health` curl smoke
 - FastAPI control-plane stub: `GET /health`, `POST/GET /v1/runs`, ledger event routes; `forge-council-api` CLI; `schema_util`, `memory_store`; tests in `tests/test_api.py`
 - Optional `[api]` extra (`fastapi`, `uvicorn`, `jsonschema`); `tests/conftest.py` sets `FORGE_COUNCIL_REPO_ROOT`
 - Forge Council product SSoT docs: `PRD.md`, `ARCHITECTURE.md`, `DATA_MODEL.md`, `NFR.md`, `RUNBOOK.md`, `GPT54.md`, `EXTENSION_ROADMAP.md`

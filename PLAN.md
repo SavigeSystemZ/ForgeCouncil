@@ -31,7 +31,7 @@
 4. ~~Ingestion script + profile/conflict refresh~~  
 5. ~~Schemas + `forge_council` package + OTel stub~~  
 6. ~~fc bootstrap stubs (run, gate, resume)~~  
-7. ~~Minimal FastAPI control plane (`forge_council.api_app`) with `/health`, runs, ledger events~~ — extend with persistence (SQLite) and auth next
+7. ~~Minimal FastAPI control plane + SQLite (`FC_STATE_DB`) + `PATCH /v1/runs`~~ — auth (API key / OAuth), OpenAPI security schemes, runner dispatch next
 
 ## Validation plan
 
