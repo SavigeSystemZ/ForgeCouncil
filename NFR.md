@@ -34,6 +34,7 @@
 | SEC-09 | Budget and **retry ceilings**; circuit breaker on repeated tool failures. |
 | SEC-10 | **Kill-switch** stops new runs; documented in `RUNBOOK.md` and escalation policy. |
 | SEC-11 | HTTP control plane: if `FC_API_TOKEN` is set, all `/v1/*` routes require `Authorization: Bearer <token>`; `/health` stays unauthenticated for probes. |
+| SEC-12 | `POST /v1/runs/{id}/dispatch` with `action=subprocess` is **denied by default** until `FC_ALLOW_SUBPROCESS_DISPATCH` is set; `argv[0]` must match `FC_EXEC_ALLOWLIST`; no shell; operator **kill-switch** via `FC_DISPATCH_KILL_SWITCH` (see `RUNBOOK.md`). |
 
 ### 1.3 Posture
 

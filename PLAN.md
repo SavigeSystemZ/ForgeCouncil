@@ -31,7 +31,7 @@
 4. ~~Ingestion script + profile/conflict refresh~~  
 5. ~~Schemas + `forge_council` package + OTel stub~~  
 6. ~~fc bootstrap stubs (run, gate, resume)~~  
-7. ~~Minimal FastAPI control plane + SQLite (`FC_STATE_DB`) + `PATCH /v1/runs` + optional Bearer auth + dispatch stub (`POST /v1/runs/{id}/dispatch`)~~ — OAuth, real runner process, OpenAPI security text polish
+7. ~~Minimal FastAPI control plane + SQLite (`FC_STATE_DB`) + `PATCH /v1/runs` + optional Bearer auth + gated subprocess dispatch + run steps~~ — OAuth, async job queue, artifact-backed logs, OpenAPI per-route security hints
 
 ## Validation plan
 

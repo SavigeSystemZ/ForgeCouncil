@@ -108,3 +108,36 @@ def test_sqlite_unknown_run_ledger_raises(tmp_path: Path) -> None:
     except KeyError:
         return
     raise AssertionError("expected KeyError")
+
+
+def test_sqlite_run_steps_upsert(tmp_path: Path) -> None:
+    db = tmp_path / "steps.db"
+    store = SqliteStore(str(db))
+    store.put_run(
+        "r1",
+        {
+            "schema_version": "1",
+            "run_id": "r1",
+            "project_id": "p1",
+            "status": "pending",
+            "mode": "local",
+            "started_at": "2026-04-04T12:00:00Z",
+            "cost_summary_json": {},
+        },
+    )
+    step = {
+        "schema_version": "1",
+        "step_id": "s1",
+        "run_id": "r1",
+        "sequence_no": 0,
+        "agent_role": "local_runner",
+        "action_type": "subprocess",
+        "status": "running",
+        "started_at": "2026-04-04T12:00:01Z",
+    }
+    store.put_run_step("r1", step)
+    step_done = {**step, "status": "succeeded", "finished_at": "2026-04-04T12:00:02Z"}
+    store.put_run_step("r1", step_done)
+    rows = store.list_run_steps("r1")
+    assert len(rows) == 1
+    assert rows[0]["status"] == "succeeded"

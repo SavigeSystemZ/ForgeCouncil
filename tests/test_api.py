@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -9,7 +10,9 @@ from forge_council.memory_store import MemoryStore
 from forge_council.sqlite_store import SqliteStore
 
 
-def test_health() -> None:
+def test_health(monkeypatch) -> None:
+    monkeypatch.delenv("FC_DISPATCH_KILL_SWITCH", raising=False)
+    monkeypatch.delenv("FC_ALLOW_SUBPROCESS_DISPATCH", raising=False)
     client = TestClient(create_app(MemoryStore()))
     r = client.get("/health")
     assert r.status_code == 200
@@ -17,6 +20,8 @@ def test_health() -> None:
     assert data["status"] == "ok"
     assert data["persistence"] == "memory"
     assert data.get("auth_required") is False
+    assert data.get("dispatch_kill_switch") is False
+    assert data.get("subprocess_dispatch_enabled") is False
 
 
 def test_create_run_and_ledger() -> None:
@@ -115,6 +120,76 @@ def test_dispatch_rejects_unknown_field() -> None:
     rid = client.post("/v1/runs", json={}).json()["run_id"]
     r = client.post(f"/v1/runs/{rid}/dispatch", json={"evil": 1})
     assert r.status_code == 400
+
+
+def test_list_run_steps_empty() -> None:
+    client = TestClient(create_app(MemoryStore()))
+    rid = client.post("/v1/runs", json={"project_id": "p"}).json()["run_id"]
+    r = client.get(f"/v1/runs/{rid}/run-steps")
+    assert r.status_code == 200
+    assert r.json()["steps"] == []
+
+
+def test_dispatch_subprocess_forbidden_without_opt_in() -> None:
+    client = TestClient(create_app(MemoryStore()))
+    rid = client.post("/v1/runs", json={"project_id": "p"}).json()["run_id"]
+    r = client.post(
+        f"/v1/runs/{rid}/dispatch",
+        json={"action": "subprocess", "argv": [sys.executable, "-c", "print(1)"]},
+    )
+    assert r.status_code == 403
+
+
+def test_dispatch_subprocess_runs_when_opt_in(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setenv("FC_ALLOW_SUBPROCESS_DISPATCH", "1")
+    monkeypatch.setenv("FC_EXEC_ALLOWLIST", str(Path(sys.executable).resolve()))
+    monkeypatch.setenv("FC_EXEC_WORKDIR", str(tmp_path))
+    client = TestClient(create_app(MemoryStore()))
+    rid = client.post("/v1/runs", json={"project_id": "p"}).json()["run_id"]
+    r = client.post(
+        f"/v1/runs/{rid}/dispatch",
+        json={
+            "action": "subprocess",
+            "argv": [sys.executable, "-c", "print('fc_ok')"],
+        },
+    )
+    assert r.status_code == 200
+    body = r.json()
+    assert body["status"] == "completed"
+    assert body["exit_code"] == 0
+    assert "fc_ok" in body["stdout_snip"]
+
+    steps = client.get(f"/v1/runs/{rid}/run-steps").json()["steps"]
+    assert len(steps) == 1
+    assert steps[0]["status"] == "succeeded"
+    assert client.get(f"/v1/runs/{rid}").json()["status"] == "completed"
+
+
+def test_dispatch_kill_switch(monkeypatch, tmp_path: Path) -> None:
+    monkeypatch.setenv("FC_DISPATCH_KILL_SWITCH", "1")
+    monkeypatch.setenv("FC_ALLOW_SUBPROCESS_DISPATCH", "1")
+    monkeypatch.setenv("FC_EXEC_ALLOWLIST", str(Path(sys.executable).resolve()))
+    monkeypatch.setenv("FC_EXEC_WORKDIR", str(tmp_path))
+    client = TestClient(create_app(MemoryStore()))
+    rid = client.post("/v1/runs", json={"project_id": "p"}).json()["run_id"]
+    r = client.post(
+        f"/v1/runs/{rid}/dispatch",
+        json={"action": "subprocess", "argv": [sys.executable, "-c", "print(1)"]},
+    )
+    assert r.status_code == 503
+
+
+def test_dispatch_subprocess_requires_argv() -> None:
+    client = TestClient(create_app(MemoryStore()))
+    rid = client.post("/v1/runs", json={"project_id": "p"}).json()["run_id"]
+    r = client.post(f"/v1/runs/{rid}/dispatch", json={"action": "subprocess"})
+    assert r.status_code == 400
+
+
+def test_openapi_lists_bearer_security_scheme() -> None:
+    client = TestClient(create_app(MemoryStore()))
+    spec = client.get("/openapi.json").json()
+    assert "bearerAuth" in spec["components"]["securitySchemes"]
 
 
 def test_bearer_token_when_configured(monkeypatch) -> None:

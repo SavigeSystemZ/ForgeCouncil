@@ -42,14 +42,28 @@ forge-council-api
 # or: .venv/bin/python -m forge_council.server
 ```
 
-- `GET /health` — liveness (`persistence`: `memory` or `sqlite`)  
+- `GET /health` — liveness (`persistence`, `auth_required`, `dispatch_kill_switch`, `subprocess_dispatch_enabled`)  
 - `POST /v1/runs` — create run (body validated against `schemas/forge_council/v1/run.json`)  
 - `PATCH /v1/runs/{run_id}` — partial update (`status`, `mode`, `milestone_id`, `workspace_id`, `finished_at`, `started_at`, `trace_id`, `cost_summary_json`, `initiated_by`, `project_id`)  
 - `GET /v1/runs/{run_id}` — fetch run  
 - `GET /v1/runs` — list runs  
 - `POST /v1/runs/{run_id}/ledger-events` — append ledger event (`ledger_event.json`)  
 - `GET /v1/runs/{run_id}/ledger-events` — list events  
-- `POST /v1/runs/{run_id}/dispatch` — accept dispatch (202); appends `dispatch_requested` ledger event (`runner`, `action`: `noop` \| `subprocess_stub`, optional `argv`, `env`, `note`). Local execution is still a stub.  
+- `POST /v1/runs/{run_id}/dispatch` — always appends `dispatch_requested` to the ledger.  
+  - `action`: `noop` or `subprocess_stub` → **202** (audit only; no subprocess).  
+  - `action`: `subprocess` → **200** when execution finishes in-process: runs `argv` with **no shell** (`asyncio.create_subprocess_exec`), updates run `status` to `completed` or `failed`, upserts a `run_step` (`run_step.json`), appends `tool_invocation_meta` with truncated stdout/stderr. **Gated** (see below).  
+- `GET /v1/runs/{run_id}/run-steps` — list persisted steps for the run  
+
+**Subprocess dispatch gates (secure default: off):**  
+
+| Variable | Purpose |
+|----------|---------|
+| `FC_DISPATCH_KILL_SWITCH` | If `1`/`true`/`yes`/`on`, refuse `subprocess` dispatch (**503**) after logging `dispatch_requested`. |
+| `FC_ALLOW_SUBPROCESS_DISPATCH` | Must be `1`/`true`/`yes`/`on` to allow `subprocess` (**403** otherwise). |
+| `FC_EXEC_ALLOWLIST` | Comma-separated **absolute paths** permitted as `argv[0]` (**403** if empty or no match). |
+| `FC_EXEC_WORKDIR` | Process working directory (default: `FORGE_COUNCIL_REPO_ROOT`, else cwd). |
+| `FC_EXEC_TIMEOUT_SEC` | Wall-clock cap per subprocess (default 60, max 3600). |
+| `FC_EXEC_INHERIT_ENV` | Default `1`: merge `env` from the request onto the server environment. Set `0` for a minimal `PATH`-only baseline plus request `env`. |
 
 **Backup:** copy the SQLite file while the process is stopped or use SQLite backup API; `data/` is gitignored by default.  
 
@@ -60,7 +74,7 @@ Schemas resolve via `FORGE_COUNCIL_REPO_ROOT` (defaults to parent of `src/` in d
 
 ## 4. Kill-switch and escalation
 
-1. **Stop new runs:** set workspace flag (future UI); today: document in `WHERE_LEFT_OFF.md` and cease dispatch manually.  
+1. **Stop new runs:** set `FC_DISPATCH_KILL_SWITCH=1` on the API host (refuses `subprocess` dispatch); set workspace flag (future UI); document in `WHERE_LEFT_OFF.md`.  
 2. **Revoke API keys** at provider if abuse suspected.  
 3. **Disable MCP servers** in workspace manifest.  
 4. Follow `_system/forge-council/policies/escalation_policy.md`.

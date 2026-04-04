@@ -400,7 +400,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "CHANGELOG.md",
-      "size_bytes": 2704
+      "size_bytes": 3036
     },
     {
       "category": "entrypoint",
@@ -454,7 +454,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "PLAN.md",
-      "size_bytes": 2631
+      "size_bytes": 2645
     },
     {
       "category": "working-state",
@@ -508,7 +508,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "WHERE_LEFT_OFF.md",
-      "size_bytes": 2234
+      "size_bytes": 2463
     },
     {
       "category": "entrypoint",
@@ -2770,7 +2770,7 @@
       "category": "ops",
       "kind": "file",
       "path": "ops/env/.env.example",
-      "size_bytes": 1006
+      "size_bytes": 1199
     },
     {
       "category": "ops",

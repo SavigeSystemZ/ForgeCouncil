@@ -1,4 +1,4 @@
-"""FastAPI control-plane stub: health, runs, ledger events."""
+"""FastAPI control-plane: health, runs, ledger, dispatch, run steps."""
 
 from __future__ import annotations
 
@@ -10,13 +10,15 @@ from typing import Any, AsyncIterator
 
 from fastapi import APIRouter, Body, Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.openapi.utils import get_openapi
 from fastapi.responses import JSONResponse
 
 from forge_council.auth import require_api_token
+from forge_council import local_runner
 from forge_council.memory_store import MemoryStore
 from forge_council.otel import configure_tracer, start_run_span
 from forge_council.sqlite_store import SqliteStore
-from forge_council.store_protocol import RunLedgerStore
+from forge_council.store_protocol import RunLedgerRunStepStore
 from forge_council.schema_util import validate_instance_or_raise_http
 
 _tracer: Any = None
@@ -36,7 +38,7 @@ ALLOWED_RUN_PATCH_KEYS = frozenset(
         "initiated_by",
         "project_id",
     }
-    )
+)
 
 
 def _normalize_dispatch_body(body: dict[str, Any]) -> dict[str, Any]:
@@ -46,8 +48,8 @@ def _normalize_dispatch_body(body: dict[str, Any]) -> dict[str, Any]:
         raise ValueError(f"unknown dispatch fields: {sorted(unknown)}")
     runner = (body.get("runner") or "local").strip() or "local"
     action = (body.get("action") or "noop").strip() or "noop"
-    if action not in ("noop", "subprocess_stub"):
-        raise ValueError("action must be 'noop' or 'subprocess_stub'")
+    if action not in ("noop", "subprocess_stub", "subprocess"):
+        raise ValueError("action must be 'noop', 'subprocess_stub', or 'subprocess'")
     out: dict[str, Any] = {"runner": runner, "action": action}
     if "note" in body and body["note"] is not None:
         if not isinstance(body["note"], str):
@@ -65,10 +67,14 @@ def _normalize_dispatch_body(body: dict[str, Any]) -> dict[str, Any]:
         ):
             raise ValueError("env must be an object of string keys and string values")
         out["env"] = dict(env)
+    if out["action"] == "subprocess":
+        argv = out.get("argv") or []
+        if not isinstance(argv, list) or len(argv) == 0:
+            raise ValueError("action subprocess requires non-empty argv")
     return out
 
 
-def default_store() -> RunLedgerStore:
+def default_store() -> RunLedgerRunStepStore:
     """Use ``FC_STATE_DB`` for SQLite; otherwise in-memory (dev/tests)."""
     path = os.environ.get("FC_STATE_DB", "").strip()
     if path:
@@ -84,11 +90,15 @@ async def _make_lifespan() -> AsyncIterator[None]:
     yield
 
 
-def create_app(store: RunLedgerStore | None = None) -> FastAPI:
+def create_app(store: RunLedgerRunStepStore | None = None) -> FastAPI:
     app = FastAPI(
         title="Forge Council Control Plane",
         version="0.1.0",
         lifespan=_make_lifespan,
+        openapi_tags=[
+            {"name": "health", "description": "Liveness and operator flags."},
+            {"name": "v1", "description": "Runs, ledger, dispatch, steps. Requires Bearer token when FC_API_TOKEN is set."},
+        ],
     )
     app.state.store = store if store is not None else default_store()
 
@@ -120,13 +130,15 @@ def create_app(store: RunLedgerStore | None = None) -> FastAPI:
             "service": "forge-council",
             "persistence": mode,
             "auth_required": auth_on,
+            "dispatch_kill_switch": local_runner.dispatch_kill_switch_active(),
+            "subprocess_dispatch_enabled": local_runner.subprocess_dispatch_enabled(),
         }
 
     v1 = APIRouter(prefix="/v1", dependencies=[Depends(require_api_token)])
 
     @v1.post("/runs", status_code=201)
     async def create_run(request: Request, body: dict[str, Any]) -> dict[str, Any]:
-        store: RunLedgerStore = request.app.state.store
+        store: RunLedgerRunStepStore = request.app.state.store
         now = dt.datetime.now(dt.timezone.utc)
         run_id = (body.get("run_id") or "").strip() or str(uuid.uuid4())
         payload: dict[str, Any] = {
@@ -156,7 +168,7 @@ def create_app(store: RunLedgerStore | None = None) -> FastAPI:
 
     @v1.patch("/runs/{run_id}")
     async def patch_run(request: Request, run_id: str, body: dict[str, Any]) -> dict[str, Any]:
-        store: RunLedgerStore = request.app.state.store
+        store: RunLedgerRunStepStore = request.app.state.store
         current = store.get_run(run_id)
         if not current:
             raise HTTPException(status_code=404, detail="run not found")
@@ -174,7 +186,7 @@ def create_app(store: RunLedgerStore | None = None) -> FastAPI:
 
     @v1.get("/runs/{run_id}")
     async def get_run(request: Request, run_id: str) -> dict[str, Any]:
-        store: RunLedgerStore = request.app.state.store
+        store: RunLedgerRunStepStore = request.app.state.store
         r = store.get_run(run_id)
         if not r:
             raise HTTPException(status_code=404, detail="run not found")
@@ -182,14 +194,14 @@ def create_app(store: RunLedgerStore | None = None) -> FastAPI:
 
     @v1.get("/runs")
     async def list_runs(request: Request) -> dict[str, list[dict[str, Any]]]:
-        store: RunLedgerStore = request.app.state.store
+        store: RunLedgerRunStepStore = request.app.state.store
         return {"runs": store.list_runs()}
 
     @v1.post("/runs/{run_id}/ledger-events", status_code=201)
     async def append_ledger_event(
         request: Request, run_id: str, body: dict[str, Any]
     ) -> dict[str, Any]:
-        store: RunLedgerStore = request.app.state.store
+        store: RunLedgerRunStepStore = request.app.state.store
         now = dt.datetime.now(dt.timezone.utc)
         event_id = (body.get("event_id") or "").strip() or str(uuid.uuid4())
         payload = {
@@ -218,19 +230,19 @@ def create_app(store: RunLedgerStore | None = None) -> FastAPI:
 
     @v1.get("/runs/{run_id}/ledger-events")
     async def list_ledger(request: Request, run_id: str) -> dict[str, list[dict[str, Any]]]:
-        store: RunLedgerStore = request.app.state.store
+        store: RunLedgerRunStepStore = request.app.state.store
         if store.get_run(run_id) is None:
             raise HTTPException(status_code=404, detail="run not found")
         return {"events": store.list_ledger_events(run_id)}
 
-    @v1.post("/runs/{run_id}/dispatch", status_code=202)
+    @v1.post("/runs/{run_id}/dispatch")
     async def dispatch_run(
         request: Request,
         run_id: str,
         body: dict[str, Any] | None = Body(default=None),
-    ) -> dict[str, Any]:
-        """Accept a dispatch request; persist audit via ledger (runner execution is stubbed)."""
-        store: RunLedgerStore = request.app.state.store
+    ) -> JSONResponse:
+        """Accept dispatch: ledger + optional gated local subprocess (see RUNBOOK)."""
+        store: RunLedgerRunStepStore = request.app.state.store
         run = store.get_run(run_id)
         if not run:
             raise HTTPException(status_code=404, detail="run not found")
@@ -244,35 +256,193 @@ def create_app(store: RunLedgerStore | None = None) -> FastAPI:
         dispatch_id = str(uuid.uuid4())
         dispatch_payload["dispatch_id"] = dispatch_id
         now = dt.datetime.now(dt.timezone.utc)
+        now_s = now.isoformat().replace("+00:00", "Z")
         ws_id = str(run.get("workspace_id") or "default-workspace")
         proj_id = str(run.get("project_id") or "default-project")
         event = {
             "schema_version": "1",
             "event_id": str(uuid.uuid4()),
-            "timestamp": now.isoformat().replace("+00:00", "Z"),
+            "timestamp": now_s,
             "workspace_id": ws_id,
             "project_id": proj_id,
             "run_id": run_id,
             "event_type": "dispatch_requested",
             "actor": "system",
-            "payload_json": dispatch_payload,
+            "payload_json": dict(dispatch_payload),
         }
         if run.get("trace_id"):
             event["trace_id"] = run["trace_id"]
         validate_instance_or_raise_http("ledger_event", event)
         store.append_ledger_event(run_id, event)
-        return {
-            "dispatch_id": dispatch_id,
+
+        action = dispatch_payload["action"]
+        if action in ("noop", "subprocess_stub"):
+            return JSONResponse(
+                status_code=202,
+                content={
+                    "dispatch_id": dispatch_id,
+                    "run_id": run_id,
+                    "status": "accepted",
+                    "message": "Recorded dispatch_requested; no subprocess executed.",
+                },
+            )
+
+        if local_runner.dispatch_kill_switch_active():
+            raise HTTPException(
+                status_code=503,
+                detail="FC_DISPATCH_KILL_SWITCH is active; dispatch refused",
+            )
+        if not local_runner.subprocess_dispatch_enabled():
+            raise HTTPException(
+                status_code=403,
+                detail="Set FC_ALLOW_SUBPROCESS_DISPATCH=1 to execute subprocess dispatch",
+            )
+
+        argv = list(dispatch_payload["argv"])
+        try:
+            local_runner.validate_subprocess_argv(argv)
+        except PermissionError as e:
+            raise HTTPException(status_code=403, detail=str(e)) from e
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e)) from e
+
+        env_overlay = dispatch_payload.get("env")
+        if isinstance(env_overlay, dict):
+            env_typed: dict[str, str] | None = dict(env_overlay)
+        else:
+            env_typed = None
+
+        step_id = str(uuid.uuid4())
+        seq = len(store.list_run_steps(run_id))
+        step_running: dict[str, Any] = {
+            "schema_version": "1",
+            "step_id": step_id,
             "run_id": run_id,
-            "status": "accepted",
-            "message": "Recorded dispatch_requested; local runner execution not started in this build.",
+            "sequence_no": seq,
+            "agent_role": "local_runner",
+            "action_type": "subprocess",
+            "status": "running",
+            "started_at": now_s,
         }
+        validate_instance_or_raise_http("run_step", step_running)
+        store.put_run_step(run_id, step_running)
+
+        merged = dict(run)
+        merged["status"] = "running"
+        merged["run_id"] = run_id
+        merged.setdefault("schema_version", run.get("schema_version") or "1")
+        validate_instance_or_raise_http("run", merged)
+        store.put_run(run_id, merged)
+
+        cwd = local_runner.resolve_workdir()
+        timeout = local_runner.exec_timeout_sec()
+        try:
+            code, out, err = await local_runner.run_subprocess_async(
+                argv,
+                cwd=cwd,
+                env_overlay=env_typed,
+                timeout=timeout,
+            )
+        except Exception as e:  # noqa: BLE001 — surface runner failures without crashing
+            code = -1
+            out = ""
+            err = f"forge_council: subprocess error: {e}"
+
+        end = dt.datetime.now(dt.timezone.utc)
+        end_s = end.isoformat().replace("+00:00", "Z")
+        term = "succeeded" if code == 0 else "failed"
+        step_final = {
+            **step_running,
+            "status": term,
+            "finished_at": end_s,
+        }
+        validate_instance_or_raise_http("run_step", step_final)
+        store.put_run_step(run_id, step_final)
+
+        meta = {
+            "schema_version": "1",
+            "event_id": str(uuid.uuid4()),
+            "timestamp": end_s,
+            "workspace_id": ws_id,
+            "project_id": proj_id,
+            "run_id": run_id,
+            "event_type": "tool_invocation_meta",
+            "actor": "system",
+            "payload_json": {
+                "dispatch_id": dispatch_id,
+                "step_id": step_id,
+                "argv0": argv[0],
+                "exit_code": code,
+                "stdout_snip": local_runner.truncate_output(out),
+                "stderr_snip": local_runner.truncate_output(err),
+            },
+        }
+        if run.get("trace_id"):
+            meta["trace_id"] = run["trace_id"]
+        validate_instance_or_raise_http("ledger_event", meta)
+        store.append_ledger_event(run_id, meta)
+
+        cur = store.get_run(run_id) or merged
+        final_run = dict(cur)
+        final_run["status"] = "completed" if code == 0 else "failed"
+        final_run["finished_at"] = end_s
+        final_run["run_id"] = run_id
+        validate_instance_or_raise_http("run", final_run)
+        store.put_run(run_id, final_run)
+
+        return JSONResponse(
+            status_code=200,
+            content={
+                "dispatch_id": dispatch_id,
+                "run_id": run_id,
+                "step_id": step_id,
+                "status": final_run["status"],
+                "exit_code": code,
+                "stdout_snip": local_runner.truncate_output(out),
+                "stderr_snip": local_runner.truncate_output(err),
+            },
+        )
+
+    @v1.get("/runs/{run_id}/run-steps")
+    async def list_run_steps_route(
+        request: Request, run_id: str
+    ) -> dict[str, list[dict[str, Any]]]:
+        store: RunLedgerRunStepStore = request.app.state.store
+        if store.get_run(run_id) is None:
+            raise HTTPException(status_code=404, detail="run not found")
+        return {"steps": store.list_run_steps(run_id)}
 
     app.include_router(v1)
 
     @app.exception_handler(ValueError)
     async def value_error_handler(request: Request, exc: ValueError) -> JSONResponse:
         return JSONResponse(status_code=400, content={"detail": str(exc)})
+
+    def custom_openapi() -> dict[str, Any]:
+        if app.openapi_schema is not None:
+            return app.openapi_schema
+        openapi_schema = get_openapi(
+            title=app.title,
+            version=app.version,
+            openapi_version=app.openapi_version,
+            routes=app.routes,
+            tags=app.openapi_tags,
+        )
+        schemes = openapi_schema.setdefault("components", {}).setdefault(
+            "securitySchemes", {}
+        )
+        schemes["bearerAuth"] = {
+            "type": "http",
+            "scheme": "bearer",
+            "description": (
+                "When the server sets FC_API_TOKEN, send Authorization: Bearer <token> "
+                "on /v1/* requests."
+            ),
+        }
+        app.openapi_schema = openapi_schema
+        return app.openapi_schema
+
+    app.openapi = custom_openapi  # type: ignore[method-assign]
 
     return app
 

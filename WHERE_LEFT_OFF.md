@@ -13,16 +13,16 @@ app repositories.
 
 ## Session Snapshot
 
-- Current phase: Control-plane API with **SQLite** persistence + **PATCH** runs
+- Current phase: Control-plane API with **SQLite** + **gated subprocess dispatch** + **run steps**
 - Working branch or lane: `main`
-- Completion status: `FC_STATE_DB`, `sqlite_store`, ledger preserved on run update; smoke script added
+- Completion status: `FC_STATE_DB`, ledger-safe upsert, `FC_ALLOW_SUBPROCESS_DISPATCH` + allowlist runner, `run_steps` persistence
 - Resume confidence: high
 
 ## Last Completed Work
 
-- `SqliteStore`, `RunLedgerStore` protocol, `PATCH /v1/runs/{id}`, health `persistence`, UPSERT fix (ledger survives run updates).
-- `tests/test_sqlite_store.py`, extended `test_api.py`; `bootstrap/fc-api-smoke.sh`.
-- Docs: `RUNBOOK`, `ARCHITECTURE`, `DATA_MODEL`, `CHANGELOG`; `.gitignore` `data/`.
+- `RunLedgerRunStepStore`, `run_steps` in `SqliteStore` / `MemoryStore`, `GET /v1/runs/{id}/run-steps`.
+- `POST /v1/runs/{id}/dispatch` with `action=subprocess` (async subprocess, ledger `tool_invocation_meta`, run status terminal); `noop` / `subprocess_stub` remain audit-only (202).
+- `local_runner.py`, `NFR` SEC-12, `RUNBOOK` operator env table; tests for gates and SQLite steps.
 
 ## Validation Run
 
@@ -31,9 +31,11 @@ app repositories.
 
 ## Next Best Step
 
-Wire **dispatch** to a real **local runner** (subprocess or worker): consume `argv` / `env`, update run `status`, append `run_step` or artifact refs. Add **run_step** persistence in store if not only via ledger.
+- **Async job queue** (background worker) so long subprocesses do not block the HTTP request; poll or SSE for step status.  
+- **Artifact refs** for full stdout/stderr (object store or workspace path) instead of only ledger snippets.  
+- **OpenAPI** `securitySchemes` when `FC_API_TOKEN` is set (dynamic schema) and richer route descriptions.
 
-**Done recently:** `POST /v1/runs/{id}/dispatch` records `dispatch_requested` in ledger (execution still stubbed); optional `FC_API_TOKEN` on `/v1/*`.
+**Done recently:** Gated in-process subprocess dispatch, `run_steps` API + SQLite, health flags for operator posture.
 
 ## Handoff Packet
 

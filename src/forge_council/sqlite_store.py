@@ -42,6 +42,13 @@ class SqliteStore:
                         body_json TEXT NOT NULL
                     );
                     CREATE INDEX IF NOT EXISTS idx_ledger_run ON ledger_events(run_id, id);
+                    CREATE TABLE IF NOT EXISTS run_steps (
+                        run_id TEXT NOT NULL REFERENCES runs(run_id) ON DELETE CASCADE,
+                        step_id TEXT NOT NULL,
+                        body_json TEXT NOT NULL,
+                        PRIMARY KEY (run_id, step_id)
+                    );
+                    CREATE INDEX IF NOT EXISTS idx_run_steps_run ON run_steps(run_id);
                     """
                 )
 
@@ -97,6 +104,38 @@ class SqliteStore:
             with self._connect() as conn:
                 rows = conn.execute(
                     "SELECT body_json FROM ledger_events WHERE run_id = ? ORDER BY id",
+                    (run_id,),
+                ).fetchall()
+        return [json.loads(r["body_json"]) for r in rows]
+
+    def put_run_step(self, run_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+        step_id = str(payload.get("step_id") or "")
+        if not step_id:
+            raise ValueError("run step requires step_id")
+        body = json.dumps(payload, sort_keys=True)
+        with self._lock:
+            with self._connect() as conn:
+                cur = conn.execute("SELECT 1 FROM runs WHERE run_id = ?", (run_id,))
+                if cur.fetchone() is None:
+                    raise KeyError(f"unknown run_id: {run_id}")
+                conn.execute(
+                    """
+                    INSERT INTO run_steps (run_id, step_id, body_json) VALUES (?, ?, ?)
+                    ON CONFLICT(run_id, step_id) DO UPDATE SET body_json = excluded.body_json
+                    """,
+                    (run_id, step_id, body),
+                )
+        return dict(payload)
+
+    def list_run_steps(self, run_id: str) -> list[dict[str, Any]]:
+        with self._lock:
+            with self._connect() as conn:
+                rows = conn.execute(
+                    """
+                    SELECT body_json FROM run_steps
+                    WHERE run_id = ?
+                    ORDER BY COALESCE(CAST(json_extract(body_json, '$.sequence_no') AS INTEGER), 0), step_id
+                    """,
                     (run_id,),
                 ).fetchall()
         return [json.loads(r["body_json"]) for r in rows]
