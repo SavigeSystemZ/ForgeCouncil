@@ -54,6 +54,7 @@ forge-council-api
 
 Set `OTEL_EXPORTER_OTLP_ENDPOINT` to enable OTLP export (optional `pip install -e ".[otel]"`).  
 Optional CORS: `FC_CORS_ORIGINS=http://127.0.0.1:3000`.  
+Optional auth: set `FC_API_TOKEN` to a long random secret; send `Authorization: Bearer <token>` on all `/v1/*` requests (`/health` remains open for load balancers).  
 Schemas resolve via `FORGE_COUNCIL_REPO_ROOT` (defaults to parent of `src/` in dev).
 
 ## 4. Kill-switch and escalation

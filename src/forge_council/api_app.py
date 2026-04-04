@@ -8,10 +8,11 @@ import uuid
 from contextlib import asynccontextmanager
 from typing import Any, AsyncIterator
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
+from forge_council.auth import require_api_token
 from forge_council.memory_store import MemoryStore
 from forge_council.otel import configure_tracer, start_run_span
 from forge_council.sqlite_store import SqliteStore
@@ -79,12 +80,20 @@ def create_app(store: RunLedgerStore | None = None) -> FastAPI:
             return await call_next(request)
 
     @app.get("/health")
-    async def health(request: Request) -> dict[str, str]:
+    async def health(request: Request) -> dict[str, Any]:
         store = request.app.state.store
         mode = "sqlite" if isinstance(store, SqliteStore) else "memory"
-        return {"status": "ok", "service": "forge-council", "persistence": mode}
+        auth_on = bool(os.environ.get("FC_API_TOKEN", "").strip())
+        return {
+            "status": "ok",
+            "service": "forge-council",
+            "persistence": mode,
+            "auth_required": auth_on,
+        }
 
-    @app.post("/v1/runs", status_code=201)
+    v1 = APIRouter(prefix="/v1", dependencies=[Depends(require_api_token)])
+
+    @v1.post("/runs", status_code=201)
     async def create_run(request: Request, body: dict[str, Any]) -> dict[str, Any]:
         store: RunLedgerStore = request.app.state.store
         now = dt.datetime.now(dt.timezone.utc)
@@ -114,7 +123,7 @@ def create_app(store: RunLedgerStore | None = None) -> FastAPI:
             raise HTTPException(status_code=400, detail=str(e)) from e
         return store.put_run(run_id, payload)
 
-    @app.patch("/v1/runs/{run_id}")
+    @v1.patch("/runs/{run_id}")
     async def patch_run(request: Request, run_id: str, body: dict[str, Any]) -> dict[str, Any]:
         store: RunLedgerStore = request.app.state.store
         current = store.get_run(run_id)
@@ -132,7 +141,7 @@ def create_app(store: RunLedgerStore | None = None) -> FastAPI:
             raise HTTPException(status_code=400, detail=str(e)) from e
         return store.put_run(run_id, merged)
 
-    @app.get("/v1/runs/{run_id}")
+    @v1.get("/runs/{run_id}")
     async def get_run(request: Request, run_id: str) -> dict[str, Any]:
         store: RunLedgerStore = request.app.state.store
         r = store.get_run(run_id)
@@ -140,12 +149,12 @@ def create_app(store: RunLedgerStore | None = None) -> FastAPI:
             raise HTTPException(status_code=404, detail="run not found")
         return r
 
-    @app.get("/v1/runs")
+    @v1.get("/runs")
     async def list_runs(request: Request) -> dict[str, list[dict[str, Any]]]:
         store: RunLedgerStore = request.app.state.store
         return {"runs": store.list_runs()}
 
-    @app.post("/v1/runs/{run_id}/ledger-events", status_code=201)
+    @v1.post("/runs/{run_id}/ledger-events", status_code=201)
     async def append_ledger_event(
         request: Request, run_id: str, body: dict[str, Any]
     ) -> dict[str, Any]:
@@ -176,12 +185,14 @@ def create_app(store: RunLedgerStore | None = None) -> FastAPI:
         except KeyError as e:
             raise HTTPException(status_code=404, detail=str(e)) from e
 
-    @app.get("/v1/runs/{run_id}/ledger-events")
+    @v1.get("/runs/{run_id}/ledger-events")
     async def list_ledger(request: Request, run_id: str) -> dict[str, list[dict[str, Any]]]:
         store: RunLedgerStore = request.app.state.store
         if store.get_run(run_id) is None:
             raise HTTPException(status_code=404, detail="run not found")
         return {"events": store.list_ledger_events(run_id)}
+
+    app.include_router(v1)
 
     @app.exception_handler(ValueError)
     async def value_error_handler(request: Request, exc: ValueError) -> JSONResponse:

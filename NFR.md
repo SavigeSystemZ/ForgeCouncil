@@ -33,6 +33,7 @@
 | SEC-08 | Structured outputs for state transitions; reject malformed payloads. |
 | SEC-09 | Budget and **retry ceilings**; circuit breaker on repeated tool failures. |
 | SEC-10 | **Kill-switch** stops new runs; documented in `RUNBOOK.md` and escalation policy. |
+| SEC-11 | HTTP control plane: if `FC_API_TOKEN` is set, all `/v1/*` routes require `Authorization: Bearer <token>`; `/health` stays unauthenticated for probes. |
 
 ### 1.3 Posture
 

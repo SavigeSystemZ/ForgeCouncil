@@ -31,7 +31,9 @@ app repositories.
 
 ## Next Best Step
 
-Add **API authentication** (shared secret header or bearer token), document in `NFR.md`, and wire **OpenAPI** `securitySchemes`. Then stub **POST /v1/runs/{id}/dispatch** → runner queue (local process first).
+Stub **POST /v1/runs/{id}/dispatch** → local runner queue (subprocess or job record + worker loop). Add **run_step** persistence and stream logs to artifacts path.
+
+**Done recently:** optional `FC_API_TOKEN` Bearer auth on `/v1/*`, `NFR` SEC-11, `ops/env/.env.example` vars.
 
 ## Handoff Packet
 

@@ -16,6 +16,7 @@ def test_health() -> None:
     data = r.json()
     assert data["status"] == "ok"
     assert data["persistence"] == "memory"
+    assert data.get("auth_required") is False
 
 
 def test_create_run_and_ledger() -> None:
@@ -81,3 +82,18 @@ def test_patch_unknown_run() -> None:
     client = TestClient(create_app(MemoryStore()))
     r = client.patch("/v1/runs/nope", json={"status": "done"})
     assert r.status_code == 404
+
+
+def test_bearer_token_when_configured(monkeypatch) -> None:
+    monkeypatch.setenv("FC_API_TOKEN", "test-secret")
+    client = TestClient(create_app(MemoryStore()))
+    r = client.post("/v1/runs", json={"project_id": "p"})
+    assert r.status_code == 401
+    r2 = client.post(
+        "/v1/runs",
+        json={"project_id": "p"},
+        headers={"Authorization": "Bearer test-secret"},
+    )
+    assert r2.status_code == 201
+    h = client.get("/health").json()
+    assert h.get("auth_required") is True
