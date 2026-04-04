@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-council.local/schemas/forge_council/v1/task_packet.json",
+  "title": "ForgeCouncilTaskPacket",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "packet_id", "milestone_id", "role", "objective"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "packet_id": { "type": "string", "minLength": 1 },
+    "milestone_id": { "type": "string", "minLength": 1 },
+    "role": {
+      "type": "string",
+      "enum": [
+        "boss",
+        "planner",
+        "planner_review",
+        "builder_primary",
+        "builder_secondary",
+        "tester",
+        "debugger_integrator",
+        "reviewer_security"
+      ]
+    },
+    "objective": { "type": "string" },
+    "inputs_json": { "type": "object" },
+    "constraints_json": { "type": "object" },
+    "deliverables_json": { "type": "object" },
+    "validation_json": { "type": "object" },
+    "handoff_template": { "type": "string" },
+    "next_role": { "type": "string" }
+  }
+}

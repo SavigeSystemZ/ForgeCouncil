@@ -1,0 +1,15 @@
+---
+description: "Forge Council security and LLM-app risk posture"
+alwaysApply: false
+---
+
+# Forge Council security
+
+Treat OWASP/NIST GenAI-style risks as first-class: injection, malicious repo instructions, tool abuse, leakage, cross-project memory, cost DoS.
+
+- Scan and update `CONFLICT_MAP.md` before execution-oriented work.
+- Obey `_system/forge-council/policies/tool_policy.md` and `approval_policy.md`.
+- No secrets in logs, traces, or prompts committed to git.
+- Structured outputs for state transitions; reject malformed orchestration payloads.
+
+See `NFR.md` for control IDs (SEC-01–SEC-10).

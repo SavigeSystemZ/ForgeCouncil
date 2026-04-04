@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-council.local/schemas/forge_council/v1/ledger_event.json",
+  "title": "ForgeCouncilLedgerEvent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "event_id", "event_type", "timestamp", "workspace_id", "project_id"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "event_id": { "type": "string", "minLength": 1 },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "workspace_id": { "type": "string", "minLength": 1 },
+    "project_id": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "span_id": { "type": "string" },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "state_transition",
+        "tool_invocation_meta",
+        "policy_decision",
+        "approval_recorded",
+        "gate_result",
+        "artifact_promoted",
+        "memory_mutation"
+      ]
+    },
+    "actor": { "type": "string", "enum": ["human", "agent", "system"] },
+    "payload_json": { "type": "object" }
+  }
+}

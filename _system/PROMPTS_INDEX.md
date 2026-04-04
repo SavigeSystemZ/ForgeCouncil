@@ -37,6 +37,12 @@
 - `_system/prompt-packs/M13_ACCESSIBILITY_AND_INCLUSION.md`
 - `_system/prompt-packs/M14_SECURITY_HARDENING.md`
 
+## Forge Council prompt packs
+
+- `_system/prompt-packs/forge-council/README.md`
+- `_system/prompt-packs/forge-council/master-handoff.md`
+- `_system/prompt-packs/forge-council/M0.*.md` through `M2.*.md` (milestone-scoped exports)
+
 ## Prompt effectiveness tracking
 
 - `_system/PROMPT_EFFECTIVENESS_TRACKING.md` — protocol for measuring prompt pack success/failure per model

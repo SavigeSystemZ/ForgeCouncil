@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-council.local/schemas/forge_council/v1/evaluation_report.json",
+  "title": "ForgeCouncilEvaluationReport",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "report_id", "run_id", "verdict"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "report_id": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "quality_score": { "type": "number", "minimum": 0, "maximum": 100 },
+    "security_findings_json": { "type": "array" },
+    "defects_json": { "type": "array" },
+    "recommendation": { "type": "string" },
+    "verdict": {
+      "type": "string",
+      "enum": ["accept", "accept_with_revisions", "reject", "split"]
+    }
+  }
+}

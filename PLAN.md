@@ -1,57 +1,54 @@
-# Plan
-
-Use this file as the current implementation plan for the active repo milestone or problem set.
+# Plan — Active execution slice
 
 ## Objective
 
-- Current target outcome: Establish a clean, validated baseline for Forge Council
-- Why it matters now: The repo needs a truthful operating picture before deeper feature work begins.
-- Deadline or forcing function: Complete onboarding before the first substantial implementation pass.
+- **Current target outcome:** Land the **Master Architecture and Planning Pack** in-repo: canonical docs, Forge Council OS tree, Cursor rules, Codex prompt packs, ingestion automation, JSON schemas + Python mirror, bootstrap stubs for execution/gates/resume, and extension roadmap documentation.  
+- **Why it matters now:** Establishes SSoT and automation before control-plane service implementation.  
+- **Forcing function:** Single cohesive baseline for all subsequent milestones.
 
 ## Success criteria
 
-- User or operator outcome: A new agent can enter the repo and immediately see how to build, validate, and continue safely.
-- Technical outcome: Runtime boundaries, validation commands, and current repo structure are documented and verified.
-- Design or product-quality outcome: The first visible surface should already reflect intentional design and best-practice structure.
+- **Operator outcome:** A new contributor can read `PRD.md` / `RUNBOOK.md` and run ingestion + validation without guesswork.  
+- **Technical outcome:** Schemas validate; scripts are executable; no runtime imports from `_system/`.  
+- **Quality outcome:** AGENTS.md and precedence contract honored; conflicts surfaced in `CONFLICT_MAP.md`.
 
 ## Scope lock
 
-- In scope: profile completion, validation mapping, first smoke check, and working-state initialization.
-- Out of scope: broad product expansion before the baseline is proven.
-- Dependencies: repo inspection, `PRODUCT_BRIEF.md`, available toolchain, and at least one real validation command.
-- Known unknowns: framework-specific gaps, deployment assumptions, and missing environment details.
+- **In scope:** Documentation, `_system/forge-council/`, `.cursor/rules/fc-*.mdc`, `schemas/`, `src/forge_council/`, `bootstrap/fc-*.sh`, `EXTENSION_ROADMAP.md`, stub operational files.  
+- **Out of scope:** Full desktop UI, production DB deployment, live multi-runner cluster.  
+- **Dependencies:** Python 3.12+, shell, git.  
+- **Known unknowns:** Exact FastAPI vs alternative for first API; desktop framework TBD.
 
 ## Assumptions
 
-- Record only assumptions that materially affect current execution.
+- AIAST upgrade path preserved by namespacing Forge files under `_system/forge-council/` and `fc-` Cursor rules.
 
 ## Execution slices
 
-1. Define the first concrete slice
-2. Define the second concrete slice
-3. Define validation and closeout
+1. ~~Canonical docs + PRODUCT_BRIEF / PLAN / ROADMAP alignment~~  
+2. ~~Forge Council OS tree (roles, policies, skills, context, templates)~~  
+3. ~~fc Cursor rules + GPT54 + prompt packs~~  
+4. ~~Ingestion script + profile/conflict refresh~~  
+5. ~~Schemas + `forge_council` package + OTel stub~~  
+6. ~~fc bootstrap stubs (run, gate, resume)~~  
+7. Next: implement minimal FastAPI health + run record API (future milestone)
 
 ## Validation plan
 
-- Commands to run: start with the smallest real build, test, or smoke command for the repo.
-- Evidence to capture: the first passing validation result and any unresolved onboarding gaps.
-- Stop conditions: missing runtime path understanding, failing baseline validation, or hidden environment blockers.
-- Release-blocking checks: baseline validation must be explicit before any release claim exists.
+- `bootstrap/validate-system.sh .`  
+- `bootstrap/fc-repo-ingestion.sh .`  
+- `pip install -e ".[dev]" && python -m forge_council.schema_check`  
+- `shellcheck bootstrap/fc-*.sh` (if available)
 
 ## Risks
 
-- Risks that could invalidate the plan: incorrect framework assumptions, hidden dependencies, or stale repo docs.
-- Fallback path if the plan fails: reduce scope, document the blocker, and stabilize the repo state before proceeding.
+- Cursor rule count may slow IDE; mitigated by focused `fc-*.mdc` files.  
+- Schema drift vs Python models — mitigated by `schema_check` loading JSON Schema.
 
 ## Done definition
 
-- Define what "done" means for this repo milestone: the repo profile is meaningfully filled, the first validation path is proven, and the next milestone is explicit.
-
-## Master template note
-
-- In the AIAST source repo, maintainer-only system-design planning belongs in the master-repo-only meta workspace, not in this installable file.
+- All master-plan to-dos completed; handoff updated in `RESUME_PACKET.md` and `WHERE_LEFT_OFF.md`.
 
 ## Notes
 
-- Use this file for current-plan structure, not long-term product vision.
-- Move medium-term sequencing into `ROADMAP.md`.
+- Long-term sequencing: `ROADMAP.md`, `EXTENSION_ROADMAP.md`.

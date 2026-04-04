@@ -13,59 +13,60 @@ app repositories.
 
 ## Session Snapshot
 
-- Current phase: Onboarding
+- Current phase: Master planning pack **landed** (canonical docs, FC OS tree, schemas, bootstrap, tests)
 - Working branch or lane: `main`
-- Completion status: not set yet — fill after meaningful work
-- Resume confidence: low until updated
+- Completion status: planning-pack implementation complete; control-plane service not started
+- Resume confidence: high for docs/automation; implementation TBD
 
 ## Last Completed Work
 
-Installed the local AI operating system for Forge Council and seeded the first working surfaces.
-- Bad: "Made progress on the API"
-- Good: "Implemented GET /users and POST /users with input validation. 4 pytest tests passing."
+Implemented the **Forge Council Master Architecture and Planning Pack** in-repo:
+
+- Product SSoT: `PRD.md`, `ARCHITECTURE.md`, `DATA_MODEL.md`, `NFR.md`, `RUNBOOK.md`, `GPT54.md`, `EXTENSION_ROADMAP.md`, operational stubs (`DECISIONS`, `EVAL_REPORT`, etc.).
+- Extension tree: `_system/forge-council/{roles,policies,skills,context,templates}`.
+- Cursor rules: `.cursor/rules/fc-*.mdc`.
+- Prompt packs: `_system/prompt-packs/forge-council/*` (master handoff, M0–M2).
+- M1 automation: `tools/fc_repo_ingestion.py`, `bootstrap/fc-repo-ingestion.sh`.
+- Schemas: `schemas/forge_council/v1/*.json`; package `src/forge_council/` (`models.py`, `otel.py`, `schema_check.py`).
+- M5–M7 stubs: `bootstrap/fc-controlled-run.sh`, `fc-gate-check.sh`, `fc-export-resume-packet.sh`; docs under `docs/forge-council/`.
+- Tests: `tests/test_schema_check.py` (pytest); use `.venv` for local dev (`python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"`).
+- Regenerated `_system/SYSTEM_REGISTRY.json` and `_system/REPO_OPERATING_PROFILE.md`; `bootstrap/validate-system.sh .` passes.
 
 ## Files Changed
 
-List files changed in the last meaningful pass. Omit if recorded in the
-Handoff Packet below.
+See git status — large multi-file addition across docs, `_system/`, `.cursor/`, `schemas/`, `src/`, `bootstrap/`, `tools/`, `tests/`, `pyproject.toml`, `README.md`.
 
 ## Validation Run
 
-- Command: bootstrap/validate-system.sh /home/whyte/.MyAppZ/ForgeCouncil --strict
-- Result: pass
-- Scope: AIAST install integrity, required files, config syntax, and awareness validation
-
-If no validation was run, write "No validation run this session" and note why.
+- Command: `bootstrap/validate-system.sh /home/whyte/.MyAppZ/ForgeCouncil`
+- Result: pass (`system_ok`)
+- Command: `.venv/bin/pytest` (after `pip install -e ".[dev]"`)
+- Result: pass (2 tests)
 
 ## Decisions Made
 
-Record durable decisions made during the last pass. Move decisions with
-long-term significance to `_system/context/DECISIONS.md`.
+- Namespaced Forge-specific OS under `_system/forge-council/` to preserve AIAST upgrade path.
+- JSON Schema as interchange SSoT; Python package must not import `_system/`.
 
 ## Open Risks / Blockers
 
-Record anything that could change the next agent's approach. Include:
-- Known failing tests or broken features
-- External dependencies that are unavailable
-- Permission or environment issues
-- Partially completed migrations or refactors
+- Choose control-plane HTTP stack (e.g. FastAPI) and desktop shell before heavy UI work.
+- After adding instruction files, run `bootstrap/fc-repo-ingestion.sh .` then `bootstrap/generate-operating-profile.sh . --write` as repo owner.
 
 ## Next Best Step
 
-State the single most valuable next action as a concrete instruction:
-- Bad: "Continue working on the feature"
-- Good: "Implement PATCH /users/:id with partial-update semantics, then add integration tests for the auth middleware"
+Implement a minimal **FastAPI** (or chosen) service with health check and `Run`/`LedgerEvent` persistence stub, wired to `schemas/forge_council/v1/run.json`, plus optional OTLP export using `src/forge_council/otel.py`.
 
 ## Handoff Packet
 
-- Agent: (which agent or human performed the work)
-- Timestamp: (date of handoff, e.g., 2026-01-15)
-- Objective: (what the session set out to accomplish)
-- Files changed: (list of modified files)
-- Commands run: (key commands with results)
-- Result summary: (1-3 sentence outcome)
-- Known blockers: (what could stop the next agent, or "none")
-- Next best step: (matches the section above)
+- Agent: Cursor / implementation pass
+- Timestamp: 2026-04-04
+- Objective: Land master planning pack per approved plan
+- Files changed: (see git diff — broad)
+- Commands run: `validate-system.sh`, `generate-system-registry.sh --write`, `pytest`, `fc-repo-ingestion.py`
+- Result summary: Repo validates; schemas and ingestion automation in place; ready for control-plane coding milestone.
+- Known blockers: none
+- Next best step: (matches section above)
 
 ## Usage rules
 

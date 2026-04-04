@@ -1,0 +1,12 @@
+---
+description: "Forge Council quality gates and validation"
+alwaysApply: false
+---
+
+# Forge Council quality
+
+Every milestone closure requires: acceptance coverage, touched files, validation executed or explicitly deferred with risk, rollback notes, doc impact, security notes, artifact completeness, resume implications.
+
+Use `_system/VALIDATION_GATES.md`, `TEST_STRATEGY.md`, and `bootstrap/fc-gate-check.sh` when implementing gates.
+
+Never claim tests passed without evidence in repo or run artifacts.

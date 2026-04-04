@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-council.local/schemas/forge_council/v1/milestone.json",
+  "title": "ForgeCouncilMilestone",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "milestone_id", "code", "title", "status", "acceptance_criteria"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "milestone_id": { "type": "string", "minLength": 1 },
+    "project_id": { "type": "string" },
+    "code": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "objective": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "planned", "approved", "in_progress", "blocked", "done", "aborted"]
+    },
+    "priority": { "type": "integer" },
+    "acceptance_criteria": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "rollback_notes": { "type": "string" },
+    "dependencies": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-council.local/schemas/forge_council/v1/approval_request.json",
+  "title": "ForgeCouncilApprovalRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "approval_id", "action_summary", "requested_by"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "approval_id": { "type": "string", "minLength": 1 },
+    "action_summary": { "type": "string", "minLength": 1 },
+    "risk_ack": { "type": "string" },
+    "requested_by": { "type": "string" },
+    "expires_at": { "type": "string", "format": "date-time" },
+    "workspace_id": { "type": "string" },
+    "project_id": { "type": "string" }
+  }
+}

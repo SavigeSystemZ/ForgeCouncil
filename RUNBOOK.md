@@ -1,0 +1,79 @@
+# Forge Council — Runbook
+
+**SSoT:** Operator procedures, scripts, and incident handling. For requirements see `PRD.md` and `NFR.md`.
+
+---
+
+## 1. First-time setup (developers)
+
+1. Clone the repository.  
+2. Read `AGENTS.md`, `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`, `PRD.md` (skim), `ARCHITECTURE.md` (skim).  
+3. Run AIAST validation:  
+   `bootstrap/validate-system.sh .`  
+4. Run Forge Council ingestion (repo profile + conflict map):  
+   `bootstrap/fc-repo-ingestion.sh .`  
+5. Review generated `REPO_PROFILE.md` and `CONFLICT_MAP.md`; resolve blocking conflicts before planning execution packets.
+
+## 2. Daily operations
+
+| Action | Command / location |
+|--------|---------------------|
+| System health | `bootstrap/system-doctor.sh` |
+| Instruction layer | `bootstrap/validate-instruction-layer.sh .` |
+| Repo ingestion refresh | `bootstrap/fc-repo-ingestion.sh .` then `bootstrap/generate-operating-profile.sh . --write` |
+| Controlled run stub (dry) | `bootstrap/fc-controlled-run.sh --dry-run` |
+| Gate check stub | `bootstrap/fc-gate-check.sh --help` (add `--full-validate` to run `validate-system.sh`) |
+| Resume packet export | `bootstrap/fc-export-resume-packet.sh .` |
+| Validate FC schemas | `python3 -m venv .venv && .venv/bin/pip install -e ".[dev]"` then `PYTHONPATH=src .venv/bin/python -m forge_council.schema_check` |
+
+Full system validation: `bootstrap/validate-system.sh .` (expect `system_ok`).
+
+## 3. Kill-switch and escalation
+
+1. **Stop new runs:** set workspace flag (future UI); today: document in `WHERE_LEFT_OFF.md` and cease dispatch manually.  
+2. **Revoke API keys** at provider if abuse suspected.  
+3. **Disable MCP servers** in workspace manifest.  
+4. Follow `_system/forge-council/policies/escalation_policy.md`.
+
+## 4. Backup and recovery
+
+- **Git:** Canonical docs and `_system/forge-council/` are versioned; commit often.  
+- **Local DB** (when introduced): backup file path documented in deployment section of `ARCHITECTURE.md` (update when DB lands).  
+- **Artifacts:** sync object store per operator policy.
+
+## 5. Telemetry
+
+- Set `OTEL_EXPORTER_OTLP_ENDPOINT` when OTLP backend available.  
+- Use `src/forge_council/otel.py` helpers; never attach raw prompts to spans.
+
+## 6. Incident response (secrets)
+
+If a secret is committed:
+
+1. Rotate the credential immediately.  
+2. Purge from git history if required by policy (use org-standard tools).  
+3. Record in `RISK_REGISTER.md` and governance notes.
+
+## 7. Release checklist (high level)
+
+- `bootstrap/validate-system.sh .` passes.  
+- `REPO_PROFILE.md` / `CONFLICT_MAP.md` current.  
+- `CHANGELOG.md` updated.  
+- No secrets in diff.  
+- `TEST_STRATEGY.md` reflects executed validations.
+
+## 8. Contacts and ownership
+
+- Product docs: repo maintainers per `AGENTS.md` handoff rules.  
+- Security policy: `_system/forge-council/policies/`.
+
+---
+
+## Script index (Forge Council)
+
+| Script | Purpose |
+|--------|---------|
+| `bootstrap/fc-repo-ingestion.sh` | Scan instructions; emit/update `REPO_PROFILE.md`, `CONFLICT_MAP.md`; refresh machine hints |
+| `bootstrap/fc-controlled-run.sh` | Placeholder for single-milestone dispatch contract |
+| `bootstrap/fc-gate-check.sh` | Placeholder validation/review gate driver |
+| `bootstrap/fc-export-resume-packet.sh` | Emit `RESUME_PACKET.md` skeleton from repo state |

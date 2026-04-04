@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-council.local/schemas/forge_council/v1/run_step.json",
+  "title": "ForgeCouncilRunStep",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "step_id", "run_id", "sequence_no", "agent_role", "action_type", "status"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "step_id": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string", "minLength": 1 },
+    "sequence_no": { "type": "integer", "minimum": 0 },
+    "agent_role": { "type": "string" },
+    "action_type": { "type": "string" },
+    "input_ref": { "type": "string" },
+    "output_ref": { "type": "string" },
+    "status": { "type": "string" },
+    "started_at": { "type": "string", "format": "date-time" },
+    "finished_at": { "type": "string", "format": "date-time" },
+    "trace_id": { "type": "string" }
+  }
+}

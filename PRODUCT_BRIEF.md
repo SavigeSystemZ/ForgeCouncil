@@ -1,40 +1,37 @@
-# Product Brief
-
-Use this file to capture the product idea, intended user value, and chosen build shape for this repo.
+# Product Brief — Forge Council
 
 ## Product frame
 
-- Product name: Forge Council
-- Product category: set once the product shape is specific enough to exclude lookalikes
-- One-line summary: define the app promise in one clear sentence before major implementation begins
-- Why it should exist: capture the user pain, operator leverage, or market opportunity this app resolves
-- Primary users: name the real people or operators who should benefit first
-- Primary workflows: list the core flows the first milestone must prove
-- Success indicators: record the measurable signal that shows the app is genuinely useful
-- Non-goals: state what this repo should not try to solve in the first phase
+- **Product name:** Forge Council  
+- **Product category:** AI-orchestrated software-factory control plane (artifact-first, policy-governed)  
+- **One-line summary:** A desktop-first hybrid control plane that turns ideas and repos into canonical docs, gated milestones, task packets, and resumable agent execution—not a chat shell.  
+- **Why it should exist:** Solo operators and small teams need **work organization** (memory, handoffs, verification, governance) more than raw model throughput; current tools optimize chat, not factory discipline.  
+- **Primary users:** Solo builders, security-conscious engineers, architects, maintainers, small team leads, AI-augmented consultants.  
+- **Primary workflows:** New project from idea; repo ingestion; canonical doc generation; milestone approval; packet export; controlled execution; resume; strategy comparison (later).  
+- **Success indicators:** Time to safe task packet after ingestion; milestone acceptance rate; resume success without chat history; operator-rated export quality.  
+- **Non-goals (MVP):** Autonomous prod deploys, custom training, full IDE replacement, unbounded swarms, marketplace/billing complexity.
 
 ## Experience bar
 
-- Visual direction: deliberate, differentiated, and product-specific rather than template-generic
-- Interaction bar: fast, clear, low-friction flows with designed states from the first milestone
-- Performance bar: snappy enough that the first slice feels trustworthy under normal use
-- Reliability bar: clear degraded states, explicit error handling, and no fake capability claims
-- Trust and safety bar: security-conscious defaults, honest validation claims, and explicit handling of risky actions
+- **Visual direction:** Professional control-plane UX (dense information, clear state—not playful chat UI).  
+- **Interaction bar:** Explicit states matching orchestration state machine; low-friction approvals.  
+- **Performance bar:** Responsive shell; heavy work isolated to runners.  
+- **Reliability bar:** Degraded modes when models/tools unavailable; honest capability claims.  
+- **Trust and safety bar:** Policy-gated tools, repo precedence, audit trail, no secret logging.
 
-## Build shape
+## Build shape (selected)
 
-- Recommended starter blueprint: manual review required
-- Recommendation confidence: low
-- Recommendation rationale: No single starter blueprint is dominant yet. Current signals are too weak or too generic. Refine PRODUCT_BRIEF.md or add real runtime signals, then review the recommendation again.
-- Selected starter blueprint: not yet selected
-- Why this blueprint fits: choose a starter blueprint after the product frame and delivery surfaces are clearer
-- Planned repo shape: decide after selecting a starter blueprint
-- First milestone: prove one end-to-end user-facing or operator-facing slice with real validation
-- Initial validation focus: confirm one real build, launch, test, or smoke path early and keep it passing
-- Next decision gates: starter blueprint, persistence model, deployment targets, packaging expectations, and AI scope
+- **Recommended starter blueprint:** Hybrid Build Fabric — **selected** for this repo.  
+- **Recommendation confidence:** high (locked in master plan).  
+- **Rationale:** Pure SaaS weak for local repos/secrets; pure local weak for dashboards and remote runners. Hybrid preserves local-first execution and optional hosted orchestration.  
+- **Selected starter blueprint:** Hybrid Build Fabric (desktop primary, optional web companion, multi-runner).  
+- **Why this blueprint fits:** Matches control-plane + isolated runners architecture and NFR posture.  
+- **Planned repo shape:** Monorepo — docs + `_system/forge-council/` + `schemas/` + `src/forge_council/` + `bootstrap/fc-*.sh`.  
+- **First milestone:** M0/M1 complete — canonical docs, extension tree, ingestion automation, schemas, prompt packs (current phase).  
+- **Initial validation focus:** `bootstrap/validate-system.sh`, `fc-repo-ingestion.sh`, schema check module.  
+- **Next decision gates:** Control-plane HTTP framework; desktop shell technology; DB for multi-user.
 
 ## Usage rules
 
-- Keep this aligned with `_system/PROJECT_PROFILE.md`, `PLAN.md`, `ROADMAP.md`, `DESIGN_NOTES.md`, and `ARCHITECTURE_NOTES.md`.
-- If the repo is greenfield, use `bootstrap/recommend-starter-blueprint.sh` first, then use `bootstrap/apply-starter-blueprint.sh` to stamp the explicitly chosen starter blueprint into the first operating surfaces.
-- Keep this factual and product-specific; do not turn it into vague aspiration or marketing filler.
+- Keep aligned with `PRD.md`, `ARCHITECTURE.md`, `PLAN.md`, `ROADMAP.md`, `_system/PROJECT_PROFILE.md`.  
+- **SSoT split:** `PRODUCT_BRIEF.md` = intent and build shape; `PRD.md` = requirements; `PLAN.md` = active execution slice.

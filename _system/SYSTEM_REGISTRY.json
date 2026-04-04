@@ -21,6 +21,12 @@
     {
       "category": "cursor-overlay",
       "kind": "file",
+      "path": ".cursor/.gitignore",
+      "size_bytes": 7
+    },
+    {
+      "category": "cursor-overlay",
+      "kind": "file",
       "path": ".cursor/README.md",
       "size_bytes": 709
     },
@@ -175,6 +181,12 @@
       "size_bytes": 23
     },
     {
+      "category": "cursor-overlay",
+      "kind": "file",
+      "path": ".cursor/plans/Forge Council Master Plan-d7c80b7f.plan.md",
+      "size_bytes": 19091
+    },
+    {
       "category": "cursor-rule",
       "kind": "file",
       "path": ".cursor/rules/00-context-load.mdc",
@@ -221,6 +233,42 @@
       "kind": "file",
       "path": ".cursor/rules/IDE_HOST_CURSOR_WINDSURF.mdc",
       "size_bytes": 677
+    },
+    {
+      "category": "cursor-rule",
+      "kind": "file",
+      "path": ".cursor/rules/fc-00-global.mdc",
+      "size_bytes": 686
+    },
+    {
+      "category": "cursor-rule",
+      "kind": "file",
+      "path": ".cursor/rules/fc-10-architecture.mdc",
+      "size_bytes": 651
+    },
+    {
+      "category": "cursor-rule",
+      "kind": "file",
+      "path": ".cursor/rules/fc-20-quality.mdc",
+      "size_bytes": 506
+    },
+    {
+      "category": "cursor-rule",
+      "kind": "file",
+      "path": ".cursor/rules/fc-30-security.mdc",
+      "size_bytes": 604
+    },
+    {
+      "category": "cursor-rule",
+      "kind": "file",
+      "path": ".cursor/rules/fc-40-handoffs.mdc",
+      "size_bytes": 623
+    },
+    {
+      "category": "cursor-rule",
+      "kind": "file",
+      "path": ".cursor/rules/fc-50-precedence.mdc",
+      "size_bytes": 549
     },
     {
       "category": "cursor-skill",
@@ -328,7 +376,7 @@
       "category": "entrypoint",
       "kind": "file",
       "path": "AGENTS.md",
-      "size_bytes": 8905
+      "size_bytes": 9594
     },
     {
       "category": "system-metadata",
@@ -352,7 +400,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "CHANGELOG.md",
-      "size_bytes": 1253
+      "size_bytes": 1951
     },
     {
       "category": "entrypoint",
@@ -406,19 +454,19 @@
       "category": "working-state",
       "kind": "file",
       "path": "PLAN.md",
-      "size_bytes": 2578
+      "size_bytes": 2483
     },
     {
       "category": "working-state",
       "kind": "file",
       "path": "PRODUCT_BRIEF.md",
-      "size_bytes": 2616
+      "size_bytes": 3049
     },
     {
       "category": "system-metadata",
       "kind": "file",
       "path": "README.md",
-      "size_bytes": 8756
+      "size_bytes": 9106
     },
     {
       "category": "working-state",
@@ -442,7 +490,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "ROADMAP.md",
-      "size_bytes": 583
+      "size_bytes": 1383
     },
     {
       "category": "working-state",
@@ -460,7 +508,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "WHERE_LEFT_OFF.md",
-      "size_bytes": 2914
+      "size_bytes": 3996
     },
     {
       "category": "entrypoint",
@@ -652,7 +700,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/INTEGRITY_MANIFEST.sha256",
-      "size_bytes": 38591
+      "size_bytes": 42993
     },
     {
       "category": "system-core",
@@ -748,7 +796,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/PROMPTS_INDEX.md",
-      "size_bytes": 2680
+      "size_bytes": 2910
     },
     {
       "category": "system-core",
@@ -820,7 +868,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/REPO_OPERATING_PROFILE.md",
-      "size_bytes": 3689
+      "size_bytes": 3714
     },
     {
       "category": "system-core",
@@ -868,7 +916,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/SYSTEM_REGISTRY.json",
-      "size_bytes": 56876
+      "size_bytes": 71802
     },
     {
       "category": "system-core",
@@ -976,7 +1024,7 @@
       "category": "system-context",
       "kind": "file",
       "path": "_system/context/CURRENT_STATUS.md",
-      "size_bytes": 1084
+      "size_bytes": 1125
     },
     {
       "category": "system-context",
@@ -1025,6 +1073,234 @@
       "kind": "file",
       "path": "_system/design-system/THEME_GOVERNANCE.md",
       "size_bytes": 1488
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/README.md",
+      "size_bytes": 1450
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/context/architecture_context.md",
+      "size_bytes": 233
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/context/integration_context.md",
+      "size_bytes": 287
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/context/product_context.md",
+      "size_bytes": 476
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/context/quality_context.md",
+      "size_bytes": 268
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/context/security_context.md",
+      "size_bytes": 300
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/context/ux_context.md",
+      "size_bytes": 221
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/policies/approval_policy.md",
+      "size_bytes": 625
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/policies/escalation_policy.md",
+      "size_bytes": 564
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/policies/export_policy.md",
+      "size_bytes": 463
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/policies/memory_policy.md",
+      "size_bytes": 659
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/policies/repo_precedence.md",
+      "size_bytes": 526
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/policies/tool_policy.md",
+      "size_bytes": 722
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/roles/boss.md",
+      "size_bytes": 818
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/roles/builder_primary.md",
+      "size_bytes": 825
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/roles/builder_secondary.md",
+      "size_bytes": 626
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/roles/debugger_integrator.md",
+      "size_bytes": 578
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/roles/planner.md",
+      "size_bytes": 843
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/roles/planner_review.md",
+      "size_bytes": 808
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/roles/reviewer_security.md",
+      "size_bytes": 711
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/roles/tester.md",
+      "size_bytes": 685
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/skills/blueprint_skill.md",
+      "size_bytes": 379
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/skills/conflict_scan_skill.md",
+      "size_bytes": 436
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/skills/eval_skill.md",
+      "size_bytes": 341
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/skills/milestone_packet_skill.md",
+      "size_bytes": 408
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/skills/prompt_export_skill.md",
+      "size_bytes": 346
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/skills/repo_ingestion_skill.md",
+      "size_bytes": 670
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/skills/resume_packet_skill.md",
+      "size_bytes": 272
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/skills/review_gate_skill.md",
+      "size_bytes": 232
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/skills/runtime_detection_skill.md",
+      "size_bytes": 332
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/skills/test_gate_skill.md",
+      "size_bytes": 290
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/templates/conflict_map.template.md",
+      "size_bytes": 273
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/templates/decision_record.template.md",
+      "size_bytes": 280
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/templates/milestone.template.md",
+      "size_bytes": 261
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/templates/repo_profile.template.md",
+      "size_bytes": 313
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/templates/resume_packet.template.md",
+      "size_bytes": 355
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/templates/review_report.template.md",
+      "size_bytes": 331
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/forge-council/templates/task_packet.template.md",
+      "size_bytes": 487
     },
     {
       "category": "system-core",
@@ -1443,6 +1719,108 @@
     {
       "category": "prompting",
       "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M0.0-planning.md",
+      "size_bytes": 643
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M0.1-canonical-docs.md",
+      "size_bytes": 561
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M0.2-repo-local-layer.md",
+      "size_bytes": 695
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M0.3-security-governance.md",
+      "size_bytes": 688
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M0.4-independent-review.md",
+      "size_bytes": 535
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M1.0-planning.md",
+      "size_bytes": 519
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M1.1-repo-ingestion.md",
+      "size_bytes": 529
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M1.2-tests.md",
+      "size_bytes": 394
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M1.3-docs-polish.md",
+      "size_bytes": 344
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M1.4-review.md",
+      "size_bytes": 301
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M2.0-planning.md",
+      "size_bytes": 409
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M2.1-blueprint-engine.md",
+      "size_bytes": 424
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M2.2-tests.md",
+      "size_bytes": 274
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M2.3-docs.md",
+      "size_bytes": 280
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/M2.4-review.md",
+      "size_bytes": 281
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/README.md",
+      "size_bytes": 793
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/forge-council/master-handoff.md",
+      "size_bytes": 2017
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
       "path": "_system/prompt-templates/architecture_prompt_template.md",
       "size_bytes": 1572
     },
@@ -1486,7 +1864,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/repo-operating-profile.json",
-      "size_bytes": 4057
+      "size_bytes": 4124
     },
     {
       "category": "review-playbook",
@@ -1829,6 +2207,30 @@
       "kind": "file",
       "path": "bootstrap/emit-tiered-context.sh",
       "size_bytes": 4247
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
+      "path": "bootstrap/fc-controlled-run.sh",
+      "size_bytes": 1396
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
+      "path": "bootstrap/fc-export-resume-packet.sh",
+      "size_bytes": 303
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
+      "path": "bootstrap/fc-gate-check.sh",
+      "size_bytes": 1847
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
+      "path": "bootstrap/fc-repo-ingestion.sh",
+      "size_bytes": 806
     },
     {
       "category": "bootstrap",
@@ -2481,6 +2883,18 @@
     {
       "category": "tools",
       "kind": "file",
+      "path": "tools/fc_export_resume.py",
+      "size_bytes": 2002
+    },
+    {
+      "category": "tools",
+      "kind": "file",
+      "path": "tools/fc_repo_ingestion.py",
+      "size_bytes": 7640
+    },
+    {
+      "category": "tools",
+      "kind": "file",
       "path": "tools/port_registry_lib.py",
       "size_bytes": 5805
     },
@@ -2497,7 +2911,7 @@
       "size_bytes": 2932
     }
   ],
-  "managed_file_count": 416,
+  "managed_file_count": 485,
   "system_readme_path": "README.md",
   "template_name": "AIAST",
   "template_version": "1.19.2"

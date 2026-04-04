@@ -1,0 +1,13 @@
+---
+description: "Forge Council system architecture and state machine"
+alwaysApply: false
+---
+
+# Forge Council architecture
+
+- Control plane: modular monolith; **runners isolated** (local / self-hosted / cloud).
+- Orchestration follows explicit **state machine** in `ARCHITECTURE.md`; persist transitions + ledger events, not chat.
+- Integration plane: model adapters, MCP, git, CI, filesystem — all **policy-scoped**.
+- Storage: relational workflow state, object artifacts, vector retrieval, append-only ledger — see `DATA_MODEL.md`.
+
+When changing structure, update `ARCHITECTURE.md` and relevant JSON Schemas under `schemas/forge_council/v1/`.

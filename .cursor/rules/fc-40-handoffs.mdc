@@ -1,0 +1,13 @@
+---
+description: "Forge Council agent handoffs and task packets"
+alwaysApply: false
+---
+
+# Forge Council handoffs
+
+- Use **supervisor/subagent** pattern; roles defined in `_system/forge-council/roles/`.
+- Work units are **task packets** from `_system/forge-council/templates/task_packet.template.md`, validated against `schemas/forge_council/v1/task_packet.json` when machine-generated.
+- Handoffs include: objective, inputs, deliverables, validation, rollback, next role.
+- Parallel builders require **separate packets** — no silent overlap.
+
+Update `RESUME_PACKET.md` and `WHERE_LEFT_OFF.md` after meaningful sessions.

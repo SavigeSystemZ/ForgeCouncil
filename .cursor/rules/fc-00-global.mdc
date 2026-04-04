@@ -1,0 +1,13 @@
+---
+description: "Forge Council product SSoT and runtime boundary"
+alwaysApply: true
+---
+
+# Forge Council (global)
+
+This repository implements **Forge Council**: a **software-factory control plane** (artifact-first, policy-gated, memory-backed), not a chat-first app.
+
+- Load product SSoT: `PRD.md`, `ARCHITECTURE.md`, `DATA_MODEL.md`, `NFR.md`, `RUNBOOK.md`, `GPT54.md`.
+- Load extension index: `_system/forge-council/README.md`.
+- **Runtime boundary:** code under `src/forge_council/` must **not** import or depend on `_system/`; configs may reference paths only.
+- **Precedence:** `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md` — host orchestration never overrides repo-local truth.

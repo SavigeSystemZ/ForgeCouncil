@@ -1,5 +1,11 @@
 # Project Agent Operating System
 
+## Forge Council product
+
+This repository implements **Forge Council**, a hybrid **software-factory control plane** (artifact-first, policy-gated, memory-backed). Product SSoT: `PRD.md`, `ARCHITECTURE.md`, `DATA_MODEL.md`, `NFR.md`, `RUNBOOK.md`. Operator automation: `bootstrap/fc-repo-ingestion.sh`, `GPT54.md`, and `_system/forge-council/`.
+
+---
+
 This repo carries a self-contained, project-local AI operating system that governs how agents design, build, debug, test, review, package, secure, upgrade, and hand off work.
 
 It is also designed to coexist with external host/orchestrator instruction layers without treating those layers as repo-local truth.

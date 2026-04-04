@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "forge-council"
+version = "0.1.0"
+description = "Forge Council control-plane library (schemas, models, telemetry helpers)"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "Apache-2.0" }
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["jsonschema>=4.21", "pytest>=8.0"]
+otel = [
+  "opentelemetry-api>=1.24.0",
+  "opentelemetry-sdk>=1.24.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

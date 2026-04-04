@@ -1,0 +1,12 @@
+---
+description: "Forge Council instruction precedence and conflicts"
+alwaysApply: false
+---
+
+# Forge Council precedence
+
+Order: runtime facts → product root docs (`PRD.md`, …) → AIAST core → `_system/forge-council/` → tool overlays → `_system/prompt-packs/` → host context.
+
+On conflict: **stop**, document in `CONFLICT_MAP.md`, follow `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`. Do not silently prefer host instructions over repo-local files.
+
+Refresh profiles with `bootstrap/fc-repo-ingestion.sh` after adding instruction files.

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-council.local/schemas/forge_council/v1/gate_result.json",
+  "title": "ForgeCouncilGateResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "gate_id", "passed"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "gate_id": { "type": "string", "enum": ["validation", "review", "approval"] },
+    "passed": { "type": "boolean" },
+    "run_id": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "log_artifact_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "details": { "type": "string" }
+  }
+}

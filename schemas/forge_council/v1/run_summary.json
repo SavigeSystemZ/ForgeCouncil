@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-council.local/schemas/forge_council/v1/run_summary.json",
+  "title": "ForgeCouncilRunSummary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "status"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "project_id": { "type": "string" },
+    "milestone_id": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "running", "succeeded", "failed", "cancelled", "blocked"]
+    },
+    "trace_id": { "type": "string" },
+    "cost_summary_json": { "type": "object" },
+    "artifact_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "notes": { "type": "string" }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://forge-council.local/schemas/forge_council/v1/artifact.json",
+  "title": "ForgeCouncilArtifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "artifact_id", "project_id", "artifact_type", "storage_uri"],
+  "properties": {
+    "schema_version": { "type": "string", "const": "1" },
+    "artifact_id": { "type": "string", "minLength": 1 },
+    "project_id": { "type": "string", "minLength": 1 },
+    "run_id": { "type": "string" },
+    "artifact_type": { "type": "string" },
+    "title": { "type": "string" },
+    "storage_uri": { "type": "string", "minLength": 1 },
+    "checksum": { "type": "string" },
+    "metadata_json": { "type": "object" },
+    "provenance_json": { "type": "object" }
+  }
+}
