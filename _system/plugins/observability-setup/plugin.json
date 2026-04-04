@@ -1,0 +1,11 @@
+{
+  "name": "observability-setup",
+  "version": "1.0.0",
+  "description": "Generates health-check endpoint stubs, structured logging configuration, and metrics scaffolding.",
+  "aiast_min_version": "1.13.0",
+  "hooks": ["monitoring.setup", "bootstrap.post_install", "environment.validate"],
+  "capabilities": ["observability-provider"],
+  "owned_paths": ["_system/plugins/observability-setup/"],
+  "requires": [],
+  "enabled": true
+}

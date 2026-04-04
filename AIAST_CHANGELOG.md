@@ -1,0 +1,577 @@
+# AIAST Changelog
+
+## 1.19.2 - 2026-04-05
+
+### Added
+- `SUB_AGENT_HOST_DELEGATION.md` — copy-paste **auxiliary brief template** for parallel host sessions
+
+### Changed
+- `EXECUTION_PROTOCOL.md` — decision rules reference sub-agent delegation when using separate host tools
+- `bootstrap/emit-tiered-context.sh` — Tier **B** context list now includes `SUB_AGENT_HOST_DELEGATION.md`
+
+### Meta (master repo only)
+- `META_SYSTEM_INTERCONNECT_INDEX.md` — index rows for `DEFERRED_USER_REMINDERS.md` and the installable sub-agent contract
+- `DEFERRED_USER_REMINDERS.md` — schedule note for next-prompt execution of downstream follow-ups
+
+## 1.19.1 - 2026-04-05
+
+### Added
+- `_system/SUB_AGENT_HOST_DELEGATION.md` — optional parallel host CLI / auxiliary sessions (honest limits: no auto-spawn MCP), primary takeover on failure
+- `_META_AGENT_SYSTEM/DEFERRED_USER_REMINDERS.md` — maintainer-only deferred follow-ups the user asked to surface after ~two future prompts
+
+### Changed
+- `CROSS_PLATFORM_DISTRIBUTION_AND_INSTALLER_STANDARD.md` — **minimum launch milestone**: scaffold installers/distribution once the app is first launchable for host dogfooding
+- `PROMPT_SYSTEM_BUILD_STANDARD.md`, `M10_GREENFIELD_BOOTSTRAP.md` — align greenfield work with early installer scaffolds
+- `MULTI_AGENT_COORDINATION.md`, `AGENTS.md`, `.cursor/rules/60-composer-orchestration.mdc` — cross-link sub-agent delegation rules
+- `CONTEXT_INDEX.md`, `LOAD_ORDER.md` — index new contract
+
+## 1.19.0 - 2026-04-04
+
+### Added — Cross-platform distribution and Composer overlays
+- `_system/CROSS_PLATFORM_DISTRIBUTION_AND_INSTALLER_STANDARD.md` — shipped-app installer contract (multi-OS layout, operator menu, port governance, hardening expectations) distinct from AIAST lifecycle `INSTALLER_AND_UPGRADE_CONTRACT.md`
+- `bootstrap/templates/runtime/distribution/**` — generated `distribution/` tree with `platforms/linux|windows|macos|android|ios` READMEs and a Windows `Install.ps1` scaffold
+- `.cursor/rules/60-composer-orchestration.mdc`, `.cursor/commands/composer-session.md`, `.cursor/agents/composer-lead.md` — Composer-oriented orchestration overlays
+
+### Changed
+- `_system/CONTEXT_INDEX.md`, `_system/LOAD_ORDER.md`, `_system/PROMPT_SYSTEM_BUILD_STANDARD.md`, `_system/prompt-packs/M6_INSTALL_AND_DISTRIBUTION.md`, and `bootstrap/check-runtime-foundations.sh` now reference `distribution/` and the new standard
+- `bootstrap/validate-system.sh` requires the new runtime template paths
+
+### Meta (master repo only)
+- `_META_AGENT_SYSTEM/META_SYSTEM_INTERCONNECT_INDEX.md` — maintainer layer awareness graph and refresh rules
+
+## 1.17.0 - 2026-04-03
+
+### Added — Installer Integrity and Smart Scaffold Entry
+- `bootstrap/scaffold-system.sh` — unified smart entrypoint that auto-detects target state and routes to first install, additive backfill, or update flow.
+- `_system/INSTALLER_AND_UPGRADE_CONTRACT.md` — explicit contract for install, update, repair, and heal behavior plus state-preservation guarantees.
+
+### Changed — Bootstrap UX and Drift Resistance
+- `init-project.sh`, `install-missing-files.sh`, and `wizard.sh` now prompt for target path when run interactively without arguments.
+- `validate-system.sh`, `check-system-awareness.sh`, and `validate-instruction-layer.sh` now enforce the installer contract and smart scaffold surfaces.
+- `bootstrap/README.md`, `_system/QUICKSTART.md`, `_system/LOAD_ORDER.md`, `_system/CONTEXT_INDEX.md`, and `_system/UPGRADE_AND_DRIFT_POLICY.md` now cross-link installer behavior and customization flow.
+
+### Changed — Neutrality and Product-Safe Guidance
+- `_system/CURSOR_AND_MULTI_HOST.md` now uses generic multi-repo examples instead of environment-specific names.
+- `_system/SECURITY_HARDENING_CONTRACT.md` privilege-separation example is now app-neutral.
+- `_system/PROJECT_PROFILE.md` now includes post-scaffold customization instructions for app-specific truth.
+
+### Fixed — Factory Lane Reliability
+- `_TEMPLATE_FACTORY/GOLDEN_EXAMPLES/REVIEW_NOTES.md` now includes required review sections for all high-scoring non-selected repos.
+- `validate-system.sh` absolute-path leak detection now excludes `.git` internals to avoid false positives in strict update smoke.
+- `_TEMPLATE_FACTORY/smoke-live-host-clis.sh` treats Cursor root-only `--no-sandbox` refusal as a soft-skip condition.
+
+## 1.16.0 - 2026-03-28
+
+### Added — Gemini "Infinite" Context (Tier S) and Whole-Repo Analysis
+- `_system/prompt-packs/M15_WHOLE_REPO_ANALYSIS.md` — new prompt pack for Tier S agents (1M+ tokens) focused on deep architectural reviews, system-wide consistency audits, and comprehensive impact analysis
+- `Tier S: Infinite (1M+ tokens)` added to `CONTEXT_BUDGET_STRATEGY.md` and `agent-performance-profiles.json`, elevating Gemini 2.5 Pro and Flash to this elite context tier
+- Gemini-optimized expectations in `GEMINI.md` (via `host-adapter-manifest.json`), including mandates for multimodal verification, deep 'Chain of Thought' reasoning, and Tier S architectural analysis
+
+### Changed — Agent Capability and Execution Guidance
+- `AGENT_PERFORMANCE_GUIDE.md` now includes Tier S and whole-repo analysis as a primary task-to-model mapping
+- `AGENT_DISCOVERY_MATRIX.md` updated to reflect Gemini's best use as a whole-repo synthesizer and architectural auditor
+- `EXECUTION_PROTOCOL.md` now carries explicit guidance for Tier S agents, including cross-referencing runtime code against the entire `_system/` layer to detect drift and using multimodal inputs for UI/UX fidelity
+
+### Changed — Regenerated Adapters and System Assets
+- All 17 tool-specific adapters (CLAUDE.md, CODEX.md, GEMINI.md, etc.) regenerated to include the M15 prompt pack in their domain-optional load paths
+- `SYSTEM_REGISTRY.json` and `INTEGRITY_MANIFEST.sha256` updated to include the M15 prompt pack and updated version markers
+- `KEY.md` and `REPO_OPERATING_PROFILE.md` regenerated to reflect the expanded system surface (343 managed files)
+
+## 1.15.0 - 2026-03-28
+
+### Added — Handoff Governance and Evidence Validation
+- `_system/HANDOFF_PROTOCOL.md` — formalized quality requirements for
+  agent-to-agent handoffs with required fields, evidence standard, and
+  anti-pattern guidance
+- `bootstrap/check-evidence-quality.sh` — scans WHERE_LEFT_OFF.md,
+  CURRENT_STATUS.md, and RELEASE_NOTES.md for ungrounded claims (e.g.,
+  "all tests pass" without command evidence)
+- `bootstrap/check-working-file-staleness.sh` — detects stale handoff
+  and planning files by comparing git timestamps, embedded dates, and
+  cross-checking WHERE_LEFT_OFF.md phase against PLAN.md objective
+- `bootstrap/check-bootstrap-permissions.sh` — validates all bootstrap/*.sh
+  scripts are executable, with `--fix` mode for automatic repair
+
+### Changed — Enhanced Working File Templates
+- `WHERE_LEFT_OFF.md` template now includes required-field guidance,
+  concrete good/bad examples, and references to the handoff protocol
+  and evidence quality checker
+- `TODO.md` template now includes priority signals (CRITICAL/HIGH/MEDIUM/LOW)
+  with definitions and a Completed section for session-end tracking
+- `EXECUTION_PROTOCOL.md` Stage 5 now references HANDOFF_PROTOCOL.md and
+  the evidence quality checker
+- `VALIDATION_GATES.md` evidence standard now references the handoff protocol
+  and both new validation scripts
+- `HALLUCINATION_DEFENSE_PROTOCOL.md` now lists the evidence quality and
+  staleness detection commands
+- `CONTEXT_INDEX.md` now lists the handoff protocol and all 3 new scripts
+- `LOAD_ORDER.md` Tier 2 now includes HANDOFF_PROTOCOL.md; Tier 3 now
+  includes the 3 new bootstrap scripts
+
+### Changed — System Doctor Expansion
+- `system-doctor.sh` now runs 16 checks (was 13), integrating
+  check-bootstrap-permissions, check-evidence-quality, and
+  check-working-file-staleness as warning-level checks
+
+### Fixed — Bootstrap Script Permissions
+- Added missing execute permission on 3 scripts: apply-starter-blueprint.sh,
+  check-host-bundle.sh, emit-host-bundle.sh (discovered by the new
+  permissions checker)
+
+## 1.14.0 - 2026-03-27
+
+### Added — Cross-Agent Adapter Expansion (M1)
+- 6 new agent adapters: DEEPSEEK.md, .aider.conf.yml, .continuerules, .clinerules, PEARAI.md, LOCAL_MODELS.md
+- `render_aider()` function in generate-host-adapters.sh for YAML adapter output
+- Updated AGENT_DISCOVERY_MATRIX.md and MULTI_AGENT_COORDINATION.md with all new agents
+
+### Added — Context-Budget-Aware Loading (M2)
+- CONTEXT_BUDGET_STRATEGY.md — 4-tier model (A/B/C/D) keyed by context window
+- context-budget-profiles.json — machine-readable tier assignments for 21 model families
+- emit-tiered-context.sh — emits tier-appropriate context load with --model fuzzy matching
+
+### Added — Golden Examples Expansion (M3)
+- 8 new pattern guides: microservices, event-driven/CQRS, serverless/edge, realtime collaboration, data pipeline/ML, error handling, testing, code snippets
+- Updated PATTERN_INDEX.md and golden-example-manifest.json
+
+### Added — Plugin Framework (M4)
+- Expanded PLUGIN_CONTRACT.md from 33 to ~120 lines with full schema and 12 hook points
+- validate-plugin.sh and discover-plugins.sh scripts
+- 3 reference plugins: security-scan, ci-integration, observability-setup
+
+### Added — Self-Healing & Environment Validation (M5)
+- ENVIRONMENT_VALIDATION_CONTRACT.md — scope and rules for environment checks
+- check-environment.sh — validates CLI tools, ports, disk, env files
+- generate-diagnostic-report.sh — aggregated health report (--json)
+- health-history.json and report-health-trends.sh — append-only trend tracking
+- system-doctor.sh gains --report and --record flags
+
+### Added — Documentation & Discoverability (M6)
+- QUICKSTART.md — 5-minute onboarding guide
+- ARCHITECTURE_DIAGRAM.md — ASCII box diagrams of system architecture
+- TROUBLESHOOTING.md — 13 symptom-based FAQ entries
+- MIGRATION_GUIDE.md — migration paths from no-system, Cursor-only, custom CLAUDE.md, other frameworks
+
+### Added — Interactive Wizard & UX (M7)
+- wizard.sh — guided interactive setup (--non-interactive, --dry-run)
+- upgrade-assistant.sh — interactive upgrade guidance with version diff and breaking change warnings
+- Visual progress helpers in aiaast-lib.sh (section_header, progress_start/step/done/warn/fail)
+
+### Added — Security Automation (M8)
+- run-sast.sh — dispatches to semgrep, bandit, eslint-security, gosec
+- check-supply-chain.sh — npm/pip/cargo/go audit with license checking
+- scan-container.sh — trivy/grype + static Dockerfile lint
+- check-network-bindings.sh — detects 0.0.0.0/:: wildcard violations
+
+### Added — Novel Enhancements (M9)
+- AGENT_PERFORMANCE_GUIDE.md — model capability dimensions and task routing
+- agent-performance-profiles.json — ratings for 19 model families
+- PROMPT_EFFECTIVENESS_TRACKING.md — protocol for measuring prompt pack success
+- context/prompt-usage-log.json — effectiveness tracking log
+- track-semantic-changes.sh — classifies git diffs as structural/contractual/cosmetic/behavioral
+
+### Changed
+- validate-system.sh now requires all new files (total required files increased)
+- CONTEXT_INDEX.md updated with all new sections and files
+- LOAD_ORDER.md updated with onboarding section and context budget guidance
+- README.md updated with all 12 agent adapters and QUICKSTART link
+- SYSTEM_REGISTRY.json and INTEGRITY_MANIFEST.sha256 regenerated
+
+## 1.13.7 - 2026-03-26
+
+### Fixed
+
+- the Flutter Android blueprint guidance now explicitly tells agents to run
+  `flutter create --platforms=android .` around the copied minimal foundation
+  before expecting Flutter analyze, test, or APK build commands to work
+- the shipped mobile runtime READMEs and mobile guide now say the same thing in
+  installable repo-local terms, so downstream agents no longer have to infer
+  the missing Flutter/Gradle project-generation step from a sparse scaffold
+- `_TEMPLATE_FACTORY/smoke-test-app-campaign.sh` now includes the mobile repo in
+  its wrapper proof and asserts that the copied mobile README and blueprint both
+  carry the downstream-proven bootstrap step
+
+## 1.13.6 - 2026-03-25
+
+### Changed
+
+- `bootstrap/validate-system.sh` now also checks
+  `_system/instruction-precedence.json.template_version` so stale precedence
+  manifests cannot silently drift from the rest of the version surfaces
+- the FastAPI and Python CLI starter-blueprint guidance now tells agents to use
+  a `src/` layout or explicit package discovery in `pyproject.toml` inside
+  scaffolded AIAST repos instead of relying on flat setuptools auto-discovery
+
+## 1.13.5 - 2026-03-25
+
+### Added
+
+- `bootstrap/generate-system-key.sh` so installed repos can regenerate an
+  exhaustive agent-facing key for the full AIAST-managed file set
+- `_system/KEY.md` as the installable exhaustive file-by-file map of the AIAST
+  surface, including what each file is for and when it should be used
+
+### Changed
+
+- installable startup and discovery docs now point agents at `_system/KEY.md`
+  when they need full coverage instead of a shorter index view
+- strict validation and source-template automation now treat the generated key
+  as a first-class required surface alongside the registry and operating
+  profile
+
+### Fixed
+
+- `bootstrap/generate-system-key.sh` now resolves relative target paths
+  correctly so `bootstrap/generate-system-key.sh . --write` writes to the real
+  repo instead of nesting an extra relative path under the target root
+
+## 1.13.4 - 2026-03-25
+
+### Fixed
+
+- the shipped Flatpak manifest templates now use the repo root as their source
+  dir when the manifest lives under `packaging/`, so real `flatpak-builder`
+  runs can see repo-root artifacts like `dist/<app>` instead of failing during
+  install
+- packaging docs now state that the Flatpak source dir must stay rooted at
+  `..` for repo-root build outputs to remain visible during packaging
+- `_TEMPLATE_FACTORY/smoke-packaging-builders.sh` is now a real host-validated
+  gate because the required Flatpak runtime is installed locally and the shipped
+  manifest no longer points at the wrong build context
+
+## 1.13.3 - 2026-03-25
+
+### Fixed
+
+- `bootstrap/update-template.sh` now always refreshes the installed version and contract-manifest surfaces that generated upgrade metadata depends on, and lifecycle metadata now stores a neutral template-source label instead of a machine-local absolute path, so additive upgrades stop reporting stale versions without leaking maintainer paths into installed repos
+- strict template updates now validate against the canonical source-template validator chain instead of trusting drifted target-side validator copies, so preserved older validation scripts can no longer mask an invalid instruction layer during upgrade
+- `_TEMPLATE_FACTORY/validate-master-template.sh` now exercises an upgrade regression where a downstream repo keeps stale target validators and an outdated `AGENTS.md`, proving that additive upgrades warn truthfully and strict upgrades fail until the instruction layer is brought back into contract
+
+## 1.13.2 - 2026-03-25
+
+### Fixed
+
+- `bootstrap/recommend-starter-blueprint.sh` now matches blueprint keywords with boundary-aware terms so generic product language like `client` no longer leaks into CLI recommendations and incidental `desktop` references do not create false desktop bias
+- the starter-blueprint recommender now gives stronger weight to truthfully filled greenfield profile signals such as Flutter frameworks, mobile runtime roots, and Flutter validation commands, so a concrete Android-client repo can move from manual review to an actual `FLUTTER_ANDROID_CLIENT` recommendation before runtime code is deeply built out
+- `_TEMPLATE_FACTORY/smoke-blueprint-recommendation.sh` now proves that a mobile-first greenfield repo with a filled Android/Flutter profile selects `FLUTTER_ANDROID_CLIENT` while blank installs still avoid false positives
+
+## 1.13.1 - 2026-03-25
+
+### Fixed
+
+- `bootstrap/check-placeholders.sh` now ignores `## Entry format` and `## Entry template` sections so installed repos are flagged for real onboarding blanks instead of schema/example lines in working and context files
+- installable bootstrap docs now describe the placeholder check in the same actionable, section-aware terms as the shipped behavior
+- `_TEMPLATE_FACTORY/smoke-blueprint-application.sh` now proves that placeholder checks still catch real `PROJECT_PROFILE.md` blanks while ignoring schema-only sections in files like `FIXME.md`, `RISK_REGISTER.md`, context entry logs, and the MCP catalog
+
+## 1.13.0 - 2026-03-23
+
+### Changed
+
+- `bootstrap/apply-starter-blueprint.sh` now adds a blueprint-specific risk entry to `RISK_REGISTER.md` when the repo is still carrying seeded onboarding-risk content, so explicit build-shape confirmation also sharpens the early risk picture
+- explicit blueprint application now reports `RISK_REGISTER.md` in its generated handoff scope and files-changed surface so the continuity packet matches the real projected file set
+- installable docs and clean-room blueprint smoke now treat risk framing as part of the explicit blueprint-projection review surface alongside product, plan, validation, design, architecture, release, and handoff state
+
+## 1.12.0 - 2026-03-23
+
+### Changed
+
+- `bootstrap/apply-starter-blueprint.sh` now also projects an explicitly selected blueprint into `DESIGN_NOTES.md` and `RELEASE_NOTES.md` when those files are present, and its generated handoff text now reports that broader surface set truthfully
+- installable bootstrap and working-file docs now treat design and release framing as part of the explicit blueprint-projection review surface instead of leaving those files implied or manual after build-shape confirmation
+- `_TEMPLATE_FACTORY/smoke-blueprint-application.sh` now proves that explicit blueprint application reaches design and release framing in addition to the earlier product, plan, validation, queue, handoff, and architecture surfaces
+
+## 1.11.0 - 2026-03-23
+
+### Changed
+
+- `bootstrap/apply-starter-blueprint.sh` now projects an explicitly selected blueprint into additional repo-local operating surfaces, including `TEST_STRATEGY.md`, `TODO.md`, `WHERE_LEFT_OFF.md`, and `ARCHITECTURE_NOTES.md` when present
+- the greenfield documentation flow now tells agents to persist a recommendation first and then explicitly apply the blueprint instead of treating blueprint application as a standalone manual list-and-pick step
+- `_TEMPLATE_FACTORY/smoke-blueprint-application.sh` now proves that the richer blueprint projection reaches the first validation, handoff, architecture, and queue surfaces coherently
+
+## 1.10.0 - 2026-03-23
+
+### Added
+
+- `_system/AGENT_ROLE_CATALOG.md` as the canonical role and write-scope contract for multi-agent work
+- `bootstrap/recommend-starter-blueprint.sh` to persist advisory blueprint recommendations with confidence and rationale
+- `bootstrap/check-agent-orchestration.sh` to verify role-catalog, prompt-pack, and Cursor role-overlay alignment
+- new Cursor execution-role overlays for orchestration, implementation, validation, and continuity
+- `_TEMPLATE_FACTORY/smoke-blueprint-recommendation.sh` to prove fresh installs avoid false blueprint picks while real runtime or product signals still recommend coherently
+
+### Changed
+
+- startup, discovery, prompt-pack, and multi-agent docs now load and reference the shared role catalog instead of leaving delegation behavior implicit
+- fresh install, additive install, and update now persist a starter-blueprint recommendation after product-brief seeding while keeping blueprint application explicit
+- the deterministic validation chain now includes orchestration-alignment checks plus blueprint recommendation smoke
+- `PRODUCT_BRIEF.md` now stores recommended blueprint, confidence, and rationale alongside the explicitly selected blueprint
+
+### Fixed
+
+- closed a greenfield bootstrap risk where generated runtime scaffolds could bias a naive blueprint recommender toward the wrong app shape
+
+## 1.9.0 - 2026-03-22
+
+### Added
+
+- `PRODUCT_BRIEF.md` as a first-class repo-local product framing surface
+- `bootstrap/seed-product-brief.sh` to turn profile signals into a bounded first-pass `PRODUCT_BRIEF.md`
+- `bootstrap/apply-starter-blueprint.sh` to stamp a selected starter blueprint into the first repo-local operating surfaces
+- `_TEMPLATE_FACTORY/smoke-blueprint-application.sh` to prove a clean-room repo can apply a blueprint coherently
+
+### Changed
+
+- Fresh install, additive install, and update now seed `PRODUCT_BRIEF.md` through the shared onboarding refresh path instead of leaving product framing manual
+- Agent startup docs, host-adapter startup manifests, and working-file guidance now treat `PRODUCT_BRIEF.md` as part of the canonical greenfield shaping surface
+- Install metadata now retains the repo app identity so lifecycle recovery can preserve the intended app name even when early working files are temporarily missing
+- The deterministic factory proof chain now includes starter-blueprint application smoke alongside installed-repo and packaging smokes
+
+### Fixed
+
+- Closed a greenfield bootstrap gap where starter blueprints existed as reference docs but did not yet project themselves into repo-local execution and product-planning surfaces
+
+## 1.8.3 - 2026-03-22
+
+### Added
+
+- `bootstrap/seed-risk-register.sh` to turn inferred profile and confidence signals into a bounded first-pass `RISK_REGISTER.md`
+
+### Changed
+
+- Fresh install, additive install, and update now seed `RISK_REGISTER.md` through the shared onboarding refresh path instead of leaving repo-local risk tracking fully manual during onboarding
+- `_TEMPLATE_FACTORY/smoke-installed-repo.sh` now proves deleted `RISK_REGISTER.md` is restored and seeded during additive recovery
+
+### Fixed
+
+- Closed an onboarding gap where validation strategy could be seeded but the adjacent risk surface still started from a neutral blank in installed repos
+
+## 1.8.2 - 2026-03-22
+
+### Added
+
+- `bootstrap/seed-test-strategy.sh` to convert inferred validation commands in `_system/PROJECT_PROFILE.md` into a first-pass `TEST_STRATEGY.md`
+
+### Changed
+
+- Fresh install, additive install, and update now seed `TEST_STRATEGY.md` through the shared onboarding refresh path instead of leaving validation strategy fully manual after profile inference
+- `_TEMPLATE_FACTORY/smoke-installed-repo.sh` now proves deleted `TEST_STRATEGY.md` is restored and seeded during additive recovery
+
+### Fixed
+
+- Closed an onboarding gap where inferred validation commands existed in the project profile but the repo-local confidence model still started blank after install or recovery
+
+## 1.8.1 - 2026-03-22
+
+### Changed
+
+- `bootstrap/init-project.sh`, `bootstrap/install-missing-files.sh`, and `bootstrap/update-template.sh` now share one safe onboarding refresh path after copy operations
+- Additive installs and upgrades now re-run non-destructive runtime-foundation generation, profile inference, working-state seeding, and validation-state recording instead of only copying template files
+
+### Fixed
+
+- Closed a lifecycle recovery gap where restored or newly added AIAST files could come back without regenerated app-owned runtime scaffolds or reseeded continuity surfaces
+
+## 1.8.0 - 2026-03-22
+
+### Added
+
+- Opportunistic live external-host CLI smoke via `_TEMPLATE_FACTORY/smoke-live-host-clis.sh`
+
+### Changed
+
+- `_TEMPLATE_FACTORY/run-automation-lane.sh` now includes optional live external-host proof in addition to optional builder smoke
+- The portable baseline is now backed by real live-host transcripts on supported authenticated headless CLIs instead of only the fixture and host-bundle simulation layers
+
+### Fixed
+
+- Closed the live external-host transcript gap by proving the exported host-bundle flow against actual installed Codex and Cursor host CLIs on this machine
+
+## 1.7.2 - 2026-03-22
+
+### Added
+
+- Factory-side golden-example promotion criteria via `_TEMPLATE_FACTORY/GOLDEN_EXAMPLES/PROMOTION_CRITERIA.md` and `_TEMPLATE_FACTORY/GOLDEN_EXAMPLES/promotion-rubric.json`
+- Deterministic donor-governance validation via `_TEMPLATE_FACTORY/validate-golden-examples.sh`
+
+### Changed
+
+- `_TEMPLATE_FACTORY/validate-master-template.sh` now proves golden-example selection governance after scorecard refresh instead of relying on review discipline alone
+- Factory donor selection now has explicit measurable thresholds plus a required review path for high-scoring non-selected repos
+
+### Fixed
+
+- Closed a governance gap where donor promotion quality depended too heavily on remembered reviewer intent even though scorecards and review notes already existed
+
+## 1.7.1 - 2026-03-22
+
+### Added
+
+- Generated Cursor session-start and canonical context-rule overlays via `.cursor/commands/session-start.md` and `.cursor/rules/00-context-load.mdc`
+
+### Changed
+
+- `_system/host-adapter-manifest.json`, `bootstrap/generate-host-adapters.sh`, and `_system/HOST_ADAPTER_POLICY.md` now treat the remaining thin Cursor startup overlays as part of the managed adapter set
+- The generated adapter boundary is now explicit: stable startup and context-load overlays are generated, while richer review commands, skills, and agent-specific workflows remain hand-authored until real drift justifies expansion
+
+### Fixed
+
+- Closed the last obvious Cursor startup drift seam by moving session-start and always-apply context-load guidance under the same canonical manifest as the other tool-entry surfaces
+
+## 1.7.0 - 2026-03-22
+
+### Added
+
+- Canonical external host-bundle contract via `_system/HOST_BUNDLE_CONTRACT.md`
+- Self-contained host-bundle emission via `bootstrap/emit-host-bundle.sh`
+- Host-bundle validation via `bootstrap/check-host-bundle.sh`
+- Separate-workspace external host-bundle smoke via `_TEMPLATE_FACTORY/smoke-host-bundle.sh`
+
+### Changed
+
+- The operating profile, capabilities markers, instruction-layer validation, system doctor, and factory proof chain now include host-bundle export surfaces
+- External host support now has a vendor-neutral zero-repo-access path instead of relying only on live repo-path access or the earlier bounded fixture
+
+### Fixed
+
+- Closed a real external-ingestion gap where the system could prove a host fixture consuming repo paths but could not yet export a deterministic self-contained prompt-and-context snapshot for hosts without repo access
+
+## 1.6.0 - 2026-03-22
+
+### Added
+
+- Canonical host-adapter governance via `_system/HOST_ADAPTER_POLICY.md` and `_system/host-adapter-manifest.json`
+- Generated tool-adapter and load-context surfaces via `bootstrap/generate-host-adapters.sh`
+- Adapter-alignment validation via `bootstrap/check-host-adapter-alignment.sh`
+
+### Changed
+
+- `CODEX.md`, `CLAUDE.md`, `GEMINI.md`, `WINDSURF.md`, `.cursorrules`, `.windsurfrules`, `.github/copilot-instructions.md`, `.cursor/commands/load-context.md`, and `.cursor/skills/load-context/SKILL.md` now come from the canonical host-adapter manifest instead of drifting independently
+- Managed write flows now refresh generated host adapters before registry, operating-profile, and integrity regeneration
+- The instruction-layer and doctor flows now validate adapter alignment as part of normal proof instead of treating tool-entry files as static prose
+
+### Fixed
+
+- Closed a real adapter drift gap where Cursor load-context surfaces had fallen behind the canonical precedence and operating-profile startup order
+
+## 1.5.1 - 2026-03-22
+
+### Added
+
+- Factory automation entrypoint via `_TEMPLATE_FACTORY/run-automation-lane.sh` plus scheduled CI automation in `.github/workflows/validate-master-template.yml`
+- Factory host-adapter fixture smoke via `_TEMPLATE_FACTORY/smoke-host-adapter-fixture.sh`
+- Optional Flatpak-first builder-aware packaging smoke via `_TEMPLATE_FACTORY/smoke-packaging-builders.sh`
+
+### Changed
+
+- `_TEMPLATE_FACTORY/validate-master-template.sh` now includes host-adapter fixture proof in the deterministic master validation chain
+- The preferred automation path is now one shared local-and-CI lane instead of relying on remembered manual release choreography
+- External integration follow-up is now split cleanly between deterministic fixture proof and opportunistic real-builder proof
+
+## 1.5.0 - 2026-03-22
+
+### Added
+
+- Dedicated packaging-target validation via `bootstrap/check-packaging-targets.sh` and clean-room packaging smoke via `_TEMPLATE_FACTORY/smoke-packaging-targets.sh`
+- Canonical host-prompt emission via `bootstrap/emit-host-prompt.sh` plus repo-side host-ingestion validation via `bootstrap/check-host-ingestion.sh`
+- Shared generated Linux desktop launcher metadata for packaging targets, including placeholder-rendered runtime template paths
+
+### Changed
+
+- `validate-instruction-layer.sh`, `system-doctor.sh`, and `validate-master-template.sh` now include host-ingestion and packaging-target proof instead of relying only on runtime-foundation smoke
+- Runtime foundations now render placeholders in file paths as well as file contents, so generated assets can carry app-specific filenames safely
+- AppImage and Flatpak scaffolds now share a generated desktop launcher file instead of duplicating launcher metadata in incompatible ways
+
+### Fixed
+
+- Closed a real packaging contract gap where Flatpak referenced a desktop launcher file that the runtime scaffold did not actually generate
+
+## 1.4.1 - 2026-03-22
+
+### Added
+
+- Template-aware repo-mode detection for `validate-system.sh`, `check-placeholders.sh`, and `system-doctor.sh`
+- Factory smoke coverage for clean-room installed repos and live runtime foundations, plus `validate-master-template.sh` as the one-command master proof chain
+- Factory review notes for high-scoring donor candidates so golden-example promotion decisions survive context resets
+
+### Changed
+
+- The neutral source template now validates cleanly in auto/template mode while installed repos still treat unresolved repo-owned placeholders as failures
+- Runtime-foundation validation now includes shell-sourceability checks for generated env defaults and executable smoke for install, repair, launch, and purge flows
+- Golden-example donor curation now records explicit review outcomes for `Immortality` and `Vetraxis` instead of leaving their deferral implicit
+
+### Fixed
+
+- Generated runtime env defaults with multi-word shell values are now quoted so installed launch flows can source them safely
+
+## 1.4.0 - 2026-03-22
+
+### Added
+
+- Neutral golden-example system under `_system/golden-examples/` with policy, pattern guides, and exemplar working files
+- Factory-only donor scoring and selection assets under `_TEMPLATE_FACTORY/GOLDEN_EXAMPLES/`
+- `refresh-golden-examples.sh` to rescan sibling repos and rebuild the donor scorecard
+
+### Changed
+
+- Agent adapters, load-order docs, discovery docs, and bootstrap docs now point to the golden-example pack for system-evolution and working-file-authoring tasks
+- Operating-profile generation, awareness checks, and system validation now treat the golden-example pack as a first-class managed surface
+- Factory maintenance now tracks donor selection explicitly instead of relying on remembered chat context
+
+## 1.3.0 - 2026-03-22
+
+### Added
+
+- Repo-local instruction precedence contract and machine-readable precedence manifest
+- Conflict detection, operating-profile generation, and instruction-layer validation scripts
+- Host-safe prompt emission contract plus compatibility markers for upstream ingestion
+
+### Changed
+
+- Core adapters and load-order docs now point to the precedence contract and operating profile
+- Validation and doctor flows now verify instruction-layer integrity
+- Upgrade, install-missing, and heal flows now refresh the operating profile alongside the registry
+- Runtime-foundation defaults are template-neutral instead of carrying branded placeholder values
+
+## 1.2.0 - 2026-03-20
+
+### Added
+
+- Runtime-foundation validation via `bootstrap/check-runtime-foundations.sh`
+- Starter blueprints for Flutter Android clients and universal multi-surface app platforms
+- Runtime scaffold checks for install scripts, env defaults, AI config, mobile manifest, and packaging manifests
+
+### Changed
+
+- `system-doctor.sh` now inspects generated runtime foundations in addition to system integrity
+- Bootstrap and context docs now expose the new runtime checker and expanded blueprint layer
+
+## 1.1.0 - 2026-03-20
+
+### Added
+
+- Runtime foundation generator for packaging, install, mobile, logging, and AI scaffolds
+- Installation, packaging, mobile, and chatbot guides plus provider-config example
+- Flutter-first Android starter files and packaging/signing templates
+- Linux packaging manifests for AppImage, Flatpak, and Snap in generated repos
+- CI examples for packaging and Android build surfaces
+
+### Changed
+
+- `init-project.sh` now generates project-owned runtime foundations automatically
+- Project profile defaults now stamp app ids, installer paths, mobile paths, and branch-strategy guidance
+- Security and observability guidance now cover installer separation, service accounts, JSON logging fields, and `logcat`
+
+## 1.0.0 - 2026-03-19
+
+### Added
+
+- First-class AIAST version metadata and installed-repo metadata
+- Upgrade and uninstall lifecycle scripts
+- Integrity-aware drift detection and manifest policy
+- Expanded project profile schema and broader repo detection
+- Security scan and hardened systemd unit generation tooling
+- CI, packaging, observability, and plugin-contract scaffolds
+
+### Changed
+
+- Bootstrap lifecycle now records install source, timestamps, and README placement
+- Drift and upgrade policy now use explicit template version markers instead of commit-message convention
+- Integrity manifests exclude app-owned state and project-local config surfaces

@@ -1,0 +1,11 @@
+{
+  "app_name": "Forge Council",
+  "install_mode": "copied-template",
+  "installed_at": "2026-04-04T16:36:15Z",
+  "last_event": "install",
+  "source_template": "TEMPLATE",
+  "system_readme_path": "README.md",
+  "template_name": "AIAST",
+  "template_version": "1.19.2",
+  "updated_at": "2026-04-04T16:36:15Z"
+}

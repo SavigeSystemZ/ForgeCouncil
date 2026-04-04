@@ -1,0 +1,25 @@
+name: forge-council
+base: core24
+version: "0.1.0"
+summary: Forge Council packaged from an AIAST project scaffold
+description: |
+  Generic Snap scaffold for Forge Council.
+  Review plugs, confinement, and launch command before release.
+
+grade: devel
+confinement: strict
+
+apps:
+  forge-council:
+    command: bin/forge-council
+    plugs:
+      - network
+      - network-bind
+      - home
+
+parts:
+  forge-council:
+    plugin: dump
+    source: .
+    organize:
+      dist/forge-council: bin/forge-council

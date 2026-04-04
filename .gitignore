@@ -1,0 +1,13 @@
+.DS_Store
+*.swp
+*.swo
+*~
+*.tmp
+tmp/
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.env
+.env.local

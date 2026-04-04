@@ -1,0 +1,11 @@
+{
+  "name": "security-scan",
+  "version": "1.0.0",
+  "description": "Wraps bootstrap/scan-security.sh and optional SAST tools into a unified security scan plugin.",
+  "aiast_min_version": "1.13.0",
+  "hooks": ["security.scan", "ci.pre_commit"],
+  "capabilities": ["security-scanner"],
+  "owned_paths": ["_system/plugins/security-scan/"],
+  "requires": [],
+  "enabled": true
+}
