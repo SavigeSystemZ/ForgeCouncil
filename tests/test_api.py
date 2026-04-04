@@ -84,6 +84,39 @@ def test_patch_unknown_run() -> None:
     assert r.status_code == 404
 
 
+def test_dispatch_run_appends_ledger() -> None:
+    client = TestClient(create_app(MemoryStore()))
+    r = client.post("/v1/runs", json={"project_id": "p1", "workspace_id": "w1"})
+    rid = r.json()["run_id"]
+    d = client.post(
+        f"/v1/runs/{rid}/dispatch",
+        json={"runner": "local", "action": "noop", "note": "test"},
+    )
+    assert d.status_code == 202
+    data = d.json()
+    assert data["run_id"] == rid
+    assert data["status"] == "accepted"
+    assert "dispatch_id" in data
+
+    ev = client.get(f"/v1/runs/{rid}/ledger-events").json()["events"]
+    assert len(ev) == 1
+    assert ev[0]["event_type"] == "dispatch_requested"
+    assert ev[0]["payload_json"]["dispatch_id"] == data["dispatch_id"]
+
+
+def test_dispatch_unknown_run() -> None:
+    client = TestClient(create_app(MemoryStore()))
+    r = client.post("/v1/runs/nope/dispatch", json={})
+    assert r.status_code == 404
+
+
+def test_dispatch_rejects_unknown_field() -> None:
+    client = TestClient(create_app(MemoryStore()))
+    rid = client.post("/v1/runs", json={}).json()["run_id"]
+    r = client.post(f"/v1/runs/{rid}/dispatch", json={"evil": 1})
+    assert r.status_code == 400
+
+
 def test_bearer_token_when_configured(monkeypatch) -> None:
     monkeypatch.setenv("FC_API_TOKEN", "test-secret")
     client = TestClient(create_app(MemoryStore()))

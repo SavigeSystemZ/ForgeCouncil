@@ -8,7 +8,7 @@ import uuid
 from contextlib import asynccontextmanager
 from typing import Any, AsyncIterator
 
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
+from fastapi import APIRouter, Body, Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -20,6 +20,8 @@ from forge_council.store_protocol import RunLedgerStore
 from forge_council.schema_util import validate_instance_or_raise_http
 
 _tracer: Any = None
+
+ALLOWED_DISPATCH_BODY_KEYS = frozenset({"runner", "action", "note", "argv", "env"})
 
 ALLOWED_RUN_PATCH_KEYS = frozenset(
     {
@@ -34,7 +36,36 @@ ALLOWED_RUN_PATCH_KEYS = frozenset(
         "initiated_by",
         "project_id",
     }
-)
+    )
+
+
+def _normalize_dispatch_body(body: dict[str, Any]) -> dict[str, Any]:
+    """Validate optional dispatch request; returns payload_json for ledger."""
+    unknown = set(body) - ALLOWED_DISPATCH_BODY_KEYS
+    if unknown:
+        raise ValueError(f"unknown dispatch fields: {sorted(unknown)}")
+    runner = (body.get("runner") or "local").strip() or "local"
+    action = (body.get("action") or "noop").strip() or "noop"
+    if action not in ("noop", "subprocess_stub"):
+        raise ValueError("action must be 'noop' or 'subprocess_stub'")
+    out: dict[str, Any] = {"runner": runner, "action": action}
+    if "note" in body and body["note"] is not None:
+        if not isinstance(body["note"], str):
+            raise ValueError("note must be a string")
+        out["note"] = body["note"]
+    if "argv" in body and body["argv"] is not None:
+        argv = body["argv"]
+        if not isinstance(argv, list) or not all(isinstance(x, str) for x in argv):
+            raise ValueError("argv must be a list of strings")
+        out["argv"] = list(argv)
+    if "env" in body and body["env"] is not None:
+        env = body["env"]
+        if not isinstance(env, dict) or not all(
+            isinstance(k, str) and isinstance(v, str) for k, v in env.items()
+        ):
+            raise ValueError("env must be an object of string keys and string values")
+        out["env"] = dict(env)
+    return out
 
 
 def default_store() -> RunLedgerStore:
@@ -191,6 +222,51 @@ def create_app(store: RunLedgerStore | None = None) -> FastAPI:
         if store.get_run(run_id) is None:
             raise HTTPException(status_code=404, detail="run not found")
         return {"events": store.list_ledger_events(run_id)}
+
+    @v1.post("/runs/{run_id}/dispatch", status_code=202)
+    async def dispatch_run(
+        request: Request,
+        run_id: str,
+        body: dict[str, Any] | None = Body(default=None),
+    ) -> dict[str, Any]:
+        """Accept a dispatch request; persist audit via ledger (runner execution is stubbed)."""
+        store: RunLedgerStore = request.app.state.store
+        run = store.get_run(run_id)
+        if not run:
+            raise HTTPException(status_code=404, detail="run not found")
+        raw = body if body is not None else {}
+        if not isinstance(raw, dict):
+            raise HTTPException(status_code=400, detail="body must be a JSON object")
+        try:
+            dispatch_payload = _normalize_dispatch_body(raw)
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=str(e)) from e
+        dispatch_id = str(uuid.uuid4())
+        dispatch_payload["dispatch_id"] = dispatch_id
+        now = dt.datetime.now(dt.timezone.utc)
+        ws_id = str(run.get("workspace_id") or "default-workspace")
+        proj_id = str(run.get("project_id") or "default-project")
+        event = {
+            "schema_version": "1",
+            "event_id": str(uuid.uuid4()),
+            "timestamp": now.isoformat().replace("+00:00", "Z"),
+            "workspace_id": ws_id,
+            "project_id": proj_id,
+            "run_id": run_id,
+            "event_type": "dispatch_requested",
+            "actor": "system",
+            "payload_json": dispatch_payload,
+        }
+        if run.get("trace_id"):
+            event["trace_id"] = run["trace_id"]
+        validate_instance_or_raise_http("ledger_event", event)
+        store.append_ledger_event(run_id, event)
+        return {
+            "dispatch_id": dispatch_id,
+            "run_id": run_id,
+            "status": "accepted",
+            "message": "Recorded dispatch_requested; local runner execution not started in this build.",
+        }
 
     app.include_router(v1)
 

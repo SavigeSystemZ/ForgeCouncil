@@ -2,7 +2,7 @@
 
 **Generated/refreshed by:** `bootstrap/fc-repo-ingestion.sh`
 **Precedence contract:** `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`
-**Last scan (UTC):** 2026-04-04T19:23:15Z
+**Last scan (UTC):** 2026-04-04T19:24:21Z
 
 ## Resolution order (summary)
 

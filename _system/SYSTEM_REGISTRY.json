@@ -400,7 +400,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "CHANGELOG.md",
-      "size_bytes": 2623
+      "size_bytes": 2704
     },
     {
       "category": "entrypoint",
@@ -454,7 +454,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "PLAN.md",
-      "size_bytes": 2574
+      "size_bytes": 2631
     },
     {
       "category": "working-state",
@@ -508,7 +508,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "WHERE_LEFT_OFF.md",
-      "size_bytes": 2147
+      "size_bytes": 2234
     },
     {
       "category": "entrypoint",
@@ -916,7 +916,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/SYSTEM_REGISTRY.json",
-      "size_bytes": 71935
+      "size_bytes": 71936
     },
     {
       "category": "system-core",

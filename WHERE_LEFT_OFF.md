@@ -31,9 +31,9 @@ app repositories.
 
 ## Next Best Step
 
-Stub **POST /v1/runs/{id}/dispatch** → local runner queue (subprocess or job record + worker loop). Add **run_step** persistence and stream logs to artifacts path.
+Wire **dispatch** to a real **local runner** (subprocess or worker): consume `argv` / `env`, update run `status`, append `run_step` or artifact refs. Add **run_step** persistence in store if not only via ledger.
 
-**Done recently:** optional `FC_API_TOKEN` Bearer auth on `/v1/*`, `NFR` SEC-11, `ops/env/.env.example` vars.
+**Done recently:** `POST /v1/runs/{id}/dispatch` records `dispatch_requested` in ledger (execution still stubbed); optional `FC_API_TOKEN` on `/v1/*`.
 
 ## Handoff Packet
 

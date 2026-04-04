@@ -49,6 +49,7 @@ forge-council-api
 - `GET /v1/runs` — list runs  
 - `POST /v1/runs/{run_id}/ledger-events` — append ledger event (`ledger_event.json`)  
 - `GET /v1/runs/{run_id}/ledger-events` — list events  
+- `POST /v1/runs/{run_id}/dispatch` — accept dispatch (202); appends `dispatch_requested` ledger event (`runner`, `action`: `noop` \| `subprocess_stub`, optional `argv`, `env`, `note`). Local execution is still a stub.  
 
 **Backup:** copy the SQLite file while the process is stopped or use SQLite backup API; `data/` is gitignored by default.  
 

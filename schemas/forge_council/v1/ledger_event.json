@@ -23,7 +23,8 @@
         "approval_recorded",
         "gate_result",
         "artifact_promoted",
-        "memory_mutation"
+        "memory_mutation",
+        "dispatch_requested"
       ]
     },
     "actor": { "type": "string", "enum": ["human", "agent", "system"] },
