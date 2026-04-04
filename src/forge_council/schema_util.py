@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 from functools import lru_cache
 from pathlib import Path
@@ -26,7 +27,7 @@ def _validator_for(name: str) -> Draft202012Validator:
     path = schema_path(name)
     if not path.is_file():
         raise FileNotFoundError(f"Schema not found: {path}")
-    raw: dict[str, Any] = __import__("json").loads(path.read_text(encoding="utf-8"))
+    raw: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(raw)
     return Draft202012Validator(raw)
 
