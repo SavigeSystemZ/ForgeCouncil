@@ -44,6 +44,32 @@ long as the **single-writer rule** in `MULTI_AGENT_COORDINATION.md` is respected
 - Prefer **at most two** concurrent auxiliaries to limit merge pain and context drift.
 - If more capacity is needed, serialize or split by milestone.
 
+## Scope split recipes (safe defaults)
+
+Use **disjoint trees** or **disjoint concerns** so git merges stay mechanical:
+
+| Primary owns | Auxiliary A | Auxiliary B |
+|--------------|-------------|---------------|
+| `PLAN.md`, `WHERE_LEFT_OFF.md`, integration | `src/**` feature slice | `tests/**` only |
+| API contract + routing | `src/server/` or `src/api/` | `src/lib/` clients or fixtures |
+| Release / changelog | Docs under `docs/` | Packaging under `packaging/` or `distribution/` |
+
+Avoid two auxiliaries touching the **same** module or the **same** test file in one pass.
+
+## Primary merge checklist (before you integrate auxiliary work)
+
+1. **Diff review** — Read every changed file; reject drive-by reformats outside the brief.
+2. **Single-writer check** — No auxiliary should have edited primary-owned files (see brief).
+3. **Validate** — Run the narrowest repo checks (`PROJECT_PROFILE` / `TEST_STRATEGY`) and expand if risk is high.
+4. **Handoff** — Update `WHERE_LEFT_OFF.md` with what merged, what was dropped, and validation evidence.
+
+## Anti-patterns
+
+- **Overlapping briefs** — Two auxiliaries with vague “fix bugs” scope on the same package.
+- **Lockfile ping-pong** — Multiple writers on `package-lock.json` / `Cargo.lock` without a single owner.
+- **Silent merge** — Claiming auxiliary output is integrated without running tests or reading diffs.
+- **Unbounded shell MCP** — Letting a tool run arbitrary host commands without repo-local policy.
+
 ## Failure and takeover
 
 If an auxiliary fails or diverges:
@@ -86,6 +112,17 @@ You are an auxiliary worker. Primary session: <tool name>. Read-only unless stat
 
 ## Hand back
 - Post summary to primary; primary merges and validates.
+```
+
+## Bootstrap helper
+
+From the repo root:
+
+```bash
+bootstrap/emit-auxiliary-brief.sh --primary "Cursor" --allowed "src/widgets/" \
+  --forbidden "PLAN.md, WHERE_LEFT_OFF.md, package-lock.json" \
+  --branch "$(git rev-parse --short HEAD)" --spec "TASK-42 widget a11y" \
+  --deliverables "Unified diff or branch push URL" --stop "Tests green; no new lint errors"
 ```
 
 ## Canonical cross-references

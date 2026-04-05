@@ -95,6 +95,17 @@ Handoff claims must be grounded. Specifically:
 
 If a check was not run, say "not verified" instead of omitting it.
 
+## Auxiliary (host CLI) handback to primary
+
+When a **separate** terminal or tool did work under `_system/SUB_AGENT_HOST_DELEGATION.md`:
+
+- The auxiliary posts: scope honored, files touched, commands run, blockers.
+- The **primary** records merge decisions in `WHERE_LEFT_OFF.md`, runs validation, and updates
+  `TODO.md` / `FIXME.md` if the integrated work changed the queue.
+- If auxiliary output is **rejected**, say so in the handoff packet (revert hash or reason).
+
+Use `bootstrap/emit-auxiliary-brief.sh` to standardize the brief the auxiliary received.
+
 ## Anti-patterns
 
 - Ending a session without updating WHERE_LEFT_OFF.md

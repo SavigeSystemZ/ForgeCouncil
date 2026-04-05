@@ -20,6 +20,7 @@ When using **Composer** (multi-file edits, broader refactors, or feature slices)
    remain in `_system/AGENT_ROLE_CATALOG.md`. For optional parallel **host CLI**
    sessions (other terminals or tools), read `_system/SUB_AGENT_HOST_DELEGATION.md`
    and never assume automated sub-agent spawning exists without operator setup.
+   Use `bootstrap/emit-auxiliary-brief.sh` to emit a frozen brief for each auxiliary.
 5. Finish with an explicit handoff or summary that lists **files changed** and
    **commands run** (see `_system/HANDOFF_PROTOCOL.md`).
 

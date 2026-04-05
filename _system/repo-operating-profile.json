@@ -71,7 +71,7 @@
   "schema_version": "1.0.0",
   "system_readme_path": "README.md",
   "template_name": "AIAST",
-  "template_version": "1.19.2",
+  "template_version": "1.19.5",
   "terminology_mappings": {
     "host_level_orchestration_context": "Task framing or operator intent emitted outside the repo.",
     "repo_local_truth": "Facts stored in repo-local runtime/config/docs and the authoritative AIAST core docs.",

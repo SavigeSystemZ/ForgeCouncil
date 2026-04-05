@@ -30,8 +30,8 @@ python -m pip install -U pip wheel setuptools
 log "pip install -e .[dev,api]"
 pip install -e "${ROOT}[dev,api]"
 
-log "ops/install/install.sh --mode user --skip-service --port 8010"
-bash "${ROOT}/ops/install/install.sh" --mode user --skip-service --port 8010
+log "ops/install/install.sh --mode user --skip-service --port 46124"
+bash "${ROOT}/ops/install/install.sh" --mode user --skip-service --port 46124
 
 if [[ -f "${ROOT}/ops/env/.env" ]]; then
   APP_P="$(awk -F= '$1=="APP_PORT" {print $2}' "${ROOT}/ops/env/.env" | tail -n 1 | tr -d '"' | tr -d "'")"
@@ -59,4 +59,4 @@ else
 fi
 
 log "done. Launch from app menu (Forge Council) or: ${LAUNCH}"
-log "health: http://127.0.0.1:8010/health (if APP_PORT is 8010)"
+log "health: http://127.0.0.1:46124/health (if APP_PORT is 46124)"

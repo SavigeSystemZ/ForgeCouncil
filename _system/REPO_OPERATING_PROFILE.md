@@ -1,7 +1,7 @@
 # Repo Operating Profile
 
 ## Summary
-- Template: `AIAST` `1.19.2`
+- Template: `AIAST` `1.19.5`
 - Profile state: `configured-project`
 - System README path: `README.md`
 - Ingestion start: `AGENTS.md` -> `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md` -> `_system/REPO_OPERATING_PROFILE.md` -> `_system/LOAD_ORDER.md`

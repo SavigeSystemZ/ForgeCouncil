@@ -170,6 +170,7 @@ require_files \
   "_system/API_DESIGN_STANDARDS.md" \
   "_system/DEPENDENCY_GOVERNANCE.md" \
   "_system/MODERN_UI_PATTERNS.md" \
+  "_system/AUTH_AND_ONBOARDING_PATTERNS.md" \
   "_system/OBSERVABILITY_STANDARDS.md" \
   "_system/THREAT_MODEL_TEMPLATE.md" \
   "_system/PLUGIN_CONTRACT.md" \
@@ -320,6 +321,7 @@ require_files \
   "bootstrap/validate-plugin.sh" \
   "bootstrap/discover-plugins.sh" \
   "bootstrap/emit-tiered-context.sh" \
+  "bootstrap/emit-auxiliary-brief.sh" \
   "bootstrap/check-environment.sh" \
   "bootstrap/generate-diagnostic-report.sh" \
   "bootstrap/report-health-trends.sh" \

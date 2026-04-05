@@ -43,8 +43,8 @@ Fill this file in immediately after copying the operating system into a real rep
 
 ## Runtime boundaries
 
-- Runtime code roots:
-- Test roots:
+- Runtime code roots: src/
+- Test roots: tests/
 - Scripts / tooling roots: tools/
 - Packaging / deploy roots: ops/, packaging/, mobile/, ai/
 - Infrastructure roots:
@@ -54,39 +54,39 @@ Fill this file in immediately after copying the operating system into a real rep
 ## Stack
 
 - Primary languages: Python
-- Primary frameworks:
-- Components:
+- Primary frameworks: FastAPI
+- Components: backend service
 - Datastores:
-- Package managers:
-- Build tools:
-- Runtime environments:
-- Supported environments:
-- Deployment targets:
+- Package managers: pyproject-based Python packaging
+- Build tools: Python project tooling
+- Runtime environments: Python
+- Supported environments: server
+- Deployment targets: Linux host
 
 ## Build and packaging
 
-- Packaging targets:
-- Native package targets:
+- Packaging targets: wheel, sdist
+- Native package targets: .deb, .rpm
 - Universal package targets:
 - Packaging manifest paths: packaging/appimage.yml, packaging/flatpak-manifest.json, packaging/snapcraft.yaml
 - Installer commands: ops/install/install.sh, ops/install/repair.sh, ops/install/uninstall.sh, ops/install/purge.sh
 - Signing identity: Release owner placeholder; replace before shipping signed artifacts
-- Minimum runtime versions:
+- Minimum runtime versions: Python 3.10+
 - System dependencies:
-- Build entrypoints:
-- Release artifacts:
+- Build entrypoints: python3 -m compileall src
+- Release artifacts: python distributions
 
 ## Validation commands
 
 - Format: `.venv/bin/ruff format src tests`
 - Lint: `.venv/bin/ruff check src tests`
-- Typecheck:
+- Typecheck: mypy src/
 - Unit tests: `.venv/bin/pytest`
 - Integration tests:
 - End-to-end or smoke:
-- Build:
-- Install / launch verification:
-- Packaging verification:
+- Build: python3 -m compileall src
+- Install / launch verification: uvicorn app.main:app --host ${APP_BIND_ADDRESS:-127.0.0.1} --port ${APP_PORT:-8000}
+- Packaging verification: python -m build
 - Visual regression or design smoke:
 - Security or policy checks: bootstrap/scan-security.sh /home/whyte/.MyAppZ/ForgeCouncil
 
@@ -104,11 +104,11 @@ Fill this file in immediately after copying the operating system into a real rep
 
 ## Operations and deployment
 
-- Default ports:
+- Default ports: 8000
 - Default port range:
-- Bind model:
+- Bind model: bind to 127.0.0.1 by default
 - Required background services:
-- Service model:
+- Service model: HTTP service
 - Migration model:
 - Database mode:
 - Container runtime preference:

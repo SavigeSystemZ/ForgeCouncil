@@ -1,5 +1,41 @@
 # AIAST Changelog
 
+## 1.19.5 - 2026-04-05
+
+### Added
+- `_system/GIT_REMOTE_AND_SYNC_PROTOCOL.md` — GitHub remotes, **SSH** transport, fetch/pull/push sync discipline, empty-remote bootstrap, auth failure handling; SavigeSystemZ operator profile (`SavageO13` / `SavigeSystemZ`, Michael Spaulding, `mtspaulding87@gmail.com`); **run Git and SSH as UNIX user `whyte`, not `root`** (keys and agent are user-scoped).
+
+### Changed
+- `LOAD_ORDER.md` — Tier 2 includes `GIT_REMOTE_AND_SYNC_PROTOCOL.md`; Tier 3 and later sections renumbered.
+- `CONTEXT_INDEX.md` — discovery entry for the Git remote and sync protocol.
+
+### Meta (master repo only)
+- `context/OWNER_GIT_REMOTES.md` — maintainer-only mirror of org layout, identity, and **`whyte`-only Git/SSH** rule.
+- `KEY.md`, `META_SYSTEM_INTERCONNECT_INDEX.md`, `WHERE_LEFT_OFF.md`, `context/CURRENT_STATUS.md` — continuity and cross-links.
+
+## 1.19.4 - 2026-04-05
+
+### Added
+- `_system/AUTH_AND_ONBOARDING_PATTERNS.md` — optional vs gated auth, progressive trust, env-only dev seed admins (no credentials in git)
+
+### Changed
+- `MODERN_UI_PATTERNS.md` — navigation deduplication (avoid redundant menus/buttons on the same surface)
+- `SECURITY_HARDENING_CONTRACT.md` — explicit ban on default accounts in source; pointer to auth patterns
+- `bootstrap/templates/runtime/ops/env/.env.example` — commented `SEED_DEV_ADMIN` / `SEED_ADMIN_*` placeholders
+- `CONTEXT_INDEX.md`, `LOAD_ORDER.md`, `AGENTS.md`, `emit-tiered-context.sh` Tier B — wire new contract
+
+## 1.19.3 - 2026-04-05
+
+### Added
+- `bootstrap/emit-auxiliary-brief.sh` — CLI to print a frozen auxiliary brief (flags + env overrides)
+
+### Changed
+- `SUB_AGENT_HOST_DELEGATION.md` — scope split recipes, primary merge checklist, anti-patterns, bootstrap usage example
+- `HANDOFF_PROTOCOL.md` — auxiliary-to-primary handback expectations
+- `M9_MULTI_AGENT_CONTINUITY.md` — load sub-agent delegation when planning parallel host sessions
+- `check-agent-orchestration.sh` — M9 pack must reference sub-agent delegation
+- `60-composer-orchestration.mdc`, `PROMPTS_INDEX.md`, `CONTEXT_INDEX.md`, `bootstrap/README.md` — document the emitter
+
 ## 1.19.2 - 2026-04-05
 
 ### Added

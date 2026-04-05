@@ -37,12 +37,6 @@
 - `_system/prompt-packs/M13_ACCESSIBILITY_AND_INCLUSION.md`
 - `_system/prompt-packs/M14_SECURITY_HARDENING.md`
 
-## Forge Council prompt packs
-
-- `_system/prompt-packs/forge-council/README.md`
-- `_system/prompt-packs/forge-council/master-handoff.md`
-- `_system/prompt-packs/forge-council/M0.*.md` through `M2.*.md` (milestone-scoped exports)
-
 ## Prompt effectiveness tracking
 
 - `_system/PROMPT_EFFECTIVENESS_TRACKING.md` — protocol for measuring prompt pack success/failure per model
@@ -54,6 +48,7 @@
 - `_system/CONTEXT_BUDGET_STRATEGY.md` — 4-tier loading model (A/B/C/D) by context window
 - `_system/context-budget-profiles.json` — machine-readable model-to-tier mappings
 - `bootstrap/emit-tiered-context.sh` — emits tier-appropriate file lists for context-constrained models
+- `bootstrap/emit-auxiliary-brief.sh` — emits a markdown brief for optional parallel host CLI / IDE workers (`SUB_AGENT_HOST_DELEGATION.md`)
 
 ## Rules for all prompt packs
 

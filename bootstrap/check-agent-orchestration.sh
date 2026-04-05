@@ -68,7 +68,10 @@ checks = {
     repo / "_system" / "MULTI_AGENT_COORDINATION.md": ["_system/AGENT_ROLE_CATALOG.md", "## Delegation rules"],
     repo / "_system" / "AGENT_DISCOVERY_MATRIX.md": ["_system/AGENT_ROLE_CATALOG.md"],
     repo / "_system" / "prompt-packs" / "M1_FEATURE_DELIVERY.md": ["role", "write ownership"],
-    repo / "_system" / "prompt-packs" / "M9_MULTI_AGENT_CONTINUITY.md": ["_system/AGENT_ROLE_CATALOG.md"],
+    repo / "_system" / "prompt-packs" / "M9_MULTI_AGENT_CONTINUITY.md": [
+        "_system/AGENT_ROLE_CATALOG.md",
+        "_system/sub_agent_host_delegation.md",
+    ],
     repo / "_system" / "prompt-packs" / "M10_GREENFIELD_BOOTSTRAP.md": ["persisted blueprint recommendation", "explicitly apply"],
     repo / ".cursor" / "agents" / "README.md": ["_system/AGENT_ROLE_CATALOG.md"],
     repo / ".cursor" / "agents" / "orchestrator.md": ["_system/AGENT_ROLE_CATALOG.md"],

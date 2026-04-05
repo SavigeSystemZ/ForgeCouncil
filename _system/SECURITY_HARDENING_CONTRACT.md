@@ -46,6 +46,9 @@ Application-serving layers (Express, FastAPI, Nginx, etc.) must implement these 
 - **SameSite:** Default to `Lax` or `Strict`.
 - **Cache Control:** Use `Cache-Control: no-store` on all authenticated or sensitive API responses.
 - **Logout:** Implement `Clear-Site-Data` header on logout endpoints.
+- **No default accounts in source:** Do not ship hardcoded admin emails/passwords in repos or
+  templates. Use gitignored env files and optional dev-only seed scripts; see
+  `_system/AUTH_AND_ONBOARDING_PATTERNS.md`.
 
 ## 6. Structured Logging
 - **Format:** Use structured JSON logs.

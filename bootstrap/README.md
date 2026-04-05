@@ -52,6 +52,7 @@ Use this directory to install, upgrade, verify, repair, and remove AIAST in a ta
 - `check-runtime-foundations.sh` — validate generated packaging, install, mobile, env, and AI runtime scaffolds
 - `emit-host-prompt.sh` — emit a host-safe prompt skeleton that defers to repo-local truth
 - `emit-host-bundle.sh` — export a self-contained host bundle for external consumers that cannot read repo-local paths directly
+- `emit-auxiliary-brief.sh` — emit a markdown brief for optional parallel host CLI / IDE workers (`_system/SUB_AGENT_HOST_DELEGATION.md`)
 - `generate-runtime-foundations.sh` — generate project-owned packaging, install, mobile, logging, and AI scaffolds in a cloned repo
 
 ## Recommended flow

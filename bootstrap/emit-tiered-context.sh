@@ -126,6 +126,7 @@ TIER_A = TIER_B + [
     "_system/API_DESIGN_STANDARDS.md",
     "_system/DEPENDENCY_GOVERNANCE.md",
     "_system/MODERN_UI_PATTERNS.md",
+    "_system/AUTH_AND_ONBOARDING_PATTERNS.md",
     "_system/DESIGN_EXCELLENCE_FRAMEWORK.md",
     "_system/SECURITY_REDACTION_AND_AUDIT.md",
     "_system/SECURITY_HARDENING_CONTRACT.md",

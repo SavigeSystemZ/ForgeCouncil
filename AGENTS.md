@@ -38,21 +38,12 @@ Read these files before making meaningful edits:
 28. `TEST_STRATEGY.md`
 29. `RISK_REGISTER.md`
 30. `RELEASE_NOTES.md`
-31. `PRD.md` (product requirements SSoT)
-32. `ARCHITECTURE.md` (system structure SSoT)
-33. `DATA_MODEL.md` (entities and memory tiers SSoT)
-34. `NFR.md` (security and quality attributes SSoT)
-35. `RUNBOOK.md` (operator procedures)
-36. `GPT54.md` (Codex / GPT-5.x family working contract)
-37. `_system/forge-council/README.md` (Forge Council extension index)
-38. `REPO_PROFILE.md` and `CONFLICT_MAP.md` (after running `bootstrap/fc-repo-ingestion.sh`)
 
 If context appears reset, incomplete, or stale, reload the canonical docs before continuing.
 
 ## Core contract
 
 - `_system/` is the agent operating layer; runtime code must not depend on it.
-- Forge Council product-specific roles, policies, skills, templates, and prompt packs live under `_system/forge-council/` and **extend** (do not replace) the AIAST core; resolve overlaps with `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`.
 - App-specific truth belongs in repo files, not in tool-local memory.
 - When host-level or orchestrator instructions exist, resolve them with `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`.
 - Repo-local runtime and product facts override generic host assumptions.
@@ -73,6 +64,8 @@ If context appears reset, incomplete, or stale, reload the canonical docs before
 - Use `_system/HOST_ADAPTER_POLICY.md`, `bootstrap/generate-host-adapters.sh`, and `bootstrap/check-host-adapter-alignment.sh` when tool-entry or adapter-load surfaces change.
 - Use `_system/HOST_BUNDLE_CONTRACT.md`, `bootstrap/emit-host-bundle.sh`, and `bootstrap/check-host-bundle.sh` when an external host cannot read repo-local paths directly or when host-bundle export surfaces change.
 - Never commit secrets, raw credentials, tokens, or machine-local policy files.
+- When designing login, registration, guest access, or dev-only admin seeding, follow
+  `_system/AUTH_AND_ONBOARDING_PATTERNS.md` (env-based seeds only; no default accounts in git).
 - MCP tools are optional accelerators, not mandatory dependencies for normal progress.
 - The master template may include app-shaped files such as `PLAN.md` or `DESIGN_NOTES.md`, but in the master template they must stay app-agnostic until copied into a real repo.
 - Once the system is installed into a real repo, replace placeholders with repo-specific truth early and keep those files current.

@@ -226,7 +226,7 @@
       "category": "cursor-rule",
       "kind": "file",
       "path": ".cursor/rules/60-composer-orchestration.mdc",
-      "size_bytes": 1271
+      "size_bytes": 1357
     },
     {
       "category": "cursor-rule",
@@ -376,13 +376,13 @@
       "category": "entrypoint",
       "kind": "file",
       "path": "AGENTS.md",
-      "size_bytes": 9594
+      "size_bytes": 9087
     },
     {
       "category": "system-metadata",
       "kind": "file",
       "path": "AIAST_CHANGELOG.md",
-      "size_bytes": 33734
+      "size_bytes": 35882
     },
     {
       "category": "system-metadata",
@@ -400,7 +400,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "CHANGELOG.md",
-      "size_bytes": 3305
+      "size_bytes": 3789
     },
     {
       "category": "entrypoint",
@@ -454,7 +454,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "PLAN.md",
-      "size_bytes": 2598
+      "size_bytes": 2649
     },
     {
       "category": "working-state",
@@ -466,13 +466,13 @@
       "category": "system-metadata",
       "kind": "file",
       "path": "README.md",
-      "size_bytes": 9106
+      "size_bytes": 8756
     },
     {
       "category": "working-state",
       "kind": "file",
       "path": "RELEASE_NOTES.md",
-      "size_bytes": 1888
+      "size_bytes": 2212
     },
     {
       "category": "working-state",
@@ -496,19 +496,19 @@
       "category": "working-state",
       "kind": "file",
       "path": "TEST_STRATEGY.md",
-      "size_bytes": 1915
+      "size_bytes": 1955
     },
     {
       "category": "working-state",
       "kind": "file",
       "path": "TODO.md",
-      "size_bytes": 2290
+      "size_bytes": 2564
     },
     {
       "category": "working-state",
       "kind": "file",
       "path": "WHERE_LEFT_OFF.md",
-      "size_bytes": 2539
+      "size_bytes": 3237
     },
     {
       "category": "entrypoint",
@@ -520,7 +520,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/.template-install.json",
-      "size_bytes": 310
+      "size_bytes": 318
     },
     {
       "category": "system-core",
@@ -567,6 +567,12 @@
     {
       "category": "system-core",
       "kind": "file",
+      "path": "_system/AUTH_AND_ONBOARDING_PATTERNS.md",
+      "size_bytes": 3995
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
       "path": "_system/CHATBOT_GUIDE.md",
       "size_bytes": 796
     },
@@ -592,7 +598,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/CONTEXT_INDEX.md",
-      "size_bytes": 11031
+      "size_bytes": 11339
     },
     {
       "category": "system-core",
@@ -645,6 +651,12 @@
     {
       "category": "system-core",
       "kind": "file",
+      "path": "_system/GIT_REMOTE_AND_SYNC_PROTOCOL.md",
+      "size_bytes": 6218
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
       "path": "_system/GOLDEN_EXAMPLES_POLICY.md",
       "size_bytes": 1937
     },
@@ -658,7 +670,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/HANDOFF_PROTOCOL.md",
-      "size_bytes": 4712
+      "size_bytes": 5273
     },
     {
       "category": "system-core",
@@ -700,19 +712,19 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/INTEGRITY_MANIFEST.sha256",
-      "size_bytes": 42993
+      "size_bytes": 38909
     },
     {
       "category": "system-core",
       "kind": "file",
       "path": "_system/KEY.md",
-      "size_bytes": 68927
+      "size_bytes": 81638
     },
     {
       "category": "system-core",
       "kind": "file",
       "path": "_system/LOAD_ORDER.md",
-      "size_bytes": 4740
+      "size_bytes": 4953
     },
     {
       "category": "system-core",
@@ -748,7 +760,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/MODERN_UI_PATTERNS.md",
-      "size_bytes": 7666
+      "size_bytes": 8667
     },
     {
       "category": "system-core",
@@ -784,7 +796,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/PROJECT_PROFILE.md",
-      "size_bytes": 4724
+      "size_bytes": 5194
     },
     {
       "category": "system-core",
@@ -796,7 +808,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/PROMPTS_INDEX.md",
-      "size_bytes": 2910
+      "size_bytes": 2823
     },
     {
       "category": "system-core",
@@ -868,13 +880,13 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/REPO_OPERATING_PROFILE.md",
-      "size_bytes": 3714
+      "size_bytes": 3689
     },
     {
       "category": "system-core",
       "kind": "file",
       "path": "_system/SECURITY_HARDENING_CONTRACT.md",
-      "size_bytes": 4432
+      "size_bytes": 4649
     },
     {
       "category": "system-core",
@@ -898,7 +910,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/SUB_AGENT_HOST_DELEGATION.md",
-      "size_bytes": 4169
+      "size_bytes": 6021
     },
     {
       "category": "system-core",
@@ -916,7 +928,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/SYSTEM_REGISTRY.json",
-      "size_bytes": 71936
+      "size_bytes": 72771
     },
     {
       "category": "system-core",
@@ -1714,7 +1726,7 @@
       "category": "prompting",
       "kind": "file",
       "path": "_system/prompt-packs/M9_MULTI_AGENT_CONTINUITY.md",
-      "size_bytes": 1185
+      "size_bytes": 1435
     },
     {
       "category": "prompting",
@@ -1864,7 +1876,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/repo-operating-profile.json",
-      "size_bytes": 4124
+      "size_bytes": 4057
     },
     {
       "category": "review-playbook",
@@ -2056,7 +2068,7 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/README.md",
-      "size_bytes": 11549
+      "size_bytes": 11689
     },
     {
       "category": "bootstrap",
@@ -2068,7 +2080,7 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/check-agent-orchestration.sh",
-      "size_bytes": 3158
+      "size_bytes": 3221
     },
     {
       "category": "bootstrap",
@@ -2193,6 +2205,12 @@
     {
       "category": "bootstrap",
       "kind": "file",
+      "path": "bootstrap/emit-auxiliary-brief.sh",
+      "size_bytes": 1944
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
       "path": "bootstrap/emit-host-bundle.sh",
       "size_bytes": 6012
     },
@@ -2206,13 +2224,13 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/emit-tiered-context.sh",
-      "size_bytes": 4247
+      "size_bytes": 4294
     },
     {
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/fc-api-smoke.sh",
-      "size_bytes": 295
+      "size_bytes": 296
     },
     {
       "category": "bootstrap",
@@ -2231,6 +2249,12 @@
       "kind": "file",
       "path": "bootstrap/fc-gate-check.sh",
       "size_bytes": 1847
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
+      "path": "bootstrap/fc-host-install.sh",
+      "size_bytes": 2358
     },
     {
       "category": "bootstrap",
@@ -2536,7 +2560,7 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/templates/runtime/ops/env/.env.example",
-      "size_bytes": 930
+      "size_bytes": 1189
     },
     {
       "category": "bootstrap",
@@ -2716,7 +2740,7 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/validate-system.sh",
-      "size_bytes": 24105
+      "size_bytes": 24191
     },
     {
       "category": "bootstrap",
@@ -2769,8 +2793,14 @@
     {
       "category": "ops",
       "kind": "file",
+      "path": "ops/env/.env",
+      "size_bytes": 1283
+    },
+    {
+      "category": "ops",
+      "kind": "file",
       "path": "ops/env/.env.example",
-      "size_bytes": 1266
+      "size_bytes": 1321
     },
     {
       "category": "ops",
@@ -2782,7 +2812,13 @@
       "category": "ops",
       "kind": "file",
       "path": "ops/install/install.sh",
-      "size_bytes": 3028
+      "size_bytes": 3068
+    },
+    {
+      "category": "ops",
+      "kind": "file",
+      "path": "ops/install/launch-forge-council-api.sh",
+      "size_bytes": 816
     },
     {
       "category": "ops",
@@ -2794,7 +2830,7 @@
       "category": "ops",
       "kind": "file",
       "path": "ops/install/lib/runtime-foundation.sh",
-      "size_bytes": 7551
+      "size_bytes": 7609
     },
     {
       "category": "ops",
@@ -2841,8 +2877,14 @@
     {
       "category": "packaging",
       "kind": "file",
+      "path": "packaging/icons/hicolor/scalable/apps/io.aiaast.forge.council.svg",
+      "size_bytes": 590
+    },
+    {
+      "category": "packaging",
+      "kind": "file",
       "path": "packaging/io.aiaast.forge.council.desktop",
-      "size_bytes": 195
+      "size_bytes": 289
     },
     {
       "category": "packaging",
@@ -2878,7 +2920,7 @@
       "category": "registry",
       "kind": "file",
       "path": "registry/ports.yaml",
-      "size_bytes": 111
+      "size_bytes": 130
     },
     {
       "category": "tools",
@@ -2917,8 +2959,8 @@
       "size_bytes": 2932
     }
   ],
-  "managed_file_count": 486,
+  "managed_file_count": 493,
   "system_readme_path": "README.md",
   "template_name": "AIAST",
-  "template_version": "1.19.2"
+  "template_version": "1.19.5"
 }

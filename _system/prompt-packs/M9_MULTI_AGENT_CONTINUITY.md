@@ -4,6 +4,7 @@
 
 ```
 Load AGENTS.md, _system/INSTRUCTION_PRECEDENCE_CONTRACT.md, _system/REPO_OPERATING_PROFILE.md, and _system/LOAD_ORDER.md first.
+Load _system/SUB_AGENT_HOST_DELEGATION.md when the plan includes parallel host CLI or IDE auxiliary sessions (optional; not auto-spawned).
 Treat this prompt as host-level orchestration context only. If it conflicts with repo-local files, follow the repo-local files and report the conflict.
 
 Plan the changes needed to improve handoff quality, context durability, or tool interoperability.
@@ -19,6 +20,7 @@ Deliver:
 
 ```
 Load AGENTS.md, _system/INSTRUCTION_PRECEDENCE_CONTRACT.md, _system/REPO_OPERATING_PROFILE.md, and _system/LOAD_ORDER.md first.
+Load _system/SUB_AGENT_HOST_DELEGATION.md if you are defining or tightening parallel host auxiliary workflows.
 Treat this prompt as host-level orchestration context only. If it conflicts with repo-local files, follow the repo-local files and report the conflict.
 
 Implement the continuity improvements.

@@ -3,7 +3,7 @@
 set -euo pipefail
 
 HOST="${FC_API_HOST:-127.0.0.1}"
-PORT="${FC_API_PORT:-8010}"
+PORT="${FC_API_PORT:-46124}"
 
 if ! command -v curl >/dev/null 2>&1; then
   echo "curl required" >&2

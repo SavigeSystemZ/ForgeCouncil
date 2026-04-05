@@ -9,7 +9,7 @@ This file is the map of the local agent operating system.
 - `REPO_OPERATING_PROFILE.md` — compact host-ingestion summary
 - `INSTALLER_AND_UPGRADE_CONTRACT.md` — install, update, repair, and heal guarantees for AIAST lifecycle actions
 - `CROSS_PLATFORM_DISTRIBUTION_AND_INSTALLER_STANDARD.md` — shipped-app installers, generated repo-root distribution tree (see runtime templates), multi-OS delivery, and operator menu (install/upgrade/repair/purge)
-- `SUB_AGENT_HOST_DELEGATION.md` — optional parallel host CLI / auxiliary sessions, scope rules, and primary takeover when auxiliaries fail
+- `SUB_AGENT_HOST_DELEGATION.md` — optional parallel host CLI / auxiliary sessions, scope rules, and primary takeover when auxiliaries fail; pair with `bootstrap/emit-auxiliary-brief.sh` for standardized briefs
 - `KEY.md` — exhaustive file-by-file key with when-to-use guidance
 - `HOST_ADAPTER_POLICY.md` — policy for generated tool-entry and adapter-load surfaces
 - `HOST_BUNDLE_CONTRACT.md` — contract for self-contained external host bundles
@@ -21,12 +21,14 @@ This file is the map of the local agent operating system.
 - `PROJECT_RULES.md` — repo-wide non-negotiable rules
 - `MEMORY_RULES.md` — what belongs in durable memory
 - `EXECUTION_PROTOCOL.md` — how work should be done
+- `AUTH_AND_ONBOARDING_PATTERNS.md` — optional vs gated auth, dev seeding via env (no credentials in git), progressive trust
 - `AGENT_ROLE_CATALOG.md` — canonical role and delegation model for multi-agent work
 - `AGENT_DISCOVERY_MATRIX.md` — which tools load which files
 - `DESIGN_EXCELLENCE_FRAMEWORK.md` — product and interface quality rules
 - `SYSTEM_AWARENESS_PROTOCOL.md` — how the operating system tracks its own managed surfaces
 - `HALLUCINATION_DEFENSE_PROTOCOL.md` — how to detect and recover from ungrounded claims
 - `HANDOFF_PROTOCOL.md` — quality requirements for agent-to-agent handoffs
+- `GIT_REMOTE_AND_SYNC_PROTOCOL.md` — remotes, SSH sync discipline, fetch/pull/push expectations for agents
 - `ports/PORT_POLICY.md` — governed port allocation protocol (runtime registry + tools)
 - `design-system/THEME_GOVERNANCE.md` — additive themes; no destructive visual overwrites
 - `SYSTEM_REGISTRY.json` — machine-readable registry of AIAST-managed files

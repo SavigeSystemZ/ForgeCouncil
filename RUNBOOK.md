@@ -30,7 +30,7 @@ Full system validation: `bootstrap/validate-system.sh .` (expect `system_ok`).
 
 ## 3. Control plane HTTP API (M5+ stub)
 
-Default bind: `127.0.0.1:8010` (override with `FC_API_HOST`, `FC_API_PORT`).
+Default bind: `127.0.0.1:46124` (override with `FC_API_HOST`, `FC_API_PORT`).
 
 **Persistence:** unset `FC_STATE_DB` → in-memory (lost on restart). Set `FC_STATE_DB` to a file path (e.g. `data/forge-council/state.db`) for **SQLite** (WAL) runs + ledger events.
 

@@ -28,7 +28,7 @@ app repositories.
 
 - `.venv/bin/pytest` — 29 passed
 - `.venv/bin/ruff check src tests` — clean
-- `bootstrap/fc-host-install.sh` + `ops/install/launch-forge-council-api.sh` + `curl http://127.0.0.1:8010/health` — OK (run installer as **desktop user** so `~/.local/share/applications` is yours, not root)
+- `bootstrap/fc-host-install.sh` + `ops/install/launch-forge-council-api.sh` + `curl http://127.0.0.1:46124/health` — OK (run installer as **desktop user** so `~/.local/share/applications` is yours, not root)
 - `bootstrap/validate-system.sh .` — run after `generate-system-registry.sh --write` when touching registry/system files (expect `system_ok`)
 
 ## Next best step

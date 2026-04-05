@@ -1,7 +1,7 @@
 assignments:
   - project: Forge Council
     service: app
-    host_port: 46300
+    host_port: 46100
     container_port: 3000
     bind_host: 127.0.0.1
     exposure: local_ui

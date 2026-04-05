@@ -1,20 +1,5 @@
 # Project Agent Operating System
 
-## Forge Council product
-
-This repository implements **Forge Council**, a hybrid **software-factory control plane** (artifact-first, policy-gated, memory-backed). Product SSoT: `PRD.md`, `ARCHITECTURE.md`, `DATA_MODEL.md`, `NFR.md`, `RUNBOOK.md`. Operator automation: `bootstrap/fc-repo-ingestion.sh`, `GPT54.md`, and `_system/forge-council/`.
-
-### Control plane: host install (Linux desktop)
-
-Run from the repo root as the desktop user (not root) so the launcher lands in your menu:
-
-1. `./bootstrap/fc-host-install.sh` — creates `.venv`, `pip install -e '.[dev,api]'`, writes `ops/env/.env` (default **8010**), installs `~/.local/share/applications/io.aiaast.forge.council.desktop`, and copies the app icon into hicolor.
-2. Start **Forge Council** from the app menu, or run `ops/install/launch-forge-council-api.sh`.
-3. Check `http://127.0.0.1:8010/health` (override with `APP_PORT` / `FC_API_PORT` in `ops/env/.env`).
-4. Quality: `.venv/bin/ruff check src tests` and `.venv/bin/pytest`.
-
----
-
 This repo carries a self-contained, project-local AI operating system that governs how agents design, build, debug, test, review, package, secure, upgrade, and hand off work.
 
 It is also designed to coexist with external host/orchestrator instruction layers without treating those layers as repo-local truth.
@@ -126,7 +111,6 @@ Nothing in `_system/` should be required for the app to run.
 
 ## Bootstrap helpers
 
-- `bootstrap/fc-host-install.sh` — Forge Council: venv + editable install + desktop launcher + icon (see section above)
 - `bootstrap/init-project.sh` — install the system into a target repo
 - `bootstrap/install-missing-files.sh` — add new template files without overwriting existing repo-owned state, then backfill missing runtime scaffolds and onboarding defaults
 - `bootstrap/update-template.sh` — preview and apply AIAST upgrades, then re-run the same safe onboarding backfill path used during install

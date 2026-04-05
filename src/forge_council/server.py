@@ -7,7 +7,7 @@ def main() -> None:
     import uvicorn
 
     host = __import__("os").environ.get("FC_API_HOST", "127.0.0.1")
-    port = int(__import__("os").environ.get("FC_API_PORT", "8010"))
+    port = int(__import__("os").environ.get("FC_API_PORT", "46124"))
     uvicorn.run(
         "forge_council.api_app:app",
         host=host,

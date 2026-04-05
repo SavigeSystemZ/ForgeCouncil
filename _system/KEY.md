@@ -2,7 +2,7 @@
 
 This file is the exhaustive agent-facing key for the installable AIAST surface.
 
-It covers 416 managed files and is generated from the canonical managed-file inventory.
+It covers 493 managed files and is generated from the canonical managed-file inventory.
 
 ## How To Use This File
 
@@ -84,9 +84,16 @@ These files install, update, repair, validate, and generate the AIAST operating 
 - `bootstrap/detect-drift.sh` - Bootstrap command for Detect Drift. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/detect-instruction-conflicts.sh` - Bootstrap command for Detect Instruction Conflicts. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/discover-plugins.sh` - Scans for installed plugins and reports their name, version, hooks, and enabled status. Run when auditing or listing available plugins.
+- `bootstrap/emit-auxiliary-brief.sh` - Bootstrap command for Emit Auxiliary Brief. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/emit-host-bundle.sh` - Bootstrap command for Emit Host Bundle. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/emit-host-prompt.sh` - Bootstrap command for Emit Host Prompt. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/emit-tiered-context.sh` - Emits a tier-appropriate context load sequence based on model context window. Run with --tier A|B|C|D or --model <name> to get the right file list for a given model.
+- `bootstrap/fc-api-smoke.sh` - Bootstrap command for Fc API Smoke. Run when performing the named install, repair, validation, emission, or generation task.
+- `bootstrap/fc-controlled-run.sh` - Bootstrap command for Fc Controlled Run. Run when performing the named install, repair, validation, emission, or generation task.
+- `bootstrap/fc-export-resume-packet.sh` - Bootstrap command for Fc Export Resume Packet. Run when performing the named install, repair, validation, emission, or generation task.
+- `bootstrap/fc-gate-check.sh` - Bootstrap command for Fc Gate Check. Run when performing the named install, repair, validation, emission, or generation task.
+- `bootstrap/fc-host-install.sh` - Bootstrap command for Fc Host Install. Run when performing the named install, repair, validation, emission, or generation task.
+- `bootstrap/fc-repo-ingestion.sh` - Bootstrap command for Fc Repo Ingestion. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/generate-diagnostic-report.sh` - Aggregates AIAST version, validation, environment, drift, and plugin status into one report. Run when you need a complete health snapshot.
 - `bootstrap/generate-host-adapters.sh` - Generator for tool-entry and host-adapter surfaces. Run when host-adapter-manifest inputs change.
 - `bootstrap/generate-operating-profile.sh` - Generator for the compact repo operating profile. Run when installable operating-model facts change.
@@ -182,6 +189,7 @@ These files define the installable operating-system contracts, policies, guides,
 - `_system/AGENT_ROLE_CATALOG.md` - Canonical role catalog and ownership model for delegated work. Read when selecting or defining agent roles.
 - `_system/API_DESIGN_STANDARDS.md` - Core operating-system reference for API Design Standards. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/ARCHITECTURE_DIAGRAM.md` - ASCII box diagrams of the three-layer model, loading flow, adapter pipeline, and validation chain. Read when understanding the system architecture or explaining it to others.
+- `_system/AUTH_AND_ONBOARDING_PATTERNS.md` - Core operating-system reference for Auth And Onboarding Patterns. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/CHATBOT_GUIDE.md` - Core operating-system reference for Chatbot Guide. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/CHECKPOINT_PROTOCOL.md` - Core operating-system reference for Checkpoint Protocol. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/CODING_STANDARDS.md` - Core operating-system reference for Coding Standards. Load when the task touches that named contract, policy, guide, or manifest.
@@ -195,6 +203,7 @@ These files define the installable operating-system contracts, policies, guides,
 - `_system/ENVIRONMENT_VALIDATION_CONTRACT.md` - Scope and rules for environment-level checks (CLI tools, ports, env vars, disk space). Read when adding or adjusting environment validation behavior.
 - `_system/EXECUTION_PROTOCOL.md` - How work should be executed, validated, and handed off. Read before starting or reshaping a meaningful execution slice.
 - `_system/FAILURE_MODES_AND_RECOVERY.md` - Core operating-system reference for Failure Modes And Recovery. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/GIT_REMOTE_AND_SYNC_PROTOCOL.md` - Core operating-system reference for Git Remote And Sync Protocol. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/GOLDEN_EXAMPLES_POLICY.md` - Policy for using curated examples without copying donor-app truth. Read before drafting new system docs, prompts, or working-file structures.
 - `_system/HALLUCINATION_DEFENSE_PROTOCOL.md` - Protocol for grounding claims in repo-local evidence. Use when confidence or claimed system state could drift from evidence.
 - `_system/HANDOFF_PROTOCOL.md` - Core operating-system reference for Handoff Protocol. Load when the task touches that named contract, policy, guide, or manifest.
@@ -251,6 +260,44 @@ These files define the installable operating-system contracts, policies, guides,
 - `_system/aiaast-capabilities.json` - Core operating-system reference for AIAST Capabilities. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/context-budget-profiles.json` - Machine-readable tier assignments for 21 model families with context token counts. Use when emit-tiered-context.sh needs to resolve a model to a tier.
 - `_system/design-system/THEME_GOVERNANCE.md` - Core operating-system reference for Theme Governance. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/README.md` - Core operating-system reference for Readme. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/context/architecture_context.md` - Core operating-system reference for Architecture Context. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/context/integration_context.md` - Core operating-system reference for Integration Context. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/context/product_context.md` - Core operating-system reference for Product Context. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/context/quality_context.md` - Core operating-system reference for Quality Context. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/context/security_context.md` - Core operating-system reference for Security Context. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/context/ux_context.md` - Core operating-system reference for UX Context. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/policies/approval_policy.md` - Core operating-system reference for Approval Policy. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/policies/escalation_policy.md` - Core operating-system reference for Escalation Policy. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/policies/export_policy.md` - Core operating-system reference for Export Policy. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/policies/memory_policy.md` - Core operating-system reference for Memory Policy. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/policies/repo_precedence.md` - Core operating-system reference for Repo Precedence. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/policies/tool_policy.md` - Core operating-system reference for Tool Policy. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/roles/boss.md` - Core operating-system reference for Boss. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/roles/builder_primary.md` - Core operating-system reference for Builder Primary. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/roles/builder_secondary.md` - Core operating-system reference for Builder Secondary. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/roles/debugger_integrator.md` - Core operating-system reference for Debugger Integrator. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/roles/planner.md` - Core operating-system reference for Planner. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/roles/planner_review.md` - Core operating-system reference for Planner Review. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/roles/reviewer_security.md` - Core operating-system reference for Reviewer Security. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/roles/tester.md` - Core operating-system reference for Tester. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/skills/blueprint_skill.md` - Core operating-system reference for Blueprint Skill. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/skills/conflict_scan_skill.md` - Core operating-system reference for Conflict Scan Skill. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/skills/eval_skill.md` - Core operating-system reference for Eval Skill. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/skills/milestone_packet_skill.md` - Core operating-system reference for Milestone Packet Skill. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/skills/prompt_export_skill.md` - Core operating-system reference for Prompt Export Skill. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/skills/repo_ingestion_skill.md` - Core operating-system reference for Repo Ingestion Skill. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/skills/resume_packet_skill.md` - Core operating-system reference for Resume Packet Skill. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/skills/review_gate_skill.md` - Core operating-system reference for Review Gate Skill. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/skills/runtime_detection_skill.md` - Core operating-system reference for Runtime Detection Skill. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/skills/test_gate_skill.md` - Core operating-system reference for Test Gate Skill. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/templates/conflict_map.template.md` - Core operating-system reference for Conflict Map Template. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/templates/decision_record.template.md` - Core operating-system reference for Decision Record Template. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/templates/milestone.template.md` - Core operating-system reference for Milestone Template. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/templates/repo_profile.template.md` - Core operating-system reference for Repo Profile Template. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/templates/resume_packet.template.md` - Core operating-system reference for Resume Packet Template. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/templates/review_report.template.md` - Core operating-system reference for Review Report Template. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/forge-council/templates/task_packet.template.md` - Core operating-system reference for Task Packet Template. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/golden-examples/PATTERN_INDEX.md` - Golden-example asset for Pattern Index. Use when auditing or refreshing the curated example pack.
 - `_system/golden-examples/README.md` - Golden-example asset for Readme. Use when auditing or refreshing the curated example pack.
 - `_system/golden-examples/golden-example-manifest.json` - Golden-example asset for Golden Example Manifest. Use when auditing or refreshing the curated example pack.
@@ -328,6 +375,23 @@ These files support prompt emission, reusable prompt templates, and prompt packs
 - `_system/prompt-packs/M7_DESIGN_EXCELLENCE.md` - Prompt-pack asset for M7 Design Excellence. Load when generating prompts for the matching workflow or role.
 - `_system/prompt-packs/M8_SECURITY_AND_COMPLIANCE.md` - Prompt-pack asset for M8 Security And Compliance. Load when generating prompts for the matching workflow or role.
 - `_system/prompt-packs/M9_MULTI_AGENT_CONTINUITY.md` - Prompt-pack asset for M9 Multi Agent Continuity. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M0.0-planning.md` - Prompt-pack asset for M0 0 Planning. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M0.1-canonical-docs.md` - Prompt-pack asset for M0 1 Canonical Docs. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M0.2-repo-local-layer.md` - Prompt-pack asset for M0 2 Repo Local Layer. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M0.3-security-governance.md` - Prompt-pack asset for M0 3 Security Governance. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M0.4-independent-review.md` - Prompt-pack asset for M0 4 Independent Review. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M1.0-planning.md` - Prompt-pack asset for M1 0 Planning. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M1.1-repo-ingestion.md` - Prompt-pack asset for M1 1 Repo Ingestion. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M1.2-tests.md` - Prompt-pack asset for M1 2 Tests. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M1.3-docs-polish.md` - Prompt-pack asset for M1 3 Docs Polish. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M1.4-review.md` - Prompt-pack asset for M1 4 Review. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M2.0-planning.md` - Prompt-pack asset for M2 0 Planning. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M2.1-blueprint-engine.md` - Prompt-pack asset for M2 1 Blueprint Engine. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M2.2-tests.md` - Prompt-pack asset for M2 2 Tests. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M2.3-docs.md` - Prompt-pack asset for M2 3 Docs. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/M2.4-review.md` - Prompt-pack asset for M2 4 Review. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/README.md` - Prompt-pack asset for Readme. Load when generating prompts for the matching workflow or role.
+- `_system/prompt-packs/forge-council/master-handoff.md` - Prompt-pack asset for Master Handoff. Load when generating prompts for the matching workflow or role.
 - `_system/prompt-templates/architecture_prompt_template.md` - Prompt template for Architecture Prompt Template. Use when assembling a task-specific prompt from reusable building blocks.
 - `_system/prompt-templates/developer_prompt_template.md` - Prompt template for Developer Prompt Template. Use when assembling a task-specific prompt from reusable building blocks.
 - `_system/prompt-templates/optimization_prompt_template.md` - Prompt template for Optimization Prompt Template. Use when assembling a task-specific prompt from reusable building blocks.
@@ -395,6 +459,7 @@ These files describe packaging policy and provide reusable packaging templates.
 - `packaging/README.md` - Managed AIAST surface for Readme. Use it when the task clearly touches the surface named by this file.
 - `packaging/appimage.yml` - Managed AIAST surface for Appimage. Use it when the task clearly touches the surface named by this file.
 - `packaging/flatpak-manifest.json` - Managed AIAST surface for Flatpak Manifest. Use it when the task clearly touches the surface named by this file.
+- `packaging/icons/hicolor/scalable/apps/io.aiaast.forge.council.svg` - Managed AIAST surface for Io AIAST Forge Council Svg. Use it when the task clearly touches the surface named by this file.
 - `packaging/io.aiaast.forge.council.desktop` - Managed AIAST surface for Io AIAST Forge Council Desktop. Use it when the task clearly touches the surface named by this file.
 - `packaging/signing/README.md` - Managed AIAST surface for Readme. Use it when the task clearly touches the surface named by this file.
 - `packaging/snapcraft.yaml` - Managed AIAST surface for Snapcraft. Use it when the task clearly touches the surface named by this file.
@@ -470,6 +535,12 @@ These files are auto-loaded Cursor rule overlays.
 - `.cursor/rules/50-working-files.mdc` - Cursor rule overlay for 50 Working Files. Auto-loaded by Cursor to reinforce repo-local behavior.
 - `.cursor/rules/60-composer-orchestration.mdc` - Cursor rule overlay for 60 Composer Orchestration. Auto-loaded by Cursor to reinforce repo-local behavior.
 - `.cursor/rules/IDE_HOST_CURSOR_WINDSURF.mdc` - Cursor rule overlay for Ide Host Cursor Windsurf. Auto-loaded by Cursor to reinforce repo-local behavior.
+- `.cursor/rules/fc-00-global.mdc` - Cursor rule overlay for Fc 00 Global. Auto-loaded by Cursor to reinforce repo-local behavior.
+- `.cursor/rules/fc-10-architecture.mdc` - Cursor rule overlay for Fc 10 Architecture. Auto-loaded by Cursor to reinforce repo-local behavior.
+- `.cursor/rules/fc-20-quality.mdc` - Cursor rule overlay for Fc 20 Quality. Auto-loaded by Cursor to reinforce repo-local behavior.
+- `.cursor/rules/fc-30-security.mdc` - Cursor rule overlay for Fc 30 Security. Auto-loaded by Cursor to reinforce repo-local behavior.
+- `.cursor/rules/fc-40-handoffs.mdc` - Cursor rule overlay for Fc 40 Handoffs. Auto-loaded by Cursor to reinforce repo-local behavior.
+- `.cursor/rules/fc-50-precedence.mdc` - Cursor rule overlay for Fc 50 Precedence. Auto-loaded by Cursor to reinforce repo-local behavior.
 
 ### Cursor Skills
 
@@ -494,5 +565,7 @@ These files back Cursor skill surfaces and skill-local commands.
 
 These files are supporting Cursor-specific overlays that do not fit the narrower agent, command, rule, or skill buckets.
 
+- `.cursor/.gitignore` - Cursor overlay surface for Gitignore. Read or regenerate when Cursor-specific integration surfaces change.
 - `.cursor/README.md` - Cursor overlay surface for Readme. Read or regenerate when Cursor-specific integration surfaces change.
 - `.cursor/mcp.json` - Cursor overlay surface for MCP. Read or regenerate when Cursor-specific integration surfaces change.
+- `.cursor/plans/Forge Council Master Plan-d7c80b7f.plan.md` - Cursor overlay surface for Forge Council Master Plan D7c80b7f Plan. Read or regenerate when Cursor-specific integration surfaces change.

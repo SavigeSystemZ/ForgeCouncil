@@ -113,6 +113,22 @@ Build interfaces that feel native, fast, and intentional on every device.
 - Implement command palettes (Cmd+K / Ctrl+K) for power users in complex applications.
 - Provide keyboard shortcuts for frequent actions and document them in a discoverable way.
 
+## Navigation deduplication
+
+- **One primary navigation authority per surface** — do not duplicate the same destination in a
+  sidebar, top bar, footer, and floating menu on the same view unless each instance serves a clearly
+  different audience (e.g. mobile drawer vs desktop rail). Prefer a single menu for a given
+  breakpoint.
+- **Avoid redundant controls** — if an action appears in a page header, do not repeat the same
+  labeled button in a card on the same page unless one is a shortcut with distinct context (e.g.
+  empty-state CTA). Remove duplicate “Settings”, “Profile”, or “Home” links that navigate to the
+  same route.
+- **Command palettes** should complement, not clone, the full nav: expose search and power actions,
+  not a second copy of every sidebar item.
+- When refactoring, **audit routes** linked from multiple chrome elements and collapse to the
+  pattern that matches `_system/DESIGN_EXCELLENCE_FRAMEWORK.md` and the product’s information
+  architecture.
+
 ## Responsive tables and data
 
 - Use horizontal scrolling for wide tables on narrow screens.

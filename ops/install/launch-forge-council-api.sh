@@ -15,7 +15,7 @@ if [[ -f "${ENV_FILE}" ]]; then
 fi
 
 : "${FC_API_HOST:=${APP_BIND_ADDRESS:-127.0.0.1}}"
-: "${FC_API_PORT:=${APP_PORT:-8010}}"
+: "${FC_API_PORT:=${APP_PORT:-46124}}"
 export FC_API_HOST FC_API_PORT
 
 cd "${ROOT_DIR}"
