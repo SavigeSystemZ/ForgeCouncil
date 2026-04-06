@@ -1,11 +1,11 @@
 {
   "name": "security-scan",
-  "version": "1.0.0",
-  "description": "Wraps bootstrap/scan-security.sh and optional SAST tools into a unified security scan plugin.",
-  "aiast_min_version": "1.13.0",
-  "hooks": ["security.scan", "ci.pre_commit"],
-  "capabilities": ["security-scanner"],
+  "version": "1.1.0",
+  "description": "Integrated SAST/DAST security scanning for AIAST repos.",
+  "aiast_min_version": "1.21.0",
+  "hooks": ["security.scan", "security.audit", "validation.report"],
+  "capabilities": ["security-scanner", "audit-reporter"],
   "owned_paths": ["_system/plugins/security-scan/"],
-  "requires": [],
+  "requires": ["semgrep", "nmap"],
   "enabled": true
 }

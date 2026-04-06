@@ -330,6 +330,7 @@ aiaast_refresh_onboarding_baseline() {
   local script_dir="$1"
   local repo_root="$2"
   local app_name="${3:-}"
+  local force="${4:-0}"
 
   if [[ -z "${app_name}" ]]; then
     app_name="$(aiaast_resolve_app_name "${repo_root}")"
@@ -339,7 +340,10 @@ aiaast_refresh_onboarding_baseline() {
     bash "${script_dir}/configure-project-profile.sh" "${repo_root}" --app-name "${app_name}"
   fi
 
-  bash "${script_dir}/generate-runtime-foundations.sh" "${repo_root}" --app-name "${app_name}"
+  local force_flag=()
+  [[ "${force}" == "1" ]] && force_flag=("--force")
+
+  bash "${script_dir}/generate-runtime-foundations.sh" "${repo_root}" --app-name "${app_name}" "${force_flag[@]}"
   bash "${script_dir}/suggest-project-profile.sh" "${repo_root}" --write
   bash "${script_dir}/seed-product-brief.sh" "${repo_root}" --app-name "${app_name}"
   bash "${script_dir}/recommend-starter-blueprint.sh" "${repo_root}" --write

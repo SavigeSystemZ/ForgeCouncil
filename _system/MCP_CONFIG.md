@@ -1,43 +1,40 @@
-# MCP Configuration Strategy
+# Model Context Protocol (MCP) Configuration
 
-Use a layered model:
+This document defines the standardized set of MCP servers used across the AIAST Swarm Fleet to provide agents with consistent tool access and repository context.
 
-1. user-level or global config for shared services across projects
-2. project-level config for repo-scoped services
+## Core MCP Fleet
 
-## Default posture
+| Server Name | Purpose | Suggested Config (JSON) |
+| :--- | :--- | :--- |
+| **@modelcontextprotocol/server-filesystem** | Repository-wide file analysis and multi-file search. | `{"args": ["-y", "@modelcontextprotocol/server-filesystem", "./"]}` |
+| **@modelcontextprotocol/server-brave-search** | Real-time research, documentation lookup, and troubleshooting. | `{"args": ["-y", "@modelcontextprotocol/server-brave-search"], "env": {"BRAVE_API_KEY": "..."}}` |
+| **@modelcontextprotocol/server-github** | Issue management, PR review, and branch coordination. | `{"args": ["-y", "@modelcontextprotocol/server-github"], "env": {"GITHUB_PERSONAL_ACCESS_TOKEN": "..."}}` |
+| **@modelcontextprotocol/server-fetch** | Parsing external web resources and documentation. | `{"args": ["-y", "@modelcontextprotocol/server-fetch"]}` |
 
-- read-only first
-- least privilege first
-- repo scope first
-- token-free repo config by default
+## Agent-Specific Setup
 
-## Recommended categories
+### Cursor (MCP Settings)
+1. Open Cursor Settings -> MCP.
+2. Add a new server for each item in the fleet above using the provided `npx` command line.
+3. Ensure the `filesystem` server is restricted to the current project root.
 
-- project filesystem server
-- doc lookup
-- read-only database diagnostics
-- git or repo metadata
-- optional memory or artifact servers
+### Windsurf (MCP Settings)
+1. Open Windsurf Settings -> MCP.
+2. Add servers using the same `npx` arguments as Cursor.
 
-## Rules
+### Claude Desktop (config.json)
+Merge the following into your `claude_desktop_config.json`:
+```json
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/absolute/path/to/project"]
+    }
+  }
+}
+```
 
-- Scope filesystem servers to the project root only.
-- Use a server catalog with purpose, scopes, risk rating, and audit expectations.
-- Add mutation-capable tools only when clearly justified.
-- Never store secrets in repo-tracked MCP files.
-- Prefer user-level config for servers requiring tokens or OAuth.
-
-## Failure behavior
-
-- If an MCP server errors, note it once and continue with repo context unless the task depends on it.
-- Do not block normal work on doc-search, memory, or auxiliary MCP failures.
-- If an MCP becomes critical to a workflow, document that dependency in `PROJECT_PROFILE.md`.
-
-## Files in this operating system
-
-- `.cursor/mcp.json` — safe empty project-level config
-- `_system/mcp/servers.cursor.example.json` — project-level Cursor example
-- `_system/mcp/servers.codex.example.toml` — Codex example
-- `_system/mcp/MCP_SERVER_CATALOG_TEMPLATE.md` — server inventory template
-- `_system/mcp/README.md` — adaptation notes
+## Security & Drift Prevention
+- **SSoT Rule:** Do not store API keys in this file. Use environment variables or local IDE secret storage.
+- **Anti-Drift:** Any changes to the fleet requirements must be proposed via a `fleet_architect` plan and reflected in this file before being applied to IDE configurations.

@@ -8,6 +8,33 @@
     "C": { "label": "Compact context", "min_tokens": 8000 },
     "D": { "label": "Minimal context", "min_tokens": 1000 }
   },
+  "fleet_profiles": {
+    "fleet_architect": {
+      "role": "Heavy context loading",
+      "authorized_files": ["ARCHITECTURE.md", "PLAN.md"],
+      "permissions": "Read-only on source code"
+    },
+    "fleet_builder": {
+      "role": "Bulk code generation",
+      "authorized_files": ["src/", "lib/", "api/"],
+      "permissions": "Auto-approved writes. Must utilize git-swarm-manager.sh"
+    },
+    "fleet_secops": {
+      "role": "Aggressive DAST/SAST scanning profile",
+      "permissions": "Authorized to execute semgrep and nmap against localhost"
+    },
+    "fleet_researcher": {
+      "role": "Context building",
+      "permissions": "Authorized to execute unrestricted curl, grep, and web searches"
+    }
+  },
+  "authorized_auto_run": [
+    "npm run lint",
+    "pytest",
+    "cargo clippy",
+    "docker compose up",
+    "./TEMPLATE/bootstrap/git-swarm-manager.sh auto-push"
+  ],
   "models": {
     "claude-opus-4": {
       "tier": "A",

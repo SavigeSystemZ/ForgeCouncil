@@ -123,7 +123,8 @@ active_risks = f"""- Risk: Validation baseline is still partially inferred or un
   Owner: current maintainer or active agent"""
 
 watch_list = """- Replace or remove these seeded first-pass risks once repo-local validation evidence and project-specific profile truth exist.
-- Add or tighten operational risk entries as soon as ports, background services, deployment topology, or release policy become concrete."""
+- Add or tighten operational risk entries as soon as ports, background services, deployment topology, or release policy become concrete.
+- **Template drift:** Downstream app repos may fall behind AIAST upgrades if `bootstrap/update-template.sh` (or equivalent) is not run on a cadence. *Severity: low for sandbox repos; higher for production.* Mitigation: track AIAST version in `_system/.template-version` and refresh from master template when security or validation contracts change."""
 
 active_placeholder = "## Active risks\n\n- None recorded yet.\n\n## Watch list"
 watch_placeholder = "## Watch list\n\n- None recorded yet.\n\n## Usage rules"

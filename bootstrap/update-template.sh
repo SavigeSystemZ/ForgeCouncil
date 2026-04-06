@@ -194,7 +194,7 @@ for rel in "${always_refresh_files[@]}"; do
   fi
 done
 
-aiaast_refresh_onboarding_baseline "${RESOLVED_TARGET}/bootstrap" "${RESOLVED_TARGET}"
+aiaast_refresh_onboarding_baseline "${RESOLVED_TARGET}/bootstrap" "${RESOLVED_TARGET}" "" "${REFRESH_MANAGED}"
 
 aiaast_write_install_metadata \
   "${RESOLVED_TARGET}" \

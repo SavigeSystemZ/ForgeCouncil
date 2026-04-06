@@ -25,6 +25,8 @@ Produce work that is:
 - Handoff quality matters because multiple agents may continue the work.
 - Host-level orchestration may exist, but repo-local truth still wins when instructions collide.
 - Governed port allocation: follow `_system/ports/PORT_POLICY.md`, keep host bindings on loopback by default, and run registry collision and preflight tools before shipping compose or service units.
+- Shipped-app installers and host validation: follow `_system/AGENT_INSTALLER_AND_HOST_VALIDATION_PROTOCOL.md`—scaffold install/distribution early after first launchable build; support repair/uninstall; allocate ports via policy tools; after large changes, re-verify launch and rendering (or document gaps).
+- Hooks and integrations: when adding Cursor rules/commands/agents, plugins, CI/GitHub workflows, or MCP—follow `_system/HOOK_AND_ORCHESTRATION_INDEX.md` and keep companion validators and docs updated.
 - Additive theme versioning: do not overwrite working aesthetics in place; add parallel selectable themes per `_system/design-system/THEME_GOVERNANCE.md`.
 
 ## Required working loop
@@ -108,6 +110,15 @@ This repository utilizes a master-scaffolded AI Agent Operating System. To maint
 - **Registry Refresh:** When AIAST-managed files change, regenerate `_system/SYSTEM_REGISTRY.json`.
 - **Profile Refresh:** When AIAST-managed instruction surfaces change, regenerate `_system/REPO_OPERATING_PROFILE.md` and `_system/repo-operating-profile.json`.
 - **Instruction-Layer Validation:** Run `bootstrap/validate-instruction-layer.sh` or `bootstrap/detect-instruction-conflicts.sh --strict` when adapters, prompt packs, or host-safe contracts change.
+
+## Swarm Fleet Operations
+
+When operating in **Swarm Fleet Mode**, you are part of a multi-IDE, task-isolated agent ecosystem.
+- **Branching Policy:** Always work on `ai/<agent_name>/<feature>` branches derived from `dev`.
+- **Commit Protocol:** Use `TEMPLATE/bootstrap/git-swarm-manager.sh auto-push` for all commits.
+- **SSoT Alignment:** All system rules and memory MUST be written to `TEMPLATE/_system/`. Never mutate global IDE configs.
+- **Role Awareness:** Adhere to your assigned Fleet profile (Architect, Builder, SecOps, Researcher) as defined in `_system/agent-performance-profiles.json`.
+- **Integrity:** If you encounter configuration drift or logic loops, run `bootstrap/repair-swarm-integrity.sh --full`.
 
 ## MCP behavior
 

@@ -1,13 +1,10 @@
 {
   "name": "ci-integration",
-  "version": "1.0.0",
-  "description": "Generates CI configuration snippets from the project profile and validates CI pipeline alignment.",
-  "aiast_min_version": "1.13.0",
-  "hooks": [
-    "ci.pre_commit",
-    "ci.post_test"
-  ],
-  "capabilities": ["ci-reporter"],
+  "version": "1.1.0",
+  "description": "GitHub Actions and local CI pipeline integration.",
+  "aiast_min_version": "1.21.0",
+  "hooks": ["ci.pre_commit", "ci.post_test", "validation.report"],
+  "capabilities": ["ci-reporter", "scaffold-generator"],
   "owned_paths": ["_system/plugins/ci-integration/"],
   "requires": [],
   "enabled": true

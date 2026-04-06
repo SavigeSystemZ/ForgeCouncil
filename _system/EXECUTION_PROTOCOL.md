@@ -58,6 +58,7 @@ When operating with Tier S capacity (e.g., Gemini 2.5 Pro):
 - Run the narrowest relevant checks first.
 - Expand outward according to risk.
 - For install, launch, packaging, migration, or operator-facing change, validate the real runtime path.
+- After **large** implementation or refactor sessions, re-check that the app **launches and renders** (or API health) per `AGENT_INSTALLER_AND_HOST_VALIDATION_PROTOCOL.md` unless the change is purely non-runtime.
 - Record command, scope, and result for meaningful verification.
 
 ## Stage 5: Record and hand off

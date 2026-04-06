@@ -4,6 +4,11 @@ This standard applies to **applications built with AIAST**, not to the AIAST
 template lifecycle itself. For AIAST copy/update/repair semantics, see
 `INSTALLER_AND_UPGRADE_CONTRACT.md`.
 
+**Agent operational checklist:** For binding rules on *when* to scaffold
+installers early, *how* to validate production-like host installs (including
+desktop icons), governed ports, dependency/DB setup, and **post-work launch/render
+verification**, read `AGENT_INSTALLER_AND_HOST_VALIDATION_PROTOCOL.md`.
+
 ## Goals
 
 - Every shipping app defines **explicit, automatable** install and uninstall

@@ -98,7 +98,8 @@ Load `_system/AGENT_ROLE_CATALOG.md` whenever work is being split across roles, 
 - Primary adapter: `.github/copilot-instructions.md`
 - Shared repo contract: `AGENTS.md`
 - Must know these also exist: `CODEX.md`, `CLAUDE.md`, `GEMINI.md`, `WINDSURF.md`, `.cursorrules`
-- Best use: inline assistance under the same operating rules
+- When touching **GitHub Actions, workflows, or PR/merge** work, also load `_system/HOOK_AND_ORCHESTRATION_INDEX.md` and `_system/GIT_REMOTE_AND_SYNC_PROTOCOL.md`
+- Best use: inline assistance under the same operating rules; pair with **GitHub / CI steward** role when CI is the main task
 
 ## DeepSeek
 
@@ -142,6 +143,12 @@ Load `_system/AGENT_ROLE_CATALOG.md` whenever work is being split across roles, 
 - Must know these also exist: all other adapter files
 - Context budget: consult `_system/CONTEXT_BUDGET_STRATEGY.md` for tiered loading
 - Best use: offline or privacy-sensitive work under the same operating rules; use fast-path loading for smaller models
+
+## Hook surfaces and orchestration (every tool)
+
+- Master index: `_system/HOOK_AND_ORCHESTRATION_INDEX.md` (Cursor rules/commands/skills/agents, plugins, validation doctors, GitHub/CI, MCP)
+- Cursor delegated agents include `github-ops.md` for CI/merge slices; command: `.cursor/commands/github-session.md`
+- Regenerate root adapters after contract changes: `bootstrap/generate-host-adapters.sh`
 
 ## Unknown or future agent
 

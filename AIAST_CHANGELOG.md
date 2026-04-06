@@ -1,5 +1,62 @@
 # AIAST Changelog
 
+## Unreleased
+
+- None.
+
+## 1.21.0 (2026-04-06)
+
+### GitHub merge discipline
+
+- **`.github/pull_request_template.md`** — PR checklist (validation, secrets, AIAST contracts, hooks).
+- **`.github/ISSUE_TEMPLATE/`** — `config.yml`, `bug_report.md`, `feature_request.md` for consistent triage.
+- **`HOOK_AND_ORCHESTRATION_INDEX.md`** — extended with PR/issue template row; `CONTEXT_INDEX.md` links to `.github/` templates.
+
+### Documentation (carried forward from pre-release)
+
+- **`HOOK_AND_ORCHESTRATION_INDEX.md`** — map of build-out hooks (Cursor rules/commands/skills/agents, plugins, validation doctors, GitHub/CI, MCP) and required companion files. **GitHub / CI steward** role in `AGENT_ROLE_CATALOG.md`; `.cursor/agents/github-ops.md`, `.cursor/commands/github-session.md`; Copilot and `AGENTS.md` cross-links; `MULTI_AGENT_COORDINATION.md` and `AGENT_DISCOVERY_MATRIX.md` updates.
+- **`AGENT_INSTALLER_AND_HOST_VALIDATION_PROTOCOL.md`** — binding agent rules: scaffold installers early after first launchable build; production-like host testing (desktop integration where applicable); robust install/repair/uninstall; governed secure ports and DB/dependency setup; re-verify launch/render after large workloads. Wired into `AGENTS.md`, `MASTER_SYSTEM_PROMPT.md`, `LOAD_ORDER.md`, `VALIDATION_GATES.md`, `EXECUTION_PROTOCOL.md`, `ports/PORT_POLICY.md`, `CROSS_PLATFORM_DISTRIBUTION_AND_INSTALLER_STANDARD.md`, `M6_INSTALL_AND_DISTRIBUTION.md`, and `CONTEXT_INDEX.md`.
+- `bootstrap/templates/runtime/ops/compose/compose.yml` — comment reminding operators to assign a **unique** `APP_PORT` per repo when running multiple stacks on one machine (see `_system/ports/PORT_POLICY.md`).
+
+### Working files
+
+- Refreshed `PLAN.md`, `FIXME.md`, `RISK_REGISTER.md`, `TEST_STRATEGY.md`, `RELEASE_NOTES.md`, `_system/context/CURRENT_STATUS.md`, `_system/context/DECISIONS.md` (baseline content + 2026-04-06 review) to support `check-working-file-staleness.sh` and clearer downstream defaults.
+
+### Maintainer (master repo only)
+
+- Root `.github/pull_request_template.md` and `.github/ISSUE_TEMPLATE/` for AIAST layer-specific PR/issue discipline.
+
+## 1.20.0 (2026-04-05)
+
+### Plugin Contract V2 & Agent-Capability Matching
+
+- **Plugin Contract V2:** Formalized richer `capabilities` and new lifecycle hooks (`bootstrap.pre_flight`, `validation.report`).
+- **Capability Discovery:** Enhanced `discover-plugins.sh` to automatically generate `_system/CAPABILITY_MATRIX.json`.
+- **Agent Matchmaking:** Updated `AGENT_ROLE_CATALOG.md` to map agent roles (e.g., `fleet_secops`) to native plugin capabilities.
+- **Diagnostic Visibility:** Integrated capability matrix display into `system-doctor.sh`.
+- **Core Plugins:** Updated `security-scan`, `ci-integration`, and `observability-setup` to align with the V2 contract.
+
+## 1.19.7 (2026-04-05)
+
+### Resilient Swarm Architecture & Anti-Drift SSoT
+
+- **Swarm Fleet Operations:** Introduced Task-Isolated AI Branching (TIA-Branching) for parallel agent work.
+- **Git Swarm Manager:** New `bootstrap/git-swarm-manager.sh` for collision-free commits and automated push/squash.
+- **Anti-Drift SSoT:** Enforced `TEMPLATE/_system/` as the single source of truth; banned global IDE mutations.
+- **Agent Hook Parity:** Unified adapters for Cursor, Windsurf, Claude/Cline, Continue, and Copilot.
+- **Resilience & Repair:** New `bootstrap/repair-swarm-integrity.sh` and `AUTH_RECOVERY_PROTOCOL.md` for self-healing.
+- **System Doctor Integration:** Added `check-swarm-fleet.sh` to the standard diagnostic suite.
+- **MCP Fleet:** Defined core MCP servers and added `validate-mcp-health.sh` for connectivity and re-auth.
+
+## 1.19.6 (2026-04-05)
+
+### Changed
+- `GIT_REMOTE_AND_SYNC_PROTOCOL.md` — **Non-negotiable priority**: Git sync treated as blocking work; session start `git fetch`, end-of-session commit + push; `.git` ownership repair; hooks / `--no-verify` policy.
+- `AGENTS.md` (installable + master root) — explicit **Git and remotes** section; master repo commit/push and `whyte`-only expectations.
+
+### Meta (master repo only)
+- `context/OWNER_GIT_REMOTES.md` — agent expectations: Git tasks non-negotiable when work should survive.
+
 ## 1.19.5 - 2026-04-05
 
 ### Added
@@ -8,6 +65,7 @@
 ### Changed
 - `LOAD_ORDER.md` — Tier 2 includes `GIT_REMOTE_AND_SYNC_PROTOCOL.md`; Tier 3 and later sections renumbered.
 - `CONTEXT_INDEX.md` — discovery entry for the Git remote and sync protocol.
+- `bootstrap/check-network-bindings.sh` — skip `.mypy_cache` / `.ruff_cache` / `.pytest_cache` and vendored `_AI_AGENT_SYSTEM/` when scanning for wildcard binds (reduces false positives in real app trees).
 
 ### Meta (master repo only)
 - `context/OWNER_GIT_REMOTES.md` — maintainer-only mirror of org layout, identity, and **`whyte`-only Git/SSH** rule.

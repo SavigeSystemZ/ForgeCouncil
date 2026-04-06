@@ -9,6 +9,7 @@ This file is the map of the local agent operating system.
 - `REPO_OPERATING_PROFILE.md` — compact host-ingestion summary
 - `INSTALLER_AND_UPGRADE_CONTRACT.md` — install, update, repair, and heal guarantees for AIAST lifecycle actions
 - `CROSS_PLATFORM_DISTRIBUTION_AND_INSTALLER_STANDARD.md` — shipped-app installers, generated repo-root distribution tree (see runtime templates), multi-OS delivery, and operator menu (install/upgrade/repair/purge)
+- `AGENT_INSTALLER_AND_HOST_VALIDATION_PROTOCOL.md` — agent rules: early installer scaffolds, prod-like host testing, desktop integration, robust install/repair/uninstall, governed ports, dependency/DB setup, periodic launch/render verification after large work
 - `SUB_AGENT_HOST_DELEGATION.md` — optional parallel host CLI / auxiliary sessions, scope rules, and primary takeover when auxiliaries fail; pair with `bootstrap/emit-auxiliary-brief.sh` for standardized briefs
 - `KEY.md` — exhaustive file-by-file key with when-to-use guidance
 - `HOST_ADAPTER_POLICY.md` — policy for generated tool-entry and adapter-load surfaces
@@ -24,6 +25,7 @@ This file is the map of the local agent operating system.
 - `AUTH_AND_ONBOARDING_PATTERNS.md` — optional vs gated auth, dev seeding via env (no credentials in git), progressive trust
 - `AGENT_ROLE_CATALOG.md` — canonical role and delegation model for multi-agent work
 - `AGENT_DISCOVERY_MATRIX.md` — which tools load which files
+- `HOOK_AND_ORCHESTRATION_INDEX.md` — map of hook surfaces (Cursor rules/commands/skills/agents, plugins, doctors, GitHub/CI, MCP) and companion files
 - `DESIGN_EXCELLENCE_FRAMEWORK.md` — product and interface quality rules
 - `SYSTEM_AWARENESS_PROTOCOL.md` — how the operating system tracks its own managed surfaces
 - `HALLUCINATION_DEFENSE_PROTOCOL.md` — how to detect and recover from ungrounded claims
@@ -232,3 +234,5 @@ This file is the map of the local agent operating system.
 - `../.continuerules`
 - `../.clinerules`
 - `../.github/copilot-instructions.md`
+- `../.github/pull_request_template.md` — merge checklist for Copilot/GitHub UI (with `AGENTS.md` + validation hooks)
+- `../.github/ISSUE_TEMPLATE/` — optional bug/feature templates for consistent triage

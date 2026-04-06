@@ -9,6 +9,16 @@ This document defines how autonomous agents should treat Git when working inside
 - Recover from **lost local state** by pulling from remote, and recover from **unpushed work** by committing and pushing when policy allows.
 - Surface **SSH or credential failures** early and escalate to the operator when human auth is required.
 
+## Non-negotiable priority (complete Git work)
+
+**Treat Git sync as blocking work, not optional housekeeping.** If the goal is progress that survives across machines, sessions, or agents, unfinished Git is unfinished work.
+
+- **Session start (when a remote exists):** `git fetch` for the current branch’s upstream before large edits, so you are not building on a stale base.
+- **Session end (after substantive edits):** `git status` → commit with a clear message → `git push`. Leaving **only** local commits or dirty trees when shared progress was intended is a **handoff failure**.
+- **Ownership / elevation:** run all Git and SSH as the operator UNIX user (**`whyte`** here, never `root`). If a tool ran as root and Git reports `Permission denied` on `.git/index`, repair with `sudo chown -R whyte:whyte .git` (or the repo root) and **retry**; do not stop with a broken index.
+- **Hooks / CI noise:** prefer fixing hooks or the underlying issue. Use `git commit --no-verify` or `git push --no-verify` **only** when the operator has explicitly allowed that escape hatch for the repo; otherwise document the blocker and still leave the working tree committable.
+- **Blocked push or auth:** spend real effort on SSH agent, remotes, and keys; if still blocked, **prompt the operator with the exact error**—do not silently abandon the Git outcome.
+
 ## Remote layout (replace placeholders)
 
 Use these placeholders in new repos unless the operator has pinned a concrete profile (below). In the **master AIAST source repo**, `_META_AGENT_SYSTEM/context/OWNER_GIT_REMOTES.md` is the maintainer-only source of truth for this workspace’s GitHub layout.

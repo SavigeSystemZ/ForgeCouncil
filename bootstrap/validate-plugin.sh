@@ -43,10 +43,12 @@ plugin_dir = Path(sys.argv[1]).resolve()
 manifest = json.loads((plugin_dir / "plugin.json").read_text())
 
 ALLOWED_HOOKS = {
+    "bootstrap.pre_flight",
     "bootstrap.post_install",
     "bootstrap.post_update",
     "validation.preflight",
     "validation.postflight",
+    "validation.report",
     "security.scan",
     "security.audit",
     "ci.pre_commit",

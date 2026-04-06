@@ -64,6 +64,29 @@ Tool-specific agents and host orchestration may wrap these roles, but they must 
   - cite the authority docs that govern the review
   - avoid broad rewrite suggestions unless the issue justifies them
 
+### GitHub / CI steward
+
+- Purpose: keep **GitHub**, **Actions**, and **merge readiness** coherent without
+  owning unrelated product code changes
+- Default write scope: `.github/workflows/*.yml`, PR/issue templates if present,
+  documented CI expectations in `README` or ops docs—**only** when explicitly assigned
+- Must do:
+  - confirm branch relationship to base (merge/rebase as required by team practice)
+  - surface failing checks, conflicts, and secret-handling mistakes before merge
+  - run or request validation that matches `PROJECT_PROFILE.md` and `VALIDATION_GATES.md`
+  - update `WHERE_LEFT_OFF.md` when CI or git state blocks other agents
+- Pair with: `.cursor/agents/github-ops.md`, `_system/HOOK_AND_ORCHESTRATION_INDEX.md` section 5
+- Optional tools: `gh` CLI, `@modelcontextprotocol/server-github` per `MCP_CONFIG.md`
+
+## Fleet Operational Profiles (Swarm Mode)
+
+When operating as part of a Swarm Fleet, agents adopt one of these specialized operational "lanes":
+
+- **fleet_architect:** Heavy context loading role. Authorized to create `ARCHITECTURE.md` and `PLAN.md`. Read-only on source code.
+- **fleet_builder:** Bulk code generation role. Authorized to write to `src/`, `lib/`, and `api/`. Must use `git-swarm-manager.sh` for commits. Native capabilities: `ci-reporter`, `scaffold-generator`.
+- **fleet_secops:** Security-focused role. Authorized for DAST/SAST, scanning `localhost`, and running `semgrep`. Native capabilities: `security-scanner`, `audit-reporter`.
+- **fleet_researcher:** Context-building role. Authorized for unrestricted `curl`, `grep`, and web searches. Native capabilities: `doc-aggregator`.
+
 ## Delegation contract
 
 1. The orchestrator chooses the role and owner before a delegated task starts.
@@ -84,5 +107,8 @@ Every role handoff must leave:
 
 ## Tooling note
 
-- `.cursor/agents/` may mirror these roles as convenience overlays.
+- `.cursor/agents/` may mirror these roles as convenience overlays (including
+  `github-ops.md` for the GitHub / CI steward lane).
 - `AGENTS.md`, `_system/MULTI_AGENT_COORDINATION.md`, and this file remain the canonical source of truth.
+- `_system/HOOK_AND_ORCHESTRATION_INDEX.md` lists hook surfaces and companion files
+  when adding rules, commands, CI, plugins, or MCP integrations.

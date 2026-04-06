@@ -41,6 +41,11 @@ Read these files before making meaningful edits:
 
 If context appears reset, incomplete, or stale, reload the canonical docs before continuing.
 
+## Git and remotes (non-negotiable)
+
+- Follow `_system/GIT_REMOTE_AND_SYNC_PROTOCOL.md` for remotes, SSH, fetch/pull/push, and the **“complete Git work”** priority (sessions start with `git fetch` when a remote exists; substantive work ends with commit + push when progress should be shared).
+- Run Git and GitHub SSH as the correct UNIX user for the machine (see that protocol); never as `root` on hosts where keys live under the operator account.
+
 ## Core contract
 
 - `_system/` is the agent operating layer; runtime code must not depend on it.
@@ -70,6 +75,9 @@ If context appears reset, incomplete, or stale, reload the canonical docs before
 - The master template may include app-shaped files such as `PLAN.md` or `DESIGN_NOTES.md`, but in the master template they must stay app-agnostic until copied into a real repo.
 - Once the system is installed into a real repo, replace placeholders with repo-specific truth early and keep those files current.
 - Use `_system/INSTALLER_AND_UPGRADE_CONTRACT.md` to understand install, additive backfill, strict upgrades, repair, and heal without losing app-owned state.
+- For **application** delivery (not AIAST template lifecycle): follow `_system/AGENT_INSTALLER_AND_HOST_VALIDATION_PROTOCOL.md` for early installer scaffolds, production-like host testing with desktop integration where applicable, governed secure ports, dependency/DB setup, robust install/repair/uninstall behavior, and periodic launch/render verification after major work.
+- When extending **hooks** (Cursor rules/commands/skills/agents), **plugins**, **CI/GitHub**, or **MCP**: follow `_system/HOOK_AND_ORCHESTRATION_INDEX.md` so each surface has the required companion files and validators; use the **GitHub / CI steward** role and `.cursor/agents/github-ops.md` for Actions/PR/merge work.
+- **Pull requests:** Use `.github/pull_request_template.md` when opening PRs on GitHub so validation and contract checks are explicit (downstream repos inherit this file from the template when present).
 
 ## Working-file model
 

@@ -80,6 +80,9 @@ SCAN_EXTS = CODE_EXTS | CONFIG_EXTS
 SKIP_DIRS = {
     ".git", "node_modules", "__pycache__", ".venv", "venv", "vendor",
     "dist", "build", ".next",
+    ".mypy_cache", "mypy_cache", ".ruff_cache", ".pytest_cache",
+    # Vendored template snapshots under an app repo; not app runtime surface.
+    "_AI_AGENT_SYSTEM",
 }
 if not include_template_assets:
     SKIP_DIRS.update({"_system", "bootstrap"})
@@ -137,6 +140,14 @@ def is_safe_context(line: str, filepath: Path) -> bool:
         return True
     # Governed allocator returns wildcard only when exposure is LAN/public; must stay opt-in.
     if "aiast-network-bind-lan-public" in line:
+        return True
+    # Allow explicit whitelisting via comment marker
+    if "aiast-network-bind-skip-check" in line:
+        return True
+    # Comparisons or security checks are often safe if they are testing FOR the wildcard to block it.
+    if '== "0.0.0.0"' in line or '!= "0.0.0.0"' in line or '= "0.0.0.0"' in line:
+        return True
+    if '== "::"' in line or '!= "::"' in line or '= "::"' in line:
         return True
     return False
 

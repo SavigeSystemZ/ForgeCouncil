@@ -12,8 +12,9 @@ services:
     environment:
       DATABASE_URL: ${OPS_DATABASE_URL:-postgresql+asyncpg://__AIAST_APP_SLUG__:change-me@postgres:5432/__AIAST_APP_SLUG__}
       REDIS_URL: ${OPS_REDIS_URL:-redis://redis:6379/0}
+    # Set a unique APP_PORT per repo (see _system/ports/PORT_POLICY.md) when many stacks run on one host.
     ports:
-      - "127.0.0.1:${APP_PORT:-38208}:${APP_PORT:-38208}"
+      - "127.0.0.1:${APP_PORT:-8080}:${APP_PORT:-8080}"
 
   postgres:
     image: postgres:16

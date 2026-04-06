@@ -122,6 +122,14 @@ run_check "check-host-adapter-alignment" bash "${SCRIPT_DIR}/check-host-adapter-
 run_check "check-host-ingestion" bash "${SCRIPT_DIR}/check-host-ingestion.sh" "${TARGET_REPO}" || failed=1
 run_check "check-host-bundle" bash "${SCRIPT_DIR}/check-host-bundle.sh" "${TARGET_REPO}" || failed=1
 run_check "check-system-awareness" bash "${SCRIPT_DIR}/check-system-awareness.sh" "${TARGET_REPO}" || failed=1
+if run_check "check-swarm-fleet" bash "${SCRIPT_DIR}/check-swarm-fleet.sh" "${TARGET_REPO}" || failed=1; then
+  # After swarm fleet is verified, also show plugin capabilities if matrix exists
+  matrix_file="${TARGET_REPO}/_system/CAPABILITY_MATRIX.json"
+  if [[ -f "${matrix_file}" ]]; then
+    printf "  → Discovered capabilities: "
+    jq -r '.capabilities | keys | join(", ")' "${matrix_file}"
+  fi
+fi
 run_check "check-repo-permissions" bash "${SCRIPT_DIR}/check-repo-permissions.sh" "${TARGET_REPO}" || failed=1
 run_check "check-agent-orchestration" bash "${SCRIPT_DIR}/check-agent-orchestration.sh" "${TARGET_REPO}" || failed=1
 run_check "check-network-bindings" bash "${SCRIPT_DIR}/check-network-bindings.sh" "${TARGET_REPO}" --include-template-assets || failed=1

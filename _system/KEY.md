@@ -2,7 +2,7 @@
 
 This file is the exhaustive agent-facing key for the installable AIAST surface.
 
-It covers 493 managed files and is generated from the canonical managed-file inventory.
+It covers 510 managed files and is generated from the canonical managed-file inventory.
 
 ## How To Use This File
 
@@ -78,6 +78,7 @@ These files install, update, repair, validate, and generate the AIAST operating 
 - `bootstrap/check-repo-permissions.sh` - Bootstrap command for Check Repo Permissions. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/check-runtime-foundations.sh` - Bootstrap command for Check Runtime Foundations. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/check-supply-chain.sh` - Runs language-specific dependency audit tools (npm, pip, cargo, go) and license checks. Run when auditing supply chain security.
+- `bootstrap/check-swarm-fleet.sh` - Bootstrap command for Check Swarm Fleet. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/check-system-awareness.sh` - Validator for registry coverage and critical path references across core docs. Run when file inventories or core doc maps change.
 - `bootstrap/check-working-file-staleness.sh` - Bootstrap command for Check Working File Staleness. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/configure-project-profile.sh` - Bootstrap command for Configure Project Profile. Run when performing the named install, repair, validation, emission, or generation task.
@@ -101,6 +102,7 @@ These files install, update, repair, validate, and generate the AIAST operating 
 - `bootstrap/generate-system-key.sh` - Generator for the exhaustive agent-facing system key. Run when the managed file set or file-role wording changes.
 - `bootstrap/generate-system-registry.sh` - Generator for the machine-readable managed-file registry. Run when the managed file set changes.
 - `bootstrap/generate-systemd-unit.sh` - Bootstrap command for Generate Systemd Unit. Run when performing the named install, repair, validation, emission, or generation task.
+- `bootstrap/git-swarm-manager.sh` - Bootstrap command for Git Swarm Manager. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/heal-system.sh` - Bootstrap command for Heal System. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/init-project.sh` - Fresh-install entrypoint that copies and initializes AIAST into a target repo. Run when bootstrapping a repo that does not yet have AIAST.
 - `bootstrap/install-missing-files.sh` - Additive recovery flow for newly introduced template files and safe defaults. Run when an installed repo is missing newer AIAST-managed surfaces.
@@ -108,6 +110,7 @@ These files install, update, repair, validate, and generate the AIAST operating 
 - `bootstrap/print-agent-map.sh` - Bootstrap command for Print Agent Map. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/recommend-starter-blueprint.sh` - Bootstrap command for Recommend Starter Blueprint. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/repair-myappz-root-ownership.sh` - Bootstrap command for Repair Myappz Root Ownership. Run when performing the named install, repair, validation, emission, or generation task.
+- `bootstrap/repair-swarm-integrity.sh` - Bootstrap command for Repair Swarm Integrity. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/repair-system.sh` - Repair flow for restoring missing or drifted system-managed files. Run when integrity, awareness, or drift checks say the local system is damaged.
 - `bootstrap/report-health-trends.sh` - Reads health-history.json and computes pass/warn/fail trends over recent entries. Run when assessing whether system health is improving or degrading.
 - `bootstrap/run-sast.sh` - Dispatches to semgrep, bandit, eslint-security, and gosec based on detected languages. Run when performing static application security testing.
@@ -119,6 +122,7 @@ These files install, update, repair, validate, and generate the AIAST operating 
 - `bootstrap/seed-test-strategy.sh` - Bootstrap command for Seed Test Strategy. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/seed-working-state.sh` - Bootstrap command for Seed Working State. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/suggest-project-profile.sh` - Bootstrap command for Suggest Project Profile. Run when performing the named install, repair, validation, emission, or generation task.
+- `bootstrap/sync-agent-adapters.sh` - Bootstrap command for Sync Agent Adapters. Run when performing the named install, repair, validation, emission, or generation task.
 - `bootstrap/system-doctor.sh` - Full diagnostic wrapper for awareness, integrity, drift, and hallucination checks. Supports --report and --record. Run when the system picture feels inconsistent or suspect.
 - `bootstrap/templates/runtime/.credits-hidden` - Bootstrap template asset for Credits Hidden. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
 - `bootstrap/templates/runtime/LICENSE` - Bootstrap template asset for License. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
@@ -185,11 +189,14 @@ These files define the installable operating-system contracts, policies, guides,
 - `_system/.template-version` - Core operating-system reference for Template Version. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/ACCESSIBILITY_STANDARDS.md` - Core operating-system reference for Accessibility Standards. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/AGENT_DISCOVERY_MATRIX.md` - Matrix of which tools and hosts load which repo surfaces. Use when checking host coverage or adapter expectations.
+- `_system/AGENT_INSTALLER_AND_HOST_VALIDATION_PROTOCOL.md` - Core operating-system reference for Agent Installer And Host Validation Protocol. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/AGENT_PERFORMANCE_GUIDE.md` - Model capability dimensions, task-to-model mapping, and multi-agent delegation guidance. Read when choosing which model to use for a specific task type.
 - `_system/AGENT_ROLE_CATALOG.md` - Canonical role catalog and ownership model for delegated work. Read when selecting or defining agent roles.
 - `_system/API_DESIGN_STANDARDS.md` - Core operating-system reference for API Design Standards. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/ARCHITECTURE_DIAGRAM.md` - ASCII box diagrams of the three-layer model, loading flow, adapter pipeline, and validation chain. Read when understanding the system architecture or explaining it to others.
 - `_system/AUTH_AND_ONBOARDING_PATTERNS.md` - Core operating-system reference for Auth And Onboarding Patterns. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/AUTH_RECOVERY_PROTOCOL.md` - Core operating-system reference for Auth Recovery Protocol. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/CAPABILITY_MATRIX.json` - Core operating-system reference for Capability Matrix. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/CHATBOT_GUIDE.md` - Core operating-system reference for Chatbot Guide. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/CHECKPOINT_PROTOCOL.md` - Core operating-system reference for Checkpoint Protocol. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/CODING_STANDARDS.md` - Core operating-system reference for Coding Standards. Load when the task touches that named contract, policy, guide, or manifest.
@@ -207,6 +214,7 @@ These files define the installable operating-system contracts, policies, guides,
 - `_system/GOLDEN_EXAMPLES_POLICY.md` - Policy for using curated examples without copying donor-app truth. Read before drafting new system docs, prompts, or working-file structures.
 - `_system/HALLUCINATION_DEFENSE_PROTOCOL.md` - Protocol for grounding claims in repo-local evidence. Use when confidence or claimed system state could drift from evidence.
 - `_system/HANDOFF_PROTOCOL.md` - Core operating-system reference for Handoff Protocol. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/HOOK_AND_ORCHESTRATION_INDEX.md` - Core operating-system reference for Hook And Orchestration Index. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/HOST_ADAPTER_POLICY.md` - Policy for generated tool-entry and load-context adapter surfaces. Read when tool-specific entrypoints or overlays change.
 - `_system/HOST_BUNDLE_CONTRACT.md` - Contract for self-contained bundles exported to external hosts. Read when a consumer cannot access repo-local paths directly.
 - `_system/INSTALLATION_GUIDE.md` - Core operating-system reference for Installation Guide. Load when the task touches that named contract, policy, guide, or manifest.
@@ -428,6 +436,7 @@ These files describe optional MCP usage, cataloging, and fallback behavior.
 - `_system/mcp/MCP_SELECTION_POLICY.md` - MCP reference for MCP Selection Policy. Read when selecting, cataloging, or recovering from MCP integrations.
 - `_system/mcp/MCP_SERVER_CATALOG.md` - MCP reference for MCP Server Catalog. Read when selecting, cataloging, or recovering from MCP integrations.
 - `_system/mcp/MCP_SERVER_CATALOG_TEMPLATE.md` - MCP reference for MCP Server Catalog Template. Read when selecting, cataloging, or recovering from MCP integrations.
+- `_system/mcp/MCP_SURVIVAL_PLAYBOOK.md` - MCP reference for MCP Survival Playbook. Read when selecting, cataloging, or recovering from MCP integrations.
 - `_system/mcp/README.md` - MCP reference for Readme. Read when selecting, cataloging, or recovering from MCP integrations.
 - `_system/mcp/servers.codex.example.toml` - MCP reference for Servers Codex Example Toml. Read when selecting, cataloging, or recovering from MCP integrations.
 - `_system/mcp/servers.cursor.example.json` - MCP reference for Servers Cursor Example. Read when selecting, cataloging, or recovering from MCP integrations.
@@ -498,6 +507,7 @@ These files define Cursor-specific delegated agent role prompts.
 - `.cursor/agents/composer-lead.md` - Cursor delegated-agent prompt for Composer Lead. Used when the named Cursor agent role is invoked.
 - `.cursor/agents/context-curator.md` - Cursor delegated-agent prompt for Context Curator. Used when the named Cursor agent role is invoked.
 - `.cursor/agents/design-reviewer.md` - Cursor delegated-agent prompt for Design Reviewer. Used when the named Cursor agent role is invoked.
+- `.cursor/agents/github-ops.md` - Cursor delegated-agent prompt for Github Ops. Used when the named Cursor agent role is invoked.
 - `.cursor/agents/implementation-worker.md` - Cursor delegated-agent prompt for Implementation Worker. Used when the named Cursor agent role is invoked.
 - `.cursor/agents/orchestrator.md` - Cursor delegated-agent prompt for Orchestrator. Used when the named Cursor agent role is invoked.
 - `.cursor/agents/release-manager.md` - Cursor delegated-agent prompt for Release Manager. Used when the named Cursor agent role is invoked.
@@ -517,6 +527,7 @@ These files define Cursor slash-command prompts and guided workflows.
 - `.cursor/commands/debug.md` - Cursor command surface for Debug. Used when invoking that named Cursor command.
 - `.cursor/commands/dependency-review.md` - Cursor command surface for Dependency Review. Used when invoking that named Cursor command.
 - `.cursor/commands/design-review.md` - Cursor command surface for Design Review. Used when invoking that named Cursor command.
+- `.cursor/commands/github-session.md` - Cursor command surface for Github Session. Used when invoking that named Cursor command.
 - `.cursor/commands/load-context.md` - Cursor command surface for Load Context. Used when invoking that named Cursor command.
 - `.cursor/commands/performance-review.md` - Cursor command surface for Performance Review. Used when invoking that named Cursor command.
 - `.cursor/commands/release-readiness.md` - Cursor command surface for Release Readiness. Used when invoking that named Cursor command.
@@ -527,6 +538,7 @@ These files define Cursor slash-command prompts and guided workflows.
 
 These files are auto-loaded Cursor rule overlays.
 
+- `.cursor/rules/00-anti-drift-ssot.mdc` - Cursor rule overlay for 00 Anti Drift Ssot. Auto-loaded by Cursor to reinforce repo-local behavior.
 - `.cursor/rules/00-context-load.mdc` - Cursor rule overlay for 00 Context Load. Auto-loaded by Cursor to reinforce repo-local behavior.
 - `.cursor/rules/10-project-boundaries.mdc` - Cursor rule overlay for 10 Project Boundaries. Auto-loaded by Cursor to reinforce repo-local behavior.
 - `.cursor/rules/20-multi-agent-awareness.mdc` - Cursor rule overlay for 20 Multi Agent Awareness. Auto-loaded by Cursor to reinforce repo-local behavior.
@@ -569,3 +581,12 @@ These files are supporting Cursor-specific overlays that do not fit the narrower
 - `.cursor/README.md` - Cursor overlay surface for Readme. Read or regenerate when Cursor-specific integration surfaces change.
 - `.cursor/mcp.json` - Cursor overlay surface for MCP. Read or regenerate when Cursor-specific integration surfaces change.
 - `.cursor/plans/Forge Council Master Plan-d7c80b7f.plan.md` - Cursor overlay surface for Forge Council Master Plan D7c80b7f Plan. Read or regenerate when Cursor-specific integration surfaces change.
+
+### Copilot Overlay
+
+These files provide repo-local guidance to GitHub Copilot.
+
+- `.github/ISSUE_TEMPLATE/bug_report.md` - GitHub Copilot overlay for Bug Report. Used when Copilot loads repo-local instructions.
+- `.github/ISSUE_TEMPLATE/config.yml` - GitHub Copilot overlay for Config. Used when Copilot loads repo-local instructions.
+- `.github/ISSUE_TEMPLATE/feature_request.md` - GitHub Copilot overlay for Feature Request. Used when Copilot loads repo-local instructions.
+- `.github/pull_request_template.md` - GitHub Copilot overlay for Pull Request Template. Used when Copilot loads repo-local instructions.

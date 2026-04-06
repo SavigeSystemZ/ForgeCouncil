@@ -536,7 +536,11 @@ if test_strategy_path.exists():
         test_text,
         "expected evidence for high-risk changes",
         f"{validation_summary} | exact commands run and pass or fail outcomes for the first proven slice",
-        ("exact commands run, pass or fail outcomes, notable warnings, and any skipped lanes with reasons",),
+        (
+            "exact commands run, pass or fail outcomes, notable warnings, and any skipped lanes with reasons",
+            "where_left_off.md",
+            "handoff_protocol",
+        ),
     )
     test_text = replace_one_of(
         test_text,

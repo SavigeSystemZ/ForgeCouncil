@@ -22,6 +22,7 @@ Use this file to record actual servers approved for the project.
 - Purpose: scoped project file access
 - Command or URL: local filesystem server
 - Environment schema: none
+- Diagnostic: `ls TEMPLATE/_system/`
 - Baseline scopes: project root read or read/write as project policy allows
 - Elevated scopes: none beyond repo scope
 - Risk rating: medium
@@ -34,6 +35,7 @@ Use this file to record actual servers approved for the project.
 - Purpose: fetch official documentation or library references
 - Command or URL: user-level or hosted MCP
 - Environment schema: token if required, not stored here
+- Diagnostic: `mcp:brave-search:search "AIAST documentation"`
 - Baseline scopes: read-only
 - Elevated scopes: none
 - Risk rating: low
@@ -46,6 +48,7 @@ Use this file to record actual servers approved for the project.
 - Purpose: query running PostgreSQL database for schema and data verification
 - Command or URL: local or containerized MCP
 - Environment schema: `PG_URL` (read-only credentials required)
+- Diagnostic: `mcp:postgres:query "SELECT 1"`
 - Baseline scopes: read-only (SELECT, EXPLAIN)
 - Elevated scopes: schema mutation (not recommended)
 - Risk rating: high
@@ -58,6 +61,7 @@ Use this file to record actual servers approved for the project.
 - Purpose: query running Redis instance for keys and latency checks
 - Command or URL: local or containerized MCP
 - Environment schema: `REDIS_URL`
+- Diagnostic: `mcp:redis:info`
 - Baseline scopes: read-only (GET, INFO, KEYS)
 - Elevated scopes: write access (FLUSHDB)
 - Risk rating: medium
@@ -70,6 +74,7 @@ Use this file to record actual servers approved for the project.
 - Purpose: inspect CI/CD build status and fetch logs
 - Command or URL: user-level or hosted MCP
 - Environment schema: `GITHUB_TOKEN` (fine-grained, read-only)
+- Diagnostic: `mcp:github:whoami`
 - Baseline scopes: read actions, read logs
 - Elevated scopes: trigger workflow
 - Risk rating: medium

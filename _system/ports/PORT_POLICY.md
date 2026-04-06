@@ -16,6 +16,11 @@
 
 Reference defaults for template authors (not mutated by apps) live in `_system/ports/default_port_matrix.yaml`.
 
+## Relationship to installer and host validation
+
+For the full agent checklist (early install scaffolds, host testing, when to
+re-verify after large sessions), see `../AGENT_INSTALLER_AND_HOST_VALIDATION_PROTOCOL.md`.
+
 ## Agent protocol before Docker, Compose, systemd, or desktop launchers
 
 1. **Read governance:** Open `registry/port_governance.yaml` and internalize reserved ports and class ranges.

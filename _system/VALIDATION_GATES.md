@@ -31,7 +31,13 @@ If code changed, run at least the impacted validation commands from `_system/PRO
 ### Tier 4: install, launch, packaging, or deploy-surface work
 
 - required: real runtime or packaging verification, not only static checks
+- required: governed port allocation and collision/preflight tools per `ports/PORT_POLICY.md` when host ports or compose publishes change
+- required: exercise install/repair/uninstall expectations from `CROSS_PLATFORM_DISTRIBUTION_AND_INSTALLER_STANDARD.md` when those scripts exist
 - handoff: record operator-facing effects and release notes
+
+### Tier 4b: large refactor or multi-session work without an install change
+
+- When the change set is large (architecture, routing, build, rendering pipeline) but Tier 4 files were not touched, still perform a **minimal launch/render or API health smoke** appropriate to the product, or document why it was skipped (`AGENT_INSTALLER_AND_HOST_VALIDATION_PROTOCOL.md`).
 
 ### Tier 5: release claim or milestone signoff
 

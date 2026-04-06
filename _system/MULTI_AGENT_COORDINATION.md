@@ -39,6 +39,7 @@ This repo is designed to survive tool changes, interrupted sessions, and handoff
    - `RISK_REGISTER.md`
    - `RELEASE_NOTES.md`
 8. Tool-specific helpers may extend behavior but must not contradict `AGENTS.md` or `_system/`.
+9. Hook and orchestration surfaces (Cursor rules/commands/skills/agents, plugins, CI, MCP) must stay coherent; see `_system/HOOK_AND_ORCHESTRATION_INDEX.md`.
 
 ## Role activation
 
@@ -47,6 +48,7 @@ This repo is designed to survive tool changes, interrupted sessions, and handoff
 - Validator: proves behavior and challenge-checks claims without taking ownership of the same files by default.
 - Context curator: updates handoff, working-state, and continuity surfaces.
 - Specialist reviewers: architecture, design, security, and release roles provide bounded read-only review.
+- GitHub / CI steward: merge readiness, workflow edits, PR checks—see `_system/AGENT_ROLE_CATALOG.md` and `.cursor/agents/github-ops.md`.
 
 ## Start-of-turn checklist
 
@@ -82,6 +84,23 @@ When taking over work started by another tool:
 3. Parallel writers are allowed only when their write scopes do not overlap.
 4. Validators and reviewers should verify or critique, not silently co-own implementation files.
 5. If write ownership becomes unclear, pause, shrink scope, and restabilize the handoff.
+
+## Swarm Fleet Branching & Commit Delegation
+
+When operating in **Swarm Fleet Mode**, the following rules are non-negotiable:
+
+1. **Branch Isolation:** Each agent MUST work on a dedicated task-isolated branch following the pattern `ai/<agent_name>/<feature>`.
+2. **Branch Discovery:** The active swarm branch must be explicitly documented in `WHERE_LEFT_OFF.md`.
+3. **Commit Tooling:** Agents are FORBIDDEN from using raw `git commit` on swarm branches. They MUST use `TEMPLATE/bootstrap/git-swarm-manager.sh auto-push` to ensure semantic consistency and remote synchronization.
+4. **Integration Lane:** The `dev` branch is the primary integration lane. Agents must not push directly to `main`.
+5. **Squash Merges:** Only the `fleet_architect` or the human operator (`whyte`) is authorized to execute `git-swarm-manager.sh squash-merge` to fold an AI branch back into `dev`.
+
+## Resilience & Self-Healing
+
+1. **MCP Heartbeat:** Agents MUST verify MCP connectivity at the start of their turn.
+2. **Failure Fallback:** If an MCP server fails, follow the `_system/mcp/MCP_SURVIVAL_PLAYBOOK.md` immediately. Do not stall.
+3. **Task Reclamation:** If an auxiliary agent stops providing "Heartbeats" (status updates in PLAN.md or WHERE_LEFT_OFF.md) for more than 2 turns, the primary orchestrator MUST reclaim the task and document the failure.
+4. **Repair Protocol:** If agent logic or IDE state becomes corrupted, run `bootstrap/repair-swarm-integrity.sh --full`.
 
 ## Optional host CLI auxiliaries (“sub-agents”)
 
