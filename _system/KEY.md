@@ -2,7 +2,7 @@
 
 This file is the exhaustive agent-facing key for the installable AIAST surface.
 
-It covers 523 managed files and is generated from the canonical managed-file inventory.
+It covers 525 managed files and is generated from the canonical managed-file inventory.
 
 ## How To Use This File
 
@@ -537,6 +537,7 @@ These files define Cursor slash-command prompts and guided workflows.
 - `.cursor/commands/code-quality-review.md` - Cursor command surface for Code Quality Review. Used when invoking that named Cursor command.
 - `.cursor/commands/code-review.md` - Cursor command surface for Code Review. Used when invoking that named Cursor command.
 - `.cursor/commands/composer-session.md` - Cursor command surface for Composer Session. Used when invoking that named Cursor command.
+- `.cursor/commands/concise-session.md` - Cursor command surface for Concise Session. Used when invoking that named Cursor command.
 - `.cursor/commands/debug.md` - Cursor command surface for Debug. Used when invoking that named Cursor command.
 - `.cursor/commands/dependency-review.md` - Cursor command surface for Dependency Review. Used when invoking that named Cursor command.
 - `.cursor/commands/design-review.md` - Cursor command surface for Design Review. Used when invoking that named Cursor command.
@@ -576,6 +577,7 @@ These files back Cursor skill surfaces and skill-local commands.
 - `.cursor/skills/checkpoint-handoff/SKILL.md` - Cursor skill asset for Skill. Used when the corresponding Cursor skill is loaded.
 - `.cursor/skills/code-quality-review/SKILL.md` - Cursor skill asset for Skill. Used when the corresponding Cursor skill is loaded.
 - `.cursor/skills/code-review/SKILL.md` - Cursor skill asset for Skill. Used when the corresponding Cursor skill is loaded.
+- `.cursor/skills/concise-communication/SKILL.md` - Cursor skill asset for Skill. Used when the corresponding Cursor skill is loaded.
 - `.cursor/skills/debug-playbook/SKILL.md` - Cursor skill asset for Skill. Used when the corresponding Cursor skill is loaded.
 - `.cursor/skills/dependency-review/SKILL.md` - Cursor skill asset for Skill. Used when the corresponding Cursor skill is loaded.
 - `.cursor/skills/design-review/SKILL.md` - Cursor skill asset for Skill. Used when the corresponding Cursor skill is loaded.

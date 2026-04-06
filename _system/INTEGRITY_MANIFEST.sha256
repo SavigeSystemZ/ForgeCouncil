@@ -151,6 +151,7 @@ b96ab52ea05bc580d204af3d17c3bb480ea0716ea23235a9ee9bbb86a6026c27  ./.cursor/comm
 9f8322efd62d21a9bcb0e3865546c149eb0f1cca284c9dbcb9621e648d6da7e7  ./.cursor/commands/code-quality-review.md
 e8c858829ae67190d85851a99602b7ba1709c051361bec6d3fbb0a7a5b7243a0  ./.cursor/commands/code-review.md
 a367cb4cbb4f9d6119f197fbaf0ca2dfef9dfda268054a9e6d5f5269e6c638a0  ./.cursor/commands/composer-session.md
+c92eb153fc2fe3a000175ce2757ac789c5388380bffcf8f6a47c7018d0f54f0d  ./.cursor/commands/concise-session.md
 512d3b95e4aa236edc9ba7ec7227eedf986dc2092ea20b5ebaf431e91d93115d  ./.cursor/commands/debug.md
 2a130dacd77a6143c870600b38a2f8e130847938564afea6c3d9b64b76cc5b96  ./.cursor/commands/dependency-review.md
 c4c42178204e4b6b901cc23366dc36c529a14654efbb530a2e10df8ae495eeb6  ./.cursor/commands/design-review.md
@@ -184,6 +185,7 @@ bbb4b50067d4e0e855ad7414ff4ed6e622d40cd06e32bf539de41e7d5ded2e01  ./.cursor/skil
 91e9f2de0e6029312f25c58c0b4722c6b7edb5748d4ee94c27133c8ac5a4fde2  ./.cursor/skills/checkpoint-handoff/SKILL.md
 111c4f96182e1844f6ea8185e2eb5e015465b880cd57a5fdefbd9e9a66da08cc  ./.cursor/skills/code-quality-review/SKILL.md
 47759ffd1056c674bf2af66a43e4aeadf905b180467f9480843a06860f9944a1  ./.cursor/skills/code-review/SKILL.md
+331c694149c00a3f8b5a737e72e093462db37fa313572456d890a77cb0dc6f07  ./.cursor/skills/concise-communication/SKILL.md
 e30f33e6c8184dbe1f0287dfca8ae3172ddedfcd0f22936e54a078ea04fbdc27  ./.cursor/skills/debug-playbook/SKILL.md
 0fc140c4e430180ee5d0a32bcb1e8130cfbeb7f78d3fb412ca5dfd3dea9b8084  ./.cursor/skills/dependency-review/SKILL.md
 2d6bd6d2a9b95a634048c01604a1e68f95f23febdcb667c967a2054130d7a073  ./.cursor/skills/design-review/SKILL.md
@@ -344,7 +346,7 @@ fe010d76c2ece6e1e9685e301f8c8ccf7517010568c5b42b75729cb5d60be6ce  ./_system/ci/g
 7c603339df1da613f198e3b8583cc9488d165a4e1b4df579883f1b4a0aeb7c7c  ./_system/CODING_STANDARDS.md
 9ede5a3caeebe42a07283bf05bb4309a8994d36e55e33aebef2c936f448bdca1  ./_system/context-budget-profiles.json
 745720d47893919d49ae748b20854cf189ba0d2366de81d600f86afa90a7bb26  ./_system/CONTEXT_BUDGET_STRATEGY.md
-8dcfdb0cceaf8a9a94392122b2e59ea239ac72da82681bbd06f32c099dd39b32  ./_system/CONTEXT_INDEX.md
+a4839497d14a2d9b645e94f5198e3e39031ff4ed86522373505803bace03a82e  ./_system/CONTEXT_INDEX.md
 a29ec5d1778fd55d4ca054c8a72f2ebf4cececd4f4134823ec45274befaf2fe0  ./_system/context/prompt-usage-log.json
 f9bdba968cdb9a11b9dca09126777ccb0c46537107ccf66e1ebc8567d5246bb7  ./_system/context/README.md
 37e2c13e51129df968087f0a1ed9f6a9f06d1931bcec38727a341a3441c7d7c4  ./_system/CROSS_PLATFORM_DISTRIBUTION_AND_INSTALLER_STANDARD.md
@@ -428,7 +430,7 @@ d9c01d8427cda3ea7ff9971ccb50d25d6a527854951002c1b6e2d8055cb1093a  ./_system/INST
 eddd57b50dee0d3cd7c91303ad4a2e789d3492d99762ce5a2231d810bee185c6  ./_system/INSTRUCTION_CONFLICT_PLAYBOOK.md
 0548857919f5f45aedd0e8cad3cc231191ceae2d96e61c15b91360013e032639  ./_system/INSTRUCTION_PRECEDENCE_CONTRACT.md
 81f0478e06bbcb49a192785d52a041ce6c19e67534e0aee2d3d4b8290bc82377  ./_system/instruction-precedence.json
-605502d8200ed7f7f542187306e79ba44713340a0a891b8fea67a08b0b4265c6  ./_system/KEY.md
+0bea2a0089be275a69b7f3b8cbe83fa61c6f2b59970262aef387d8bcb8036e10  ./_system/KEY.md
 34147c6fd779d9f17ed0c25c7b4d81df578f3c8b11a88f14031079d43e518c68  ./_system/llm_config.yaml.example
 110f4db2bad55f8e72db3e201cc043618399005c8e6e6976425bb520d21bbc26  ./_system/LOAD_ORDER.md
 bf8b1457c07534081a339e18048d4f8c20065b747abb683af6426df20f598a2a  ./_system/MASTER_SYSTEM_PROMPT.md

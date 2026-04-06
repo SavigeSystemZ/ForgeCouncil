@@ -135,6 +135,12 @@
     {
       "category": "cursor-command",
       "kind": "file",
+      "path": ".cursor/commands/concise-session.md",
+      "size_bytes": 685
+    },
+    {
+      "category": "cursor-command",
+      "kind": "file",
       "path": ".cursor/commands/debug.md",
       "size_bytes": 1101
     },
@@ -317,6 +323,12 @@
       "kind": "file",
       "path": ".cursor/skills/code-review/SKILL.md",
       "size_bytes": 732
+    },
+    {
+      "category": "cursor-skill",
+      "kind": "file",
+      "path": ".cursor/skills/concise-communication/SKILL.md",
+      "size_bytes": 3068
     },
     {
       "category": "cursor-skill",
@@ -670,7 +682,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/CONTEXT_INDEX.md",
-      "size_bytes": 12844
+      "size_bytes": 12998
     },
     {
       "category": "system-core",
@@ -796,13 +808,13 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/INTEGRITY_MANIFEST.sha256",
-      "size_bytes": 560146
+      "size_bytes": 561490
     },
     {
       "category": "system-core",
       "kind": "file",
       "path": "_system/KEY.md",
-      "size_bytes": 86590
+      "size_bytes": 86856
     },
     {
       "category": "system-core",
@@ -1036,7 +1048,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/SYSTEM_REGISTRY.json",
-      "size_bytes": 75404
+      "size_bytes": 77284
     },
     {
       "category": "system-core",
@@ -3139,7 +3151,7 @@
       "size_bytes": 2932
     }
   ],
-  "managed_file_count": 523,
+  "managed_file_count": 525,
   "system_readme_path": "README.md",
   "template_name": "AIAST",
   "template_version": "1.21.1"

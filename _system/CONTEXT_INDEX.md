@@ -231,7 +231,7 @@ This file is the map of the local agent operating system.
 - `HOST_ADAPTER_POLICY.md`
 - `host-adapter-manifest.json`
 - `../.cursorrules`
-- `../.cursor/`
+- `../.cursor/` — rules, commands, skills, agents; see `SKILLS_INDEX.md` (includes opt-in `concise-communication` for token-efficient **output** when the user opts in)
 - `../CLAUDE.md`
 - `../GEMINI.md`
 - `../CODEX.md`
