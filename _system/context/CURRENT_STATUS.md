@@ -24,7 +24,7 @@
 
 ## Freshness
 
-- Last updated: 2026-04-06T07:06:11Z
+- Last updated: 2026-04-06T07:53:35Z
 - Updated by: bootstrap lifecycle validation
 
 ## Usage rules
