@@ -6,6 +6,8 @@ description: Load the canonical repo context in the required order. Use at sessi
 # Load Context
 
 ## Steps
+Optional: read `_system/SYSTEM_ORCHESTRATION_GUIDE.md` for a single map of surfaces and review/validation order.
+
 1. Read `AGENTS.md`.
 2. Read `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`.
 3. Read `_system/REPO_OPERATING_PROFILE.md`.

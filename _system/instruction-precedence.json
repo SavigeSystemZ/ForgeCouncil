@@ -54,7 +54,7 @@
   ],
   "schema_version": "1.0.0",
   "template_name": "AIAST",
-  "template_version": "1.21.0",
+  "template_version": "1.21.1",
   "tool_adapters": {
     "claude": "CLAUDE.md",
     "codex": "CODEX.md",

@@ -160,7 +160,7 @@
       "category": "cursor-command",
       "kind": "file",
       "path": ".cursor/commands/load-context.md",
-      "size_bytes": 1542
+      "size_bytes": 1662
     },
     {
       "category": "cursor-command",
@@ -208,7 +208,7 @@
       "category": "cursor-rule",
       "kind": "file",
       "path": ".cursor/rules/00-context-load.mdc",
-      "size_bytes": 331
+      "size_bytes": 484
     },
     {
       "category": "cursor-rule",
@@ -340,7 +340,7 @@
       "category": "cursor-skill",
       "kind": "file",
       "path": ".cursor/skills/load-context/SKILL.md",
-      "size_bytes": 1712
+      "size_bytes": 1826
     },
     {
       "category": "cursor-skill",
@@ -424,7 +424,7 @@
       "category": "system-metadata",
       "kind": "file",
       "path": "AIAST_CHANGELOG.md",
-      "size_bytes": 40273
+      "size_bytes": 42450
     },
     {
       "category": "system-metadata",
@@ -603,6 +603,12 @@
     {
       "category": "system-core",
       "kind": "file",
+      "path": "_system/AI_RULES.md",
+      "size_bytes": 1564
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
       "path": "_system/API_DESIGN_STANDARDS.md",
       "size_bytes": 5953
     },
@@ -623,6 +629,12 @@
       "kind": "file",
       "path": "_system/AUTH_RECOVERY_PROTOCOL.md",
       "size_bytes": 1970
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/AUTONOMOUS_GUARDRAILS_PROTOCOL.md",
+      "size_bytes": 3695
     },
     {
       "category": "system-core",
@@ -658,7 +670,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/CONTEXT_INDEX.md",
-      "size_bytes": 11964
+      "size_bytes": 12844
     },
     {
       "category": "system-core",
@@ -677,6 +689,12 @@
       "kind": "file",
       "path": "_system/DEBUG_REPAIR_PLAYBOOK.md",
       "size_bytes": 1471
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/DELIVERY_GATES.md",
+      "size_bytes": 2420
     },
     {
       "category": "system-core",
@@ -784,19 +802,19 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/KEY.md",
-      "size_bytes": 84246
+      "size_bytes": 86590
     },
     {
       "category": "system-core",
       "kind": "file",
       "path": "_system/LOAD_ORDER.md",
-      "size_bytes": 5124
+      "size_bytes": 5693
     },
     {
       "category": "system-core",
       "kind": "file",
       "path": "_system/MASTER_SYSTEM_PROMPT.md",
-      "size_bytes": 8304
+      "size_bytes": 8926
     },
     {
       "category": "system-core",
@@ -945,8 +963,26 @@
     {
       "category": "system-core",
       "kind": "file",
+      "path": "_system/REPO_CONVENTIONS.md",
+      "size_bytes": 1364
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
       "path": "_system/REPO_OPERATING_PROFILE.md",
       "size_bytes": 3714
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/REQUEST_ALIGNMENT_PROTOCOL.md",
+      "size_bytes": 1430
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/SECURITY_BASELINE.md",
+      "size_bytes": 1750
     },
     {
       "category": "system-core",
@@ -993,8 +1029,14 @@
     {
       "category": "system-core",
       "kind": "file",
+      "path": "_system/SYSTEM_ORCHESTRATION_GUIDE.md",
+      "size_bytes": 6826
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
       "path": "_system/SYSTEM_REGISTRY.json",
-      "size_bytes": 75403
+      "size_bytes": 75404
     },
     {
       "category": "system-core",
@@ -1024,7 +1066,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/VALIDATION_GATES.md",
-      "size_bytes": 3835
+      "size_bytes": 4526
     },
     {
       "category": "system-core",
@@ -1043,6 +1085,18 @@
       "kind": "file",
       "path": "_system/aiaast-capabilities.json",
       "size_bytes": 2829
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/automation/.gitignore",
+      "size_bytes": 111
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/automation/README.md",
+      "size_bytes": 489
     },
     {
       "category": "ci",
@@ -1504,7 +1558,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/host-adapter-manifest.json",
-      "size_bytes": 16157
+      "size_bytes": 16641
     },
     {
       "category": "system-core",
@@ -1745,6 +1799,12 @@
       "kind": "file",
       "path": "_system/prompt-packs/M15_WHOLE_REPO_ANALYSIS.md",
       "size_bytes": 2094
+    },
+    {
+      "category": "prompting",
+      "kind": "file",
+      "path": "_system/prompt-packs/M16_PLATFORM_PRODUCT_EXPANSION.md",
+      "size_bytes": 3122
     },
     {
       "category": "prompting",
@@ -2163,6 +2223,12 @@
     {
       "category": "bootstrap",
       "kind": "file",
+      "path": "bootstrap/check-delivery-gate-alignment.sh",
+      "size_bytes": 3045
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
       "path": "bootstrap/check-environment.sh",
       "size_bytes": 5563
     },
@@ -2350,7 +2416,7 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/generate-host-adapters.sh",
-      "size_bytes": 8614
+      "size_bytes": 8921
     },
     {
       "category": "bootstrap",
@@ -2368,7 +2434,7 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/generate-system-key.sh",
-      "size_bytes": 38737
+      "size_bytes": 39104
     },
     {
       "category": "bootstrap",
@@ -2399,6 +2465,12 @@
       "kind": "file",
       "path": "bootstrap/init-project.sh",
       "size_bytes": 3791
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
+      "path": "bootstrap/install-autonomous-guardrails.sh",
+      "size_bytes": 5264
     },
     {
       "category": "bootstrap",
@@ -2447,6 +2519,12 @@
       "kind": "file",
       "path": "bootstrap/report-health-trends.sh",
       "size_bytes": 2388
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
+      "path": "bootstrap/run-autonomous-guardrails.sh",
+      "size_bytes": 4681
     },
     {
       "category": "bootstrap",
@@ -3061,8 +3139,8 @@
       "size_bytes": 2932
     }
   ],
-  "managed_file_count": 510,
+  "managed_file_count": 523,
   "system_readme_path": "README.md",
   "template_name": "AIAST",
-  "template_version": "1.21.0"
+  "template_version": "1.21.1"
 }

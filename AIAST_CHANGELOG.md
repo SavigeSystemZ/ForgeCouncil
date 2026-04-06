@@ -4,13 +4,42 @@
 
 - None.
 
+## 1.21.1 (2026-04-06)
+
+### Documentation
+
+- **`UPGRADE_AND_DRIFT_POLICY.md`:** **Pinning the source template (release tags)** — use `git fetch origin --tags` and checkout an annotated tag (for example `v1.21.0` or `v1.21.1`) in the master clone before passing `TEMPLATE/` to `bootstrap/update-template.sh --source` for reproducible drift checks.
+- **`GIT_REMOTE_AND_SYNC_PROTOCOL.md`:** **Release tags** section — cross-links upgrade policy and `RELEASE_NOTES.md` / `AIAST_CHANGELOG.md`.
+
+### Version alignment
+
+- Patch release so installable **semver** (`AIAST_VERSION.md`, `.template-version`, JSON markers) matches the **documented** git-tag workflow; tag **`v1.21.1`** on the source repo marks this tree.
+
 ## 1.21.0 (2026-04-06)
+
+**Git tag:** `v1.21.0` (annotated tag on the AIAST source repository `main` branch).
 
 ### GitHub merge discipline
 
 - **`.github/pull_request_template.md`** — PR checklist (validation, secrets, AIAST contracts, hooks).
 - **`.github/ISSUE_TEMPLATE/`** — `config.yml`, `bug_report.md`, `feature_request.md` for consistent triage.
 - **`HOOK_AND_ORCHESTRATION_INDEX.md`** — extended with PR/issue template row; `CONTEXT_INDEX.md` links to `.github/` templates.
+
+### Platform expansion (M16) and installable contracts
+
+- **`M16_PLATFORM_PRODUCT_EXPANSION.md`** — bounded multi-surface expansion and hardening; **`PROMPTS_INDEX.md`** lists M15/M16.
+- **Neutral app-fill placeholders:** `DELIVERY_GATES.md`, `AI_RULES.md`, `REPO_CONVENTIONS.md`, `SECURITY_BASELINE.md`.
+- **`REQUEST_ALIGNMENT_PROTOCOL.md`** — risk-aware clarification; wired into `MASTER_SYSTEM_PROMPT.md` and discovery docs.
+
+### Autonomous guardrails and scheduling
+
+- **`bootstrap/run-autonomous-guardrails.sh`**, **`bootstrap/install-autonomous-guardrails.sh`** — recurring checks; installer **`--dry-run`**; cron fallback uses valid multi-hour patterns when the minute field cannot express the interval.
+- **`_system/automation/.gitignore`**, **`AUTONOMOUS_GUARDRAILS_PROTOCOL.md`** — runtime log hygiene and operator workflow.
+
+### Delivery-gate alignment and troubleshooting
+
+- **`bootstrap/check-delivery-gate-alignment.sh`** — enforced via **`validate-system.sh`** and **`system-doctor.sh`** so contracts stay discoverable in `CONTEXT_INDEX.md`, `LOAD_ORDER.md`, and `MASTER_SYSTEM_PROMPT.md`.
+- **`VALIDATION_GATES.md`** — impact mapping when editing gates or contracts; **`DELIVERY_GATES.md`** — automated wiring section; **`AUTONOMOUS_GUARDRAILS_PROTOCOL.md`** — quick-mode note; **`TROUBLESHOOTING.md`** — remediation for alignment failures.
 
 ### Documentation (carried forward from pre-release)
 

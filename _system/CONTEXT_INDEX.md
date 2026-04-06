@@ -15,6 +15,7 @@ This file is the map of the local agent operating system.
 - `HOST_ADAPTER_POLICY.md` — policy for generated tool-entry and adapter-load surfaces
 - `HOST_BUNDLE_CONTRACT.md` — contract for self-contained external host bundles
 - `LOAD_ORDER.md` — what to read and in what order
+- `SYSTEM_ORCHESTRATION_GUIDE.md` — optional meta-map: how core surfaces relate, review/validation order, expansion and conflict pointers (includes product UX stack for shipped apps)
 - `WORKING_FILES_GUIDE.md` — what each planning and continuity file is for
 - `TEMPLATE_NEUTRALITY_POLICY.md` — how the master template stays reusable
 - `GOLDEN_EXAMPLES_POLICY.md` — how neutral example packs may be used without leaking donor-app truth
@@ -51,6 +52,12 @@ This file is the map of the local agent operating system.
 - `DEPENDENCY_GOVERNANCE.md` — supply chain security, license compliance, size hygiene
 - `MODERN_UI_PATTERNS.md` — component architecture, responsive design, color, typography, motion (see `design-system/THEME_GOVERNANCE.md` for theme versioning)
 - `OBSERVABILITY_STANDARDS.md` — logging, metrics, tracing, profiling, retention
+- `DELIVERY_GATES.md` — concise milestone completion checklist aligned to validation gates
+- `AI_RULES.md` — app-specific AI policy placeholder to be filled after scaffold
+- `REPO_CONVENTIONS.md` — app-specific repo conventions placeholder to be filled after scaffold
+- `SECURITY_BASELINE.md` — app-specific security baseline placeholder to be filled after scaffold
+- `AUTONOMOUS_GUARDRAILS_PROTOCOL.md` — recurring automated validation/integrity/drift/hallucination checks
+- `REQUEST_ALIGNMENT_PROTOCOL.md` — how to handle unsafe or conflicting requests with option-based clarification
 - `INSTALLATION_GUIDE.md` — generated installer flows and Linux runtime scaffolds
 - `PACKAGING_GUIDE.md` — universal packaging guidance and release signing notes
 - `MOBILE_GUIDE.md` — Flutter-first Android delivery guide
@@ -173,6 +180,8 @@ This file is the map of the local agent operating system.
 - `../bootstrap/check-hallucination.sh`
 - `../bootstrap/system-doctor.sh`
 - `../bootstrap/heal-system.sh`
+- `../bootstrap/run-autonomous-guardrails.sh`
+- `../bootstrap/install-autonomous-guardrails.sh`
 - `../bootstrap/scan-security.sh`
 - `../bootstrap/generate-systemd-unit.sh`
 - `../bootstrap/generate-runtime-foundations.sh`

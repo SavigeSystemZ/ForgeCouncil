@@ -322,6 +322,11 @@ exact = {
         "Recommended read order for loading the system efficiently.",
         "Use when context is limited or when a host needs a deterministic startup sequence.",
     ),
+    "_system/SYSTEM_ORCHESTRATION_GUIDE.md": register_exact(
+        "_system/SYSTEM_ORCHESTRATION_GUIDE.md",
+        "Meta-map: how core surfaces connect, recommended review/validation order, evolution and conflict pointers.",
+        "Read once when onboarding, consolidating systems, or when you need a single checklist instead of scattered entry points.",
+    ),
     "_system/WORKING_FILES_GUIDE.md": register_exact(
         "_system/WORKING_FILES_GUIDE.md",
         "Guide to the role of each working-state file.",

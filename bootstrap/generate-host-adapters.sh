@@ -164,6 +164,11 @@ def render_cursor_skill(spec: dict[str, object]) -> str:
         "",
         "## Steps",
     ]
+    pre_steps = [str(item) for item in spec.get("pre_steps_lines", [])]
+    if pre_steps:
+        for line in pre_steps:
+            lines.append(line)
+        lines.append("")
     lines.extend(f"{idx}. Read `{item}`." for idx, item in enumerate(startup_files, start=1))
     next_idx = len(startup_files) + 1
     lines.extend([
@@ -226,13 +231,18 @@ def render_cursor_rule(spec: dict[str, object]) -> str:
         "# Context Load",
         "",
         "Read the load order from `AGENTS.md` and `_system/LOAD_ORDER.md`.",
+    ]
+    for extra in spec.get("extra_lines", []):
+        lines.append("")
+        lines.append(str(extra))
+    lines.extend([
         "",
         "If context appears reset, incomplete, or stale:",
         "",
         "1. reload the canonical docs",
         "2. confirm readiness",
         "3. only then continue with implementation",
-    ]
+    ])
     return "\n".join(lines).rstrip() + "\n"
 
 

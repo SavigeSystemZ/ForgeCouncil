@@ -6,6 +6,8 @@ Validation is mandatory whenever meaningful work lands.
 
 If code changed, run at least the impacted validation commands from `_system/PROJECT_PROFILE.md`.
 
+For the **recommended bootstrap script order** (instruction layer, strict system validation, conflicts, awareness, delivery alignment, doctor), use `_system/SYSTEM_ORCHESTRATION_GUIDE.md` § “Recommended review and validation order”.
+
 ## Validation tiers
 
 ### Tier 0: system or docs only
@@ -62,6 +64,12 @@ If code changed, run at least the impacted validation commands from `_system/PRO
 - design-system or interaction change: visual and state smoke checks plus updated design notes when needed
 - install, launch, packaging, or deploy change: runtime verification required
 - `_system/`-only change: consistency, syntax sanity, portability, and cross-reference review required
+- delivery gates or app-fill contracts (`DELIVERY_GATES.md`, `AI_RULES.md`,
+  `REPO_CONVENTIONS.md`, `SECURITY_BASELINE.md`, `REQUEST_ALIGNMENT_PROTOCOL.md`,
+  `AUTONOMOUS_GUARDRAILS_PROTOCOL.md`): after edits, ensure `_system/CONTEXT_INDEX.md`,
+  `_system/LOAD_ORDER.md`, and `_system/MASTER_SYSTEM_PROMPT.md` still reference
+  those surfaces; run `bootstrap/check-delivery-gate-alignment.sh . --strict`
+  (also part of `validate-system.sh --strict`)
 - self-awareness or recovery change: run `bootstrap/check-system-awareness.sh` and `bootstrap/check-hallucination.sh`
 
 ## Failure policy

@@ -1,4 +1,5 @@
 Load the canonical repo context in this order:
+Optional orientation (single map of surfaces, review order, validation order): `_system/SYSTEM_ORCHESTRATION_GUIDE.md`.
 
 1. `AGENTS.md`
 2. `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`

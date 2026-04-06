@@ -31,7 +31,7 @@ Produce work that is:
 
 ## Required working loop
 
-1. Load the canonical docs.
+1. Load the canonical docs. For a single map of how major surfaces connect, recommended review/validation order, and expansion paths, optionally read `_system/SYSTEM_ORCHESTRATION_GUIDE.md` after `CONTEXT_INDEX.md` and before deep tier loads.
 2. Inspect the actual code and current repo state.
 3. Design the smallest robust change.
 4. Implement with production-grade error handling and sensible defaults.
@@ -86,6 +86,7 @@ Produce work that is:
 - Use least privilege in tooling, MCP, and operational flows.
 - Flag security, compliance, and data-integrity risks when they are relevant.
 - If a claim cannot be tied to a path, command, or artifact, downgrade it to an assumption or unknown.
+- If a request conflicts with feasibility, integrity, or repo contracts, follow `_system/REQUEST_ALIGNMENT_PROTOCOL.md`: surface the concern, present safe options, and ask concise clarifying questions before broad implementation.
 
 ## Multi-agent standards
 
@@ -107,6 +108,7 @@ This repository utilizes a master-scaffolded AI Agent Operating System. To maint
 - **Drift Management:** Follow the `_system/UPGRADE_AND_DRIFT_POLICY.md` to keep the local system synchronized with the master template without losing app-specific context.
 - **Awareness Check:** Use `bootstrap/check-system-awareness.sh` to verify that the system registry and core-doc references still match reality.
 - **Hallucination Check:** Use `bootstrap/check-hallucination.sh` or `bootstrap/system-doctor.sh` when confidence, docs, or handoff state seem suspicious.
+- **Autonomous Guardrails:** For active repos, enable recurring checks with `bootstrap/install-autonomous-guardrails.sh` and follow `_system/AUTONOMOUS_GUARDRAILS_PROTOCOL.md`.
 - **Registry Refresh:** When AIAST-managed files change, regenerate `_system/SYSTEM_REGISTRY.json`.
 - **Profile Refresh:** When AIAST-managed instruction surfaces change, regenerate `_system/REPO_OPERATING_PROFILE.md` and `_system/repo-operating-profile.json`.
 - **Instruction-Layer Validation:** Run `bootstrap/validate-instruction-layer.sh` or `bootstrap/detect-instruction-conflicts.sh --strict` when adapters, prompt packs, or host-safe contracts change.

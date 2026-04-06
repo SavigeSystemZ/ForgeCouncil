@@ -189,7 +189,8 @@
       "path": ".cursor/commands/load-context.md",
       "kind": "cursor_command",
       "intro_lines": [
-        "Load the canonical repo context in this order:"
+        "Load the canonical repo context in this order:",
+        "Optional orientation (single map of surfaces, review order, validation order): `_system/SYSTEM_ORCHESTRATION_GUIDE.md`."
       ]
     },
     "cursor_session_start_command": {
@@ -207,6 +208,9 @@
       "kind": "cursor_skill",
       "frontmatter_name": "load-context",
       "frontmatter_description": "Load the canonical repo context in the required order. Use at session start, after context resets, or when the user asks to reload project rules.",
+      "pre_steps_lines": [
+        "Optional: read `_system/SYSTEM_ORCHESTRATION_GUIDE.md` for a single map of surfaces and review/validation order."
+      ],
       "output_bullets": [
         "briefly state what was loaded",
         "confirm readiness",
@@ -217,7 +221,10 @@
       "path": ".cursor/rules/00-context-load.mdc",
       "kind": "cursor_rule",
       "description": "Load the canonical repo context before making meaningful changes",
-      "always_apply": true
+      "always_apply": true,
+      "extra_lines": [
+        "For a one-page map of how major surfaces connect and the recommended review/validation order, also know `_system/SYSTEM_ORCHESTRATION_GUIDE.md` exists."
+      ]
     },
     "deepseek": {
       "path": "DEEPSEEK.md",

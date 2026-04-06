@@ -2,6 +2,12 @@
 
 Use this order to bootstrap quickly without wasting context.
 
+## Tier 0 (optional orientation)
+
+If you are new to the repo, onboarding multiple roles, or need a **single map** of how surfaces connect, **review/validation order**, and **expansion paths**, read once:
+
+- `_system/SYSTEM_ORCHESTRATION_GUIDE.md`
+
 ## Tier 0: Operating contract
 
 1. `AGENTS.md`
@@ -69,59 +75,67 @@ Use this order to bootstrap quickly without wasting context.
 57. `_system/DEPENDENCY_GOVERNANCE.md`
 58. `_system/MODERN_UI_PATTERNS.md`
 59. `_system/OBSERVABILITY_STANDARDS.md`
-60. `_system/SECURITY_HARDENING_CONTRACT.md`
-61. `_system/THREAT_MODEL_TEMPLATE.md`
-62. `_system/INSTALLATION_GUIDE.md`
-63. `_system/PACKAGING_GUIDE.md`
-64. `_system/CROSS_PLATFORM_DISTRIBUTION_AND_INSTALLER_STANDARD.md`
-65. `_system/AGENT_INSTALLER_AND_HOST_VALIDATION_PROTOCOL.md`
-66. `_system/SUB_AGENT_HOST_DELEGATION.md`
-67. `_system/MOBILE_GUIDE.md`
-68. `_system/CHATBOT_GUIDE.md`
-69. `_system/PLUGIN_CONTRACT.md`
-70. `_system/SYSTEM_REGISTRY.json`
+60. `_system/DELIVERY_GATES.md`
+61. `_system/SECURITY_HARDENING_CONTRACT.md`
+62. `_system/SECURITY_BASELINE.md`
+63. `_system/THREAT_MODEL_TEMPLATE.md`
+64. `_system/AI_RULES.md`
+65. `_system/REPO_CONVENTIONS.md`
+66. `_system/AUTONOMOUS_GUARDRAILS_PROTOCOL.md`
+67. `_system/REQUEST_ALIGNMENT_PROTOCOL.md`
+68. `_system/INSTALLATION_GUIDE.md`
+69. `_system/PACKAGING_GUIDE.md`
+70. `_system/CROSS_PLATFORM_DISTRIBUTION_AND_INSTALLER_STANDARD.md`
+71. `_system/AGENT_INSTALLER_AND_HOST_VALIDATION_PROTOCOL.md`
+72. `_system/SUB_AGENT_HOST_DELEGATION.md`
+73. `_system/MOBILE_GUIDE.md`
+74. `_system/CHATBOT_GUIDE.md`
+75. `_system/PLUGIN_CONTRACT.md`
+76. `_system/SYSTEM_REGISTRY.json`
 
 ## Tier 3: Prompting and tooling
 
-71. `_system/PROMPTS_INDEX.md`
-72. `_system/PROMPT_EMISSION_CONTRACT.md`
-73. `_system/SKILLS_INDEX.md`
-74. `_system/review-playbooks/`
-75. `_system/prompt-templates/`
-76. `_system/prompt-packs/`
-77. `_system/ci/`
-78. `_system/packaging/`
-79. `_system/systemd/`
-80. `_system/starter-blueprints/`
-81. `bootstrap/system-doctor.sh`
-82. `bootstrap/validate-instruction-layer.sh`
-83. `bootstrap/detect-instruction-conflicts.sh`
-84. `bootstrap/check-runtime-foundations.sh`
-85. `bootstrap/check-evidence-quality.sh`
-86. `bootstrap/check-working-file-staleness.sh`
-87. `bootstrap/check-bootstrap-permissions.sh`
-88. `.cursor/` rules, commands, skills, and agents if using Cursor (include Composer-oriented rules when using Composer)
+77. `_system/PROMPTS_INDEX.md`
+78. `_system/PROMPT_EMISSION_CONTRACT.md`
+79. `_system/SKILLS_INDEX.md`
+80. `_system/review-playbooks/`
+81. `_system/prompt-templates/`
+82. `_system/prompt-packs/`
+83. `_system/ci/`
+84. `_system/packaging/`
+85. `_system/systemd/`
+86. `_system/starter-blueprints/`
+87. `bootstrap/system-doctor.sh`
+88. `bootstrap/validate-instruction-layer.sh`
+89. `bootstrap/detect-instruction-conflicts.sh`
+90. `bootstrap/check-runtime-foundations.sh`
+91. `bootstrap/check-evidence-quality.sh`
+92. `bootstrap/check-working-file-staleness.sh`
+93. `bootstrap/check-bootstrap-permissions.sh`
+94. `bootstrap/run-autonomous-guardrails.sh`
+95. `bootstrap/install-autonomous-guardrails.sh`
+96. `.cursor/` rules, commands, skills, and agents if using Cursor (include Composer-oriented rules when using Composer)
 
 ## Targeted optional load
 
 When the task is greenfield bootstrap, system evolution, prompt-authoring, skill-authoring, or working-file drafting, also load:
 
-89. `_system/GOLDEN_EXAMPLES_POLICY.md`
-90. `_system/golden-examples/PATTERN_INDEX.md`
-91. relevant files under `_system/golden-examples/patterns/` or `_system/golden-examples/working-files/`
-92. `_system/HOST_ADAPTER_POLICY.md` when the task changes tool-entry or adapter-load surfaces
-93. `_system/HOST_BUNDLE_CONTRACT.md` when the task changes external host-export or bundle surfaces
-94. `_system/design-system/THEME_GOVERNANCE.md` when changing global theme tokens or doing a visual overhaul
-95. `_system/ports/PORT_POLICY.md` when adding Docker Compose, host publishes, or systemd socket ports
-96. `_system/AUTH_AND_ONBOARDING_PATTERNS.md` when adding login, registration, guest mode, or dev-only seed admins
+97. `_system/GOLDEN_EXAMPLES_POLICY.md`
+98. `_system/golden-examples/PATTERN_INDEX.md`
+99. relevant files under `_system/golden-examples/patterns/` or `_system/golden-examples/working-files/`
+100. `_system/HOST_ADAPTER_POLICY.md` when the task changes tool-entry or adapter-load surfaces
+101. `_system/HOST_BUNDLE_CONTRACT.md` when the task changes external host-export or bundle surfaces
+102. `_system/design-system/THEME_GOVERNANCE.md` when changing global theme tokens or doing a visual overhaul
+103. `_system/ports/PORT_POLICY.md` when adding Docker Compose, host publishes, or systemd socket ports
+104. `_system/AUTH_AND_ONBOARDING_PATTERNS.md` when adding login, registration, guest mode, or dev-only seed admins
 
 ## Onboarding (load on demand)
 
-97. `_system/INSTALLER_AND_UPGRADE_CONTRACT.md` — install, upgrade, repair, and state preservation
-98. `_system/QUICKSTART.md` — 1-page onboarding
-99. `_system/ARCHITECTURE_DIAGRAM.md` — visual system overview
-100. `_system/TROUBLESHOOTING.md` — symptom-based FAQ
-101. `_system/MIGRATION_GUIDE.md` — migration paths from other setups
+105. `_system/INSTALLER_AND_UPGRADE_CONTRACT.md` — install, upgrade, repair, and state preservation
+106. `_system/QUICKSTART.md` — 1-page onboarding
+107. `_system/ARCHITECTURE_DIAGRAM.md` — visual system overview
+108. `_system/TROUBLESHOOTING.md` — symptom-based FAQ
+109. `_system/MIGRATION_GUIDE.md` — migration paths from other setups
 
 ## Fast path
 
