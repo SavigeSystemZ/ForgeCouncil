@@ -16,3 +16,9 @@ dist/
 build/
 data/
 .forge-council/
+.aider*
+.gemini/
+.claudecode/
+.plandex/
+.openhands_state/
+!.ai/

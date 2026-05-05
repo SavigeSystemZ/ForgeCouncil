@@ -13,7 +13,12 @@ This file is the map of the local agent operating system.
 - `SUB_AGENT_HOST_DELEGATION.md` — optional parallel host CLI / auxiliary sessions, scope rules, and primary takeover when auxiliaries fail; pair with `bootstrap/emit-auxiliary-brief.sh` for standardized briefs
 - `KEY.md` — exhaustive file-by-file key with when-to-use guidance
 - `HOST_ADAPTER_POLICY.md` — policy for generated tool-entry and adapter-load surfaces
+- `AGENT_SURFACE_TAXONOMY.md` — canonical adapter classes, naming, and placeholder boundaries
+- `AGENT_INIT_CONVERGENCE.md` — mapping from external init workspaces to installable AIAST contracts
+- `DOWNSTREAM_PRESERVATION_AND_SYNC_NOTICE_POLICY.md` — master template vs downstream app repo; preserve-first rules; template sync notice + health gate
+- `TEMPLATE_SYNC_NOTICE.md` — latest template sync state for agents (`PENDING_HEALTH_CHECK` vs `CLEARED`); see `LOAD_ORDER.md`
 - `HOST_BUNDLE_CONTRACT.md` — contract for self-contained external host bundles
+- `_system/READ_BUNDLES.md` — smallest-useful-context bundles for common AIAST task families
 - `LOAD_ORDER.md` — what to read and in what order
 - `SYSTEM_ORCHESTRATION_GUIDE.md` — optional meta-map: how core surfaces relate, review/validation order, expansion and conflict pointers (includes product UX stack for shipped apps)
 - `WORKING_FILES_GUIDE.md` — what each planning and continuity file is for
@@ -23,6 +28,17 @@ This file is the map of the local agent operating system.
 - `PROJECT_RULES.md` — repo-wide non-negotiable rules
 - `MEMORY_RULES.md` — what belongs in durable memory
 - `EXECUTION_PROTOCOL.md` — how work should be done
+- `_system/TEMPLATE_CHANGE_IMPACT_POLICY.md` — high-risk installable template change classes and required follow-through
+- `_system/SELF_HEALING_BOUNDARY.md` — safe automatic repair versus unsafe repair requiring review
+- `_system/VERSION_SENSITIVE_RESEARCH_PROTOCOL.md` — how to handle framework, package, platform, installer, and API research that may change over time
+- `_system/WORKSPACE_AUTHORITY_AND_CONTAINMENT_PROTOCOL.md` — working-directory authority and write containment rules
+- `_system/PROJECT_IDENTITY_AND_SCOPE_PROTOCOL.md` — identity mismatch detection and halt behavior
+- `_system/INSTRUCTION_DOMAIN_ALIGNMENT_PROTOCOL.md` — wrong-app / wrong-vertical pasted prompts; halt until reconciled with `PROJECT_DOMAIN_MANIFEST.json`
+- `_system/PROJECT_DOMAIN_MANIFEST.json` — machine-readable product domain and off-domain keyword guards (copy from `PROJECT_DOMAIN_MANIFEST.template.json` when bootstrapping)
+- `_system/GLOBAL_REDIRECT_SHIM_POLICY.md` — thin redirect shim policy for parent/tool-global surfaces
+- `_system/SCAVENGE_AND_DISCOVERY_AUTHORIZATION.md` — authorized local discovery scope and write constraints
+- `_system/SESSION_ENVIRONMENT_REPORT_CONTRACT.md` — required session environment report fields and usage
+- `_system/ORPHAN_META_SNAPSHOT_POLICY.md` — orphan-branch continuity snapshot model
 - `AUTH_AND_ONBOARDING_PATTERNS.md` — optional vs gated auth, dev seeding via env (no credentials in git), progressive trust
 - `AGENT_ROLE_CATALOG.md` — canonical role and delegation model for multi-agent work
 - `AGENT_DISCOVERY_MATRIX.md` — which tools load which files
@@ -68,7 +84,8 @@ This file is the map of the local agent operating system.
 
 - `MULTI_AGENT_COORDINATION.md` — turn-taking and handoff rules
 - `AGENT_ROLE_CATALOG.md` — shared role model and write-scope contract
-- `CHECKPOINT_PROTOCOL.md` — milestone checkpoint flow
+- `CHECKPOINT_PROTOCOL.md` — agent-neutral mid-session checkpoint flow (rate-limit, crash, and handoff resume)
+- `checkpoints/README.md` — checkpoint directory layout and rules. The LATEST.json + LATEST.md files are written at runtime by any agent; the history subdirectory is append-only.
 - `VALIDATION_GATES.md` — required validation rules
 - `DEBUG_REPAIR_PLAYBOOK.md` — failure triage and repair
 - `PROVENANCE_AND_EVIDENCE.md` — audit and lineage rules
@@ -117,6 +134,11 @@ This file is the map of the local agent operating system.
 - `context/OPEN_QUESTIONS.md`
 - `context/QUALITY_DEBT.md`
 
+## Optional longform trees
+
+- `../docs/README.md` — optional human-edited documentation; on the v1 allowlist for opt-in input prose compression (`CONTEXT_BUDGET_STRATEGY.md`, `bootstrap/compress-context-file.sh`)
+- `../notes/README.md` — optional human-edited notes; same allowlist as `docs/`
+
 ## Agent performance and effectiveness
 
 - `AGENT_PERFORMANCE_GUIDE.md` — model capability dimensions, task-to-model mapping, multi-agent delegation
@@ -145,6 +167,7 @@ This file is the map of the local agent operating system.
 
 - `PROMPTS_INDEX.md`
 - `PROMPT_EMISSION_CONTRACT.md`
+- `OPERATOR_PROMPTING_PLAYBOOK.md`
 - `HOST_BUNDLE_CONTRACT.md`
 - `prompt-templates/`
 - `prompt-packs/`
@@ -154,6 +177,8 @@ This file is the map of the local agent operating system.
 - `../bootstrap/init-project.sh`
 - `../bootstrap/scaffold-system.sh`
 - `../bootstrap/update-template.sh`
+- `../bootstrap/write-checkpoint.sh` — agent-neutral mid-session checkpoint writer (`_system/checkpoints/`)
+- `../bootstrap/resume-from-checkpoint.sh` — resume briefing reader for the LATEST.json file under `_system/checkpoints/` (written at runtime)
 - `../bootstrap/repair-system.sh`
 - `../bootstrap/uninstall-system.sh`
 - `../bootstrap/configure-project-profile.sh`
@@ -171,12 +196,22 @@ This file is the map of the local agent operating system.
 - `../bootstrap/generate-host-adapters.sh`
 - `../bootstrap/generate-operating-profile.sh`
 - `../bootstrap/check-host-adapter-alignment.sh`
+- `../bootstrap/check-agent-surface-integrity.sh`
+- `../bootstrap/sync-metasystem-contracts.sh`
+- `../bootstrap/migrate-agent-surface-upgrade.sh`
 - `../bootstrap/emit-host-prompt.sh`
 - `../bootstrap/check-host-ingestion.sh`
 - `../bootstrap/emit-host-bundle.sh`
 - `../bootstrap/check-host-bundle.sh`
 - `../bootstrap/detect-instruction-conflicts.sh`
 - `../bootstrap/check-system-awareness.sh`
+- `../bootstrap/check-working-directory-alignment.sh`
+- `../bootstrap/check-project-target-consistency.sh`
+- `../bootstrap/install-root-redirect-shims.sh`
+- `../bootstrap/install-tool-global-redirects.sh`
+- `../bootstrap/check-global-shim-alignment.sh`
+- `../bootstrap/emit-session-environment.sh`
+- `../bootstrap/snapshot-meta-to-orphan-branch.sh`
 - `../bootstrap/check-hallucination.sh`
 - `../bootstrap/system-doctor.sh`
 - `../bootstrap/heal-system.sh`
@@ -188,6 +223,7 @@ This file is the map of the local agent operating system.
 - `../bootstrap/validate-plugin.sh`
 - `../bootstrap/discover-plugins.sh`
 - `../bootstrap/emit-tiered-context.sh`
+- `../bootstrap/compress-context-file.sh` — optional Caveman-style compression for eligible prose under `docs/` / `notes/` only (`CONTEXT_BUDGET_STRATEGY.md`)
 - `../bootstrap/check-environment.sh`
 - `../bootstrap/generate-diagnostic-report.sh`
 - `../bootstrap/report-health-trends.sh`
@@ -239,6 +275,10 @@ This file is the map of the local agent operating system.
 - `../DEEPSEEK.md`
 - `../PEARAI.md`
 - `../LOCAL_MODELS.md`
+- `../CURSOR.md`
+- `../COPILOT.md`
+- `../AIDER.md`
+- `../AGENT_ZERO.md`
 - `../.aider.conf.yml`
 - `../.continuerules`
 - `../.clinerules`

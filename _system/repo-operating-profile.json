@@ -7,6 +7,8 @@
   "canonical_instruction_files": [
     "AGENTS.md",
     "_system/PROJECT_PROFILE.md",
+    "_system/PROJECT_DOMAIN_MANIFEST.json",
+    "_system/INSTRUCTION_DOMAIN_ALIGNMENT_PROTOCOL.md",
     "_system/INSTRUCTION_PRECEDENCE_CONTRACT.md",
     "_system/REPO_OPERATING_PROFILE.md",
     "_system/LOAD_ORDER.md",
@@ -15,6 +17,8 @@
     "_system/AGENT_ROLE_CATALOG.md",
     "_system/AGENT_DISCOVERY_MATRIX.md"
   ],
+  "change_impact_policy_path": "_system/TEMPLATE_CHANGE_IMPACT_POLICY.md",
+  "global_redirect_shim_policy_path": "_system/GLOBAL_REDIRECT_SHIM_POLICY.md",
   "golden_examples": {
     "manifest_path": "_system/golden-examples/golden-example-manifest.json",
     "pattern_index_path": "_system/golden-examples/PATTERN_INDEX.md",
@@ -38,6 +42,7 @@
     "_system/CONTEXT_INDEX.md",
     "_system/LOAD_ORDER.md"
   ],
+  "orphan_meta_snapshot_policy_path": "_system/ORPHAN_META_SNAPSHOT_POLICY.md",
   "packaging_install_expectations": {
     "default_bind_model": "loopback-only by default",
     "default_port_range": "8000-9000",
@@ -66,17 +71,32 @@
     "contract_path": "_system/INSTRUCTION_PRECEDENCE_CONTRACT.md",
     "manifest_path": "_system/instruction-precedence.json"
   },
+  "preferred_bundle_ids": [
+    "template-evolution",
+    "repo-onboarding",
+    "runtime-foundations",
+    "packaging-distribution",
+    "adapter-host-emission",
+    "release-readiness",
+    "repo-pivot"
+  ],
   "profile_state": "configured-project",
+  "project_identity_scope_protocol_path": "_system/PROJECT_IDENTITY_AND_SCOPE_PROTOCOL.md",
   "prompt_emission_contract": "_system/PROMPT_EMISSION_CONTRACT.md",
+  "read_bundles_contract_path": "_system/READ_BUNDLES.md",
+  "scavenge_discovery_authorization_path": "_system/SCAVENGE_AND_DISCOVERY_AUTHORIZATION.md",
   "schema_version": "1.0.0",
+  "self_healing_boundary_path": "_system/SELF_HEALING_BOUNDARY.md",
+  "session_environment_report_contract_path": "_system/SESSION_ENVIRONMENT_REPORT_CONTRACT.md",
   "system_readme_path": "README.md",
   "template_name": "AIAST",
-  "template_version": "1.21.1",
+  "template_version": "1.23.0",
   "terminology_mappings": {
     "host_level_orchestration_context": "Task framing or operator intent emitted outside the repo.",
     "repo_local_truth": "Facts stored in repo-local runtime/config/docs and the authoritative AIAST core docs.",
     "runtime_system_boundary": "Runtime code must remain independent from _system/.",
-    "tool_overlay": "A tool-specific adapter or rules layer that sits on top of the repo-local core."
+    "tool_overlay": "A tool-specific adapter or rules layer that sits on top of the repo-local core.",
+    "workspace_authority": "For downstream repos, authority is the working-directory copy, not parent/global shims."
   },
   "tool_adapters_present": {
     "claude": "CLAUDE.md",
@@ -94,6 +114,10 @@
     "bootstrap/check-host-ingestion.sh <repo>",
     "bootstrap/check-host-bundle.sh <repo>",
     "bootstrap/check-system-awareness.sh <repo>",
+    "bootstrap/check-working-directory-alignment.sh <repo>",
+    "bootstrap/check-project-target-consistency.sh <repo>",
+    "bootstrap/check-global-shim-alignment.sh <repo>",
+    "bootstrap/emit-session-environment.sh <repo>",
     "bootstrap/detect-instruction-conflicts.sh <repo> --strict",
     "bootstrap/system-doctor.sh <repo>",
     "bootstrap/check-packaging-targets.sh <repo>"
@@ -102,5 +126,7 @@
     "capabilities_manifest": "_system/aiaast-capabilities.json",
     "human_version": "AIAST_VERSION.md",
     "installed_version": "_system/.template-version"
-  }
+  },
+  "version_sensitive_research_protocol_path": "_system/VERSION_SENSITIVE_RESEARCH_PROTOCOL.md",
+  "workspace_authority_protocol_path": "_system/WORKSPACE_AUTHORITY_AND_CONTAINMENT_PROTOCOL.md"
 }

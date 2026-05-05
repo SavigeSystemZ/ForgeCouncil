@@ -12,6 +12,9 @@ This contract defines how AIAST prompt templates and prompt packs must be emitte
 - Prefer `bootstrap/emit-host-prompt.sh` when the repo provides it instead of rebuilding the startup preamble ad hoc.
 - When a host cannot resolve repo-local file paths directly, prefer `bootstrap/emit-host-bundle.sh` and follow `_system/HOST_BUNDLE_CONTRACT.md`.
 - Keep tool-entry adapter files aligned through `_system/HOST_ADAPTER_POLICY.md` and `bootstrap/generate-host-adapters.sh` instead of hand-editing shared startup language repeatedly.
+- When the task maps cleanly to one of the standard AIAST bundles, name the
+  relevant bundle from `_system/READ_BUNDLES.md` instead of expanding to the full
+  tiered load by default.
 
 ## Required startup preamble
 
@@ -26,6 +29,9 @@ Every emitted prompt should contain a compact version of this instruction:
 - Prefer saying "read these files" over embedding long rule text.
 - If a host needs a self-contained export instead of live path access, emit a narrow host bundle rather than copying large rule bodies into ad hoc prompts.
 - If the target task is narrow, reference only the additional domain files needed for that task.
+- If the task depends on current framework, package, platform, installer, or API
+  behavior, include `_system/VERSION_SENSITIVE_RESEARCH_PROTOCOL.md` in the read
+  set and label any current-state assumptions explicitly.
 - If a host adds reporting format or delivery steps, label that as host-level context rather than repo-local truth.
 - Remember that prompt emission surfaces sit below the repo-local core and any tool overlay in the precedence stack.
 
@@ -50,12 +56,15 @@ Every emitted prompt should contain a compact version of this instruction:
 - `host-level orchestration context` means external task framing emitted outside the repo.
 - `tool overlay` means a tool-specific adapter layered on top of the shared repo-local core.
 - `runtime system boundary` means runtime code must remain independent from `_system/`.
+- `workspace_authority` (workspace authority) means downstream repos trust the working-directory copy as authority while parent/global files stay redirect-only.
 
 ## Related files
 
 - `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`
 - `_system/REPO_OPERATING_PROFILE.md`
 - `_system/HOST_BUNDLE_CONTRACT.md`
+- `_system/READ_BUNDLES.md`
+- `_system/VERSION_SENSITIVE_RESEARCH_PROTOCOL.md`
 - `_system/PROMPTS_INDEX.md`
 - `_system/HOST_ADAPTER_POLICY.md`
 - `_system/prompt-templates/`

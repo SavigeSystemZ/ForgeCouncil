@@ -4,7 +4,15 @@ This file tells each supported tool which files it should load first, which adap
 
 Tool-entry files and shared load-context overlays are governed by `_system/HOST_ADAPTER_POLICY.md` and may be regenerated via `bootstrap/generate-host-adapters.sh`. Validate them with `bootstrap/check-host-adapter-alignment.sh`.
 
+Canonical adapter classes, naming rules, and placeholder boundaries are defined in `_system/AGENT_SURFACE_TAXONOMY.md`. External initialization pattern ingestion is defined in `_system/AGENT_INIT_CONVERGENCE.md`.
+
 External host exports are governed by `_system/HOST_BUNDLE_CONTRACT.md` and may be emitted via `bootstrap/emit-host-bundle.sh`. Validate them with `bootstrap/check-host-bundle.sh`.
+
+## Orientation (optional)
+
+When you need one checklist for how surfaces connect, review order, validation order, and where to expand the system:
+
+- `_system/SYSTEM_ORCHESTRATION_GUIDE.md`
 
 ## Shared truth for every tool
 
@@ -14,6 +22,7 @@ Every tool must treat these as canonical:
 - `_system/PROJECT_PROFILE.md`
 - `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`
 - `_system/REPO_OPERATING_PROFILE.md`
+- `_system/READ_BUNDLES.md`
 - `_system/CONTEXT_INDEX.md`
 - `_system/WORKING_FILES_GUIDE.md`
 - `_system/TEMPLATE_NEUTRALITY_POLICY.md`
@@ -41,6 +50,21 @@ Load these when the task touches their domain:
 - `RELEASE_NOTES.md`
 - `_system/context/ASSUMPTIONS.md`
 - `_system/context/INTEGRATION_SURFACES.md`
+
+## Governance add-ons
+
+Load these when the task changes installable AIAST behavior, recovery behavior,
+or current-state tooling assumptions:
+
+- `_system/TEMPLATE_CHANGE_IMPACT_POLICY.md`
+- `_system/SELF_HEALING_BOUNDARY.md`
+- `_system/VERSION_SENSITIVE_RESEARCH_PROTOCOL.md`
+- `_system/WORKSPACE_AUTHORITY_AND_CONTAINMENT_PROTOCOL.md`
+- `_system/PROJECT_IDENTITY_AND_SCOPE_PROTOCOL.md`
+- `_system/GLOBAL_REDIRECT_SHIM_POLICY.md`
+- `_system/SCAVENGE_AND_DISCOVERY_AUTHORIZATION.md`
+- `_system/SESSION_ENVIRONMENT_REPORT_CONTRACT.md`
+- `_system/ORPHAN_META_SNAPSHOT_POLICY.md`
 
 ## Golden example pack
 
@@ -157,18 +181,21 @@ Load `_system/AGENT_ROLE_CATALOG.md` whenever work is being split across roles, 
   2. `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`
   3. `_system/REPO_OPERATING_PROFILE.md`
   4. `_system/CONTEXT_INDEX.md`
-  5. `_system/LOAD_ORDER.md`
-  6. `_system/WORKING_FILES_GUIDE.md`
-  7. `_system/MASTER_SYSTEM_PROMPT.md`
-  8. `_system/AGENT_ROLE_CATALOG.md`
-  9. `PRODUCT_BRIEF.md`
-  10. `TODO.md`
-  11. `FIXME.md`
-  12. `WHERE_LEFT_OFF.md`
+  5. `_system/SYSTEM_ORCHESTRATION_GUIDE.md` (optional orientation)
+  6. `_system/LOAD_ORDER.md`
+  7. `_system/WORKING_FILES_GUIDE.md`
+  8. `_system/MASTER_SYSTEM_PROMPT.md`
+  9. `_system/AGENT_ROLE_CATALOG.md`
+  10. `PRODUCT_BRIEF.md`
+  11. `TODO.md`
+  12. `FIXME.md`
+  13. `WHERE_LEFT_OFF.md`
 
 ## Coexistence rule
 
 No adapter may contradict the shared core. If an adapter needs a different emphasis, it may add tool-specific handling only on top of the shared rules.
+
+Compatibility placeholders (`CURSOR.md`, `COPILOT.md`, `AIDER.md`, `AGENT_ZERO.md`) exist for cross-agent scaffold comparability and must remain thin pointer surfaces.
 
 When a host/orchestrator layer exists, it must defer to repo-local truth and the precedence contract rather than redefining the shared core.
 

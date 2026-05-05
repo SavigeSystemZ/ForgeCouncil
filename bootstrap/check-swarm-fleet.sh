@@ -30,16 +30,20 @@ check_file() {
     fi
 }
 
-check_symlink() {
-    local rel="$1"
-    if [[ "${REPO_MODE}" == "template" ]]; then
-        # In template source, these are real files, not symlinks.
+ensure_copilot_overlay() {
+    local rel=".github/copilot-instructions.md"
+    local path="${TARGET_REPO}/${rel}"
+    if [[ -f "${path}" && ! -L "${path}" ]]; then
         return 0
     fi
-    if [[ ! -L "${TARGET_REPO}/${rel}" ]]; then
-        log_warn "Missing or broken symlink: ${rel}. Attempting repair..."
-        return 1
+    log_warn "Missing or invalid Copilot overlay: ${rel}. Regenerating host adapters..."
+    rm -f "${path}" || true
+    bash "${SCRIPT_DIR}/generate-host-adapters.sh" "${TARGET_REPO}" --write >/dev/null
+    if [[ -f "${path}" && ! -L "${path}" ]]; then
+        log_info "Repaired Copilot overlay via adapter generation."
+        return 0
     fi
+    log_fail "Unable to restore ${rel} as a regular generated file."
 }
 
 log_info "Verifying Swarm Fleet Core Tools..."
@@ -59,12 +63,8 @@ check_file ".windsurfrules"
 check_file ".clinerules"
 check_file ".continuerules"
 
-log_info "Verifying Copilot Symlink..."
-if ! check_symlink ".github/copilot-instructions.md"; then
-    mkdir -p "${TARGET_REPO}/.github"
-    ln -sf "../TEMPLATE/.github/copilot-instructions.md" "${TARGET_REPO}/.github/copilot-instructions.md"
-    log_info "Repaired Copilot symlink."
-fi
+log_info "Verifying Copilot overlay..."
+ensure_copilot_overlay
 
 log_info "Verifying SSH Identity for 'whyte'..."
 if [[ "$(whoami)" != "whyte" ]]; then

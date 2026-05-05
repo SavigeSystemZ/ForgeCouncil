@@ -2,6 +2,8 @@
   "capabilities": {
     "agent_orchestration_validation": true,
     "agent_role_catalog": true,
+    "bundle_scoped_context_loading": true,
+    "cross_agent_checkpointing": true,
     "generated_host_adapters": true,
     "golden_examples_pack": true,
     "host_adapter_alignment_validation": true,
@@ -21,17 +23,24 @@
     "runtime_foundation_generation": true,
     "runtime_foundation_validation": true,
     "runtime_template_path_rendering": true,
+    "self_healing_boundary_policy": true,
     "starter_blueprint_application": true,
     "starter_blueprint_recommendation": true,
     "starter_blueprint_surface_projection": true,
     "system_key_surface": true,
+    "template_change_impact_policy": true,
     "template_aware_placeholder_validation": true,
     "template_repo_mode_detection": true,
-    "validation_strategy_seeding": true
+    "validation_strategy_seeding": true,
+    "version_sensitive_research_protocol": true
   },
   "compatibility_schema_version": "1.0.0",
   "markers": {
     "agent_role_catalog": "_system/AGENT_ROLE_CATALOG.md",
+    "checkpoint_protocol": "_system/CHECKPOINT_PROTOCOL.md",
+    "checkpoint_reader": "bootstrap/resume-from-checkpoint.sh",
+    "checkpoint_writer": "bootstrap/write-checkpoint.sh",
+    "checkpoints_directory": "_system/checkpoints/",
     "golden_examples_manifest": "_system/golden-examples/golden-example-manifest.json",
     "golden_examples_policy": "_system/GOLDEN_EXAMPLES_POLICY.md",
     "host_adapter_generator": "bootstrap/generate-host-adapters.sh",
@@ -51,12 +60,16 @@
     "product_brief": "PRODUCT_BRIEF.md",
     "product_brief_seeder": "bootstrap/seed-product-brief.sh",
     "prompt_emission_contract": "_system/PROMPT_EMISSION_CONTRACT.md",
+    "read_bundles_contract": "_system/READ_BUNDLES.md",
+    "self_healing_boundary": "_system/SELF_HEALING_BOUNDARY.md",
     "starter_blueprint_applicator": "bootstrap/apply-starter-blueprint.sh",
     "starter_blueprint_recommender": "bootstrap/recommend-starter-blueprint.sh",
     "system_key": "_system/KEY.md",
-    "system_key_generator": "bootstrap/generate-system-key.sh"
+    "system_key_generator": "bootstrap/generate-system-key.sh",
+    "template_change_impact_policy": "_system/TEMPLATE_CHANGE_IMPACT_POLICY.md",
+    "version_sensitive_research_protocol": "_system/VERSION_SENSITIVE_RESEARCH_PROTOCOL.md"
   },
   "schema_version": "1.0.0",
   "template_name": "AIAST",
-  "template_version": "1.21.1"
+  "template_version": "1.23.0"
 }

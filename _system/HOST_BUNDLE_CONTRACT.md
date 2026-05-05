@@ -40,6 +40,8 @@ This contract defines how AIAST exports a self-contained prompt-and-context bund
 - Each included file must carry its repo-relative path, `sha256`, line count, byte count, and text content.
 - Do not include absolute paths, machine-local config, or hidden host-only instructions.
 - Keep bundle scope narrow. Include only the additional repo-local files needed for the task.
+- Prefer choosing scope from `_system/READ_BUNDLES.md` when one bundle already
+  matches the task.
 
 ## Authority rules
 
@@ -60,6 +62,7 @@ This contract defines how AIAST exports a self-contained prompt-and-context bund
 - `_system/PROMPT_EMISSION_CONTRACT.md`
 - `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`
 - `_system/REPO_OPERATING_PROFILE.md`
+- `_system/READ_BUNDLES.md`
 - `_system/aiaast-capabilities.json`
 - `bootstrap/emit-host-prompt.sh`
 - `bootstrap/check-host-ingestion.sh`

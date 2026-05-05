@@ -98,6 +98,7 @@ run_check() {
 
 if [[ ${HEAL} -eq 1 ]]; then
   echo "Heal mode: attempting safe repair and awareness refresh before diagnosis..."
+  echo "Self-healing scope is governed by _system/SELF_HEALING_BOUNDARY.md"
   bash "${SCRIPT_DIR}/repair-system.sh" "${TARGET_REPO}" --source "${SOURCE}"
   bash "${SCRIPT_DIR}/generate-host-adapters.sh" "${TARGET_REPO}" --write
   bash "${SCRIPT_DIR}/generate-system-registry.sh" "${TARGET_REPO}" --write
@@ -122,17 +123,34 @@ run_check "check-host-adapter-alignment" bash "${SCRIPT_DIR}/check-host-adapter-
 run_check "check-host-ingestion" bash "${SCRIPT_DIR}/check-host-ingestion.sh" "${TARGET_REPO}" || failed=1
 run_check "check-host-bundle" bash "${SCRIPT_DIR}/check-host-bundle.sh" "${TARGET_REPO}" || failed=1
 run_check "check-system-awareness" bash "${SCRIPT_DIR}/check-system-awareness.sh" "${TARGET_REPO}" || failed=1
-if run_check "check-swarm-fleet" bash "${SCRIPT_DIR}/check-swarm-fleet.sh" "${TARGET_REPO}" || failed=1; then
+if run_check "check-swarm-fleet" bash "${SCRIPT_DIR}/check-swarm-fleet.sh" "${TARGET_REPO}"; then
   # After swarm fleet is verified, also show plugin capabilities if matrix exists
   matrix_file="${TARGET_REPO}/_system/CAPABILITY_MATRIX.json"
   if [[ -f "${matrix_file}" ]]; then
     printf "  → Discovered capabilities: "
     jq -r '.capabilities | keys | join(", ")' "${matrix_file}"
   fi
+else
+  failed=1
 fi
 run_check "check-repo-permissions" bash "${SCRIPT_DIR}/check-repo-permissions.sh" "${TARGET_REPO}" || failed=1
 run_check "check-agent-orchestration" bash "${SCRIPT_DIR}/check-agent-orchestration.sh" "${TARGET_REPO}" || failed=1
 run_check "check-network-bindings" bash "${SCRIPT_DIR}/check-network-bindings.sh" "${TARGET_REPO}" --include-template-assets || failed=1
+run_check "check-delivery-gate-alignment" bash "${SCRIPT_DIR}/check-delivery-gate-alignment.sh" "${TARGET_REPO}" "${strict_flag[@]}" || failed=1
+run_check "check-working-directory-alignment" bash "${SCRIPT_DIR}/check-working-directory-alignment.sh" "${TARGET_REPO}" || failed=1
+if run_check "check-project-target-consistency" bash "${SCRIPT_DIR}/check-project-target-consistency.sh" "${TARGET_REPO}"; then
+  true
+else
+  warned=1
+  warning_labels+=("project-target-consistency")
+fi
+if run_check "check-global-shim-alignment" bash "${SCRIPT_DIR}/check-global-shim-alignment.sh"; then
+  true
+else
+  warned=1
+  warning_labels+=("global-shim-alignment")
+fi
+run_check "emit-session-environment" bash "${SCRIPT_DIR}/emit-session-environment.sh" "${TARGET_REPO}" || failed=1
 
 if run_check "check-placeholders" bash "${SCRIPT_DIR}/check-placeholders.sh" "${TARGET_REPO}" --summary "${mode_flag[@]}"; then
   true

@@ -11,6 +11,12 @@ usage() {
 Usage: update-template.sh <target-repo> [--source <template-root>] [--strict] [--dry-run] [--refresh-managed]
 
 Apply additive AIAST updates and optionally refresh drifted template-managed files.
+
+Preserve-first: stateful repo-owned paths (for example TODO.md, PLAN.md,
+PRODUCT_BRIEF.md, WHERE_LEFT_OFF.md, _system/context/*.md) are excluded from
+template diff refresh, but --refresh-managed still copies any other drifted
+template-managed file from the source template. Commit or snapshot the repo
+before using --refresh-managed on important branches.
 EOF
 }
 
@@ -19,6 +25,8 @@ SOURCE="${DEFAULT_TEMPLATE_ROOT}"
 STRICT=0
 DRY_RUN=0
 REFRESH_MANAGED=0
+
+AIAST_UPDATE_ORIGINAL_ARGS=("$@")
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -78,13 +86,47 @@ if [[ "${RESOLVED_TEMPLATE}" == "${RESOLVED_TARGET}" ]]; then
   exit 1
 fi
 
+# Self-refresh guard: if the installed copy of this script drifts from the
+# source template, re-exec from a tempfile copy of the source version before
+# touching any managed files. Bash reads scripts as a buffered stream, so
+# rewriting the running script in place mid-execution corrupts the parser
+# (classic symptom: "unexpected EOF while looking for matching quote" past
+# the original line count). Re-execing from a stable tempfile avoids that.
+if [[ "${AIAST_UPDATE_REEXEC:-0}" != "1" && ${DRY_RUN} -eq 0 && ${REFRESH_MANAGED} -eq 1 ]]; then
+  source_self="${RESOLVED_TEMPLATE}/bootstrap/update-template.sh"
+  running_self="${BASH_SOURCE[0]}"
+  if [[ -f "${source_self}" && -f "${running_self}" ]]; then
+    if ! diff -q "${source_self}" "${running_self}" >/dev/null 2>&1; then
+      reexec_tmp="$(mktemp --suffix=.sh 2>/dev/null || mktemp -t aiaast-update.XXXXXX.sh)"
+      cp -p "${source_self}" "${reexec_tmp}"
+      chmod +x "${reexec_tmp}" 2>/dev/null || true
+      export AIAST_UPDATE_REEXEC=1
+      export AIAST_UPDATE_REEXEC_TMP="${reexec_tmp}"
+      echo "AIAST update: re-executing from stable copy of source update-template.sh at ${reexec_tmp}"
+      if [[ ${#AIAST_UPDATE_ORIGINAL_ARGS[@]} -gt 0 ]]; then
+        exec bash "${reexec_tmp}" "${AIAST_UPDATE_ORIGINAL_ARGS[@]}"
+      else
+        exec bash "${reexec_tmp}"
+      fi
+    fi
+  fi
+fi
+
+if [[ -n "${AIAST_UPDATE_REEXEC_TMP:-}" ]]; then
+  trap 'rm -f "${AIAST_UPDATE_REEXEC_TMP}"' EXIT
+fi
+
 source_version="$(aiaast_template_version "${RESOLVED_TEMPLATE}")"
 installed_version="$(aiaast_template_version "${RESOLVED_TARGET}")"
 readme_dest="$(aiaast_detect_system_readme_path "${RESOLVED_TARGET}")"
+bash "${RESOLVED_TARGET}/bootstrap/check-working-directory-alignment.sh" "${RESOLVED_TARGET}"
+bash "${RESOLVED_TARGET}/bootstrap/check-project-target-consistency.sh" "${RESOLVED_TARGET}"
+bash "${RESOLVED_TARGET}/bootstrap/emit-session-environment.sh" "${RESOLVED_TARGET}"
 always_refresh_files=(
   "AIAST_VERSION.md"
   "AIAST_CHANGELOG.md"
   "bootstrap/generate-system-key.sh"
+  "bootstrap/generate-host-adapters.sh"
   "_system/.template-version"
   "_system/aiaast-capabilities.json"
   "_system/instruction-precedence.json"
@@ -194,6 +236,24 @@ for rel in "${always_refresh_files[@]}"; do
   fi
 done
 
+for rel in "${source_files[@]}"; do
+  rel="${rel#./}"
+  dest_rel="${rel}"
+  if [[ "${rel}" == "README.md" ]]; then
+    dest_rel="${readme_dest}"
+  fi
+
+  if [[ ! -e "${RESOLVED_TARGET}/${dest_rel}" ]]; then
+    continue
+  fi
+
+  if [[ "${rel}" != "README.md" ]] && aiaast_is_template_diff_skip_path "${dest_rel}"; then
+    continue
+  fi
+
+  aiaast_sync_rel_file_mode "${RESOLVED_TEMPLATE}" "${rel}" "${RESOLVED_TARGET}" "${dest_rel}"
+done
+
 aiaast_refresh_onboarding_baseline "${RESOLVED_TARGET}/bootstrap" "${RESOLVED_TARGET}" "" "${REFRESH_MANAGED}"
 
 aiaast_write_install_metadata \
@@ -203,6 +263,13 @@ aiaast_write_install_metadata \
   "copied-template" \
   "${readme_dest}" \
   "update-template"
+
+# Manifest and onboarding hooks may refresh immediately before adapter emission.
+# Always re-pin the emitter script to the source template version so renderer
+# tables stay aligned with `generated_adapters` kinds (avoids skew on large jumps).
+if [[ -f "${RESOLVED_TEMPLATE}/bootstrap/generate-host-adapters.sh" ]]; then
+  aiaast_copy_rel_file "${RESOLVED_TEMPLATE}" "bootstrap/generate-host-adapters.sh" "${RESOLVED_TARGET}" "bootstrap/generate-host-adapters.sh"
+fi
 bash "${RESOLVED_TARGET}/bootstrap/generate-host-adapters.sh" "${RESOLVED_TARGET}" --write
 bash "${RESOLVED_TARGET}/bootstrap/generate-system-key.sh" "${RESOLVED_TARGET}" --write
 bash "${RESOLVED_TARGET}/bootstrap/generate-system-registry.sh" "${RESOLVED_TARGET}" --write
@@ -234,6 +301,8 @@ else
     fi
   fi
 fi
+
+aiaast_emit_template_sync_notice "${RESOLVED_TARGET}" "update-template" "${REFRESH_MANAGED}"
 
 aiaast_record_validation_success \
   "${RESOLVED_TARGET}" \

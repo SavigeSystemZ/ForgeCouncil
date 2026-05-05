@@ -4,6 +4,8 @@ The skills in `.cursor/skills/` are reusable operating workflows for this system
 
 They support the shared roles defined in `_system/AGENT_ROLE_CATALOG.md`; they do not replace that role model.
 
+For how skills, validation scripts, and handoff files fit together in one checklist, see `_system/SYSTEM_ORCHESTRATION_GUIDE.md`.
+
 ## Included skills
 
 - `load-context` — boot a session correctly
@@ -20,11 +22,14 @@ They support the shared roles defined in `_system/AGENT_ROLE_CATALOG.md`; they d
 - `accessibility-review` — audit UI for WCAG compliance, keyboard access, and screen reader support
 - `performance-review` — audit for performance budget compliance and optimization opportunities
 - `dependency-review` — review dependencies for security, license, size, and necessity
+- `concise-communication` — **opt-in** ultra-concise assistant output (output-token efficient; Caveman-style). Use command `/concise-session` or when the user asks for terse/token-efficient replies. Never default; never compress away requirements or handoff quality.
+- `compress-context-input` — **opt-in** checklist for shrinking long **human-edited** markdown under `docs/` or `notes/` via `bootstrap/compress-context-file.sh` (upstream caveman-compress). Use command `/compress-context`. Does **not** replace tiered loading; never target generated adapters or contract files.
 
 ## Supporting tools
 
 These bootstrap scripts support skill workflows but are not skills themselves:
 
+- `bootstrap/compress-context-file.sh` — optional Caveman-style **input** file compression (denylisted paths + `docs/`/`notes/` allowlist); delegates to upstream caveman-compress when installed
 - `bootstrap/wizard.sh` — interactive AIAST setup wizard
 - `bootstrap/upgrade-assistant.sh` — interactive upgrade guide
 - `bootstrap/run-sast.sh` — static application security testing

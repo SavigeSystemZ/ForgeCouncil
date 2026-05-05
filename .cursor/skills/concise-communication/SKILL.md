@@ -9,7 +9,7 @@ description: Opt-in ultra-concise assistant replies to reduce OUTPUT tokens (Cav
 
 Compress **assistant output** (not user instructions): drop filler, hedging, and redundant prose while keeping **full technical accuracy**. Pattern aligns with the community **Caveman** skill ([JuliusBrussee/caveman](https://github.com/JuliusBrussee/caveman), MIT); this repo ships a **host-neutral** Cursor skill so any agent that reads `.cursor/skills/` can apply the same rules.
 
-**Important:** Savings apply mainly to **output** tokens. **Input** context (repo, rules, large files) usually dominates cost—pair with `_system/CONTEXT_BUDGET_STRATEGY.md` and tiered loading for input-side efficiency.
+**Important:** Savings apply mainly to **output** tokens. **Input** context (repo, rules, large files) usually dominates cost—pair with `_system/CONTEXT_BUDGET_STRATEGY.md` and tiered loading for input-side efficiency. For optional compression of long **human-authored** notes (eligible `docs/` / `notes/` paths only), use `/compress-context` and `compress-context-input`—never confuse that workflow with this output skill.
 
 ## When to activate (explicit user intent)
 

@@ -2,6 +2,8 @@
 
 Use this document to keep the operating system capable of producing not only working software, but also intentional, high-quality product experiences.
 
+For where this framework sits relative to validation, mobile, and theme governance, see `_system/SYSTEM_ORCHESTRATION_GUIDE.md` (expansion and optimization sections).
+
 ## Design north stars
 
 - clarity under real use

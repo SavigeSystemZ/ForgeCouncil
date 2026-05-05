@@ -2,9 +2,179 @@
 
 ## Unreleased
 
-- None.
+- **Enhancement — Downstream preservation + sync notice:** added `_system/DOWNSTREAM_PRESERVATION_AND_SYNC_NOTICE_POLICY.md` (master template vs app repo, preserve-first recap, agent health gate), `_system/TEMPLATE_SYNC_NOTICE.md` baseline, `bootstrap/clear-template-sync-notice.sh`, and `aiaast_emit_template_sync_notice` in `bootstrap/lib/aiaast-lib.sh`. Successful non-dry-run `init-project.sh`, `install-missing-files.sh`, and `update-template.sh` runs now write `_system/TEMPLATE_SYNC_NOTICE.md` with **PENDING_HEALTH_CHECK** and append `_system/history/template-sync-events.jsonl`. `LOAD_ORDER.md`, `CONTEXT_INDEX.md`, `UPGRADE_AND_DRIFT_POLICY.md`, `TEMPLATE_CHANGE_IMPACT_POLICY.md`, and `AGENT_INIT_CONVERGENCE.md` cross-link the policy. Maintainer boundary doc: `_META_AGENT_SYSTEM/DOWNSTREAM_ROLLOUT_PRESERVATION_AND_MASTER_REPO_BOUNDARY.md`.
+- **Fix — Template sync history vs managed-file registry:** `_system/history/template-sync-events.jsonl` is classified as stateful/runtime-only, and `_system/history/*` is omitted from `aiaast_print_managed_files` so `check-system-awareness` does not report “Managed file missing from registry” on the same `init-project` run that creates the JSONL append-only log (before a later registry refresh).
+- **Fix — Template sync notice vs integrity / doctor:** `_system/TEMPLATE_SYNC_NOTICE.md` is treated as local volatile state for integrity manifest purposes (bootstrap rewrites it after install/update), so `verify-integrity` no longer false-fails on fresh downstream repos. **`system-doctor.sh`:** corrected `check-swarm-fleet` control flow so a failed swarm check sets `failed=1` without being masked by the `|| failed=1` idiom inside the `if` condition.
+
+- **Enhancement — Preserve-first agent-surface migration:** `migrate-agent-surface-upgrade.sh --write` runs `install-missing-files.sh --skip-onboarding-seeds`, and `aiaast_refresh_onboarding_baseline` honors `AIAST_SKIP_ONBOARDING_SEEDS=1` by skipping suggest/seed passes so `PRODUCT_BRIEF.md`, working files, and `_system/context` bullets are not bulk-rewritten during additive file installs. Operators can pass `--skip-onboarding-seeds` on any `install-missing-files.sh` invocation for the same effect. Documented in `_system/AGENT_INIT_CONVERGENCE.md` and `bootstrap/update-template.sh` usage text for `--refresh-managed` snapshot expectations.
+
+- **Enhancement — Contract sync command:** added
+  `bootstrap/sync-metasystem-contracts.sh` to run adapter generation, system registry/profile regeneration, integrity generation, and core validation checks in one deterministic flow.
+- **Enhancement — Downstream migration assistant:** added
+  `bootstrap/migrate-agent-surface-upgrade.sh` with `--dry-run` and `--write`
+  modes to roll out dual-metasystem agent-surface upgrades to existing
+  downstream repos.
+- **Enhancement — Parity and quality gates:** added
+  `_TEMPLATE_FACTORY/check-aiast-mos-parity.sh` and
+  `_TEMPLATE_FACTORY/check-metasystem-quality-gate.sh`; both are now integrated
+  into `_TEMPLATE_FACTORY/validate-master-template.sh`.
+- **Enhancement — Adapter alias lifecycle enforcement:** extended
+  `_system/host-adapter-manifest.json` `deprecated_aliases` entries with
+  `target`, `deprecated_since`, `remove_after`, and `migration_doc`, and
+  updated validators to fail on expired alias windows.
+- **Enhancement — Dual metasystem unification:** added installable adapter governance and convergence contracts:
+  - `_system/AGENT_SURFACE_TAXONOMY.md`
+  - `_system/AGENT_INIT_CONVERGENCE.md`
+  - `_system/OPERATOR_PROMPTING_PLAYBOOK.md`
+- **Enhancement — Adapter parity placeholders:** added `CURSOR.md`, `COPILOT.md`, `AIDER.md`, and `AGENT_ZERO.md` as thin compatibility pointer files for scaffold comparability across mixed agent ecosystems.
+- **Enhancement — Validation lane hardening:** added `bootstrap/check-agent-surface-integrity.sh`, integrated it into `_TEMPLATE_FACTORY/validate-master-template.sh`, and extended host-adapter alignment checks to enforce required placeholder presence and taxonomy/convergence references.
+- **Enhancement — Meta-of-meta governance:** added `_META_AGENT_SYSTEM/META_GOVERNANCE_FRAMEWORK.md` for proposal lifecycle, compatibility tiers, and evidence-backed release gates.
+- **Enhancement — MOS parity crosswalk:** added `MOS_TEMPLATE/meta_system/META_AGENT_SURFACE_CROSSWALK.md` and wired MOS host-adapter policy/load/context docs to the crosswalk.
+
+- **Fix — `bootstrap/lib/aiaast-lib.sh`:** `aiaast_refresh_onboarding_baseline`
+  no longer propagates its `force` parameter to
+  `generate-runtime-foundations.sh`. Runtime foundation templates under
+  `bootstrap/templates/runtime/` are product-owned seeds (e.g.
+  `ops/install/install.sh`, `ops/install/lib/runtime-foundation.sh`,
+  `ops/compose/compose.yml`, `ops/env/.env.example`,
+  `ops/install/lib/port_allocator.py`) that are copied into a downstream
+  on first install and then customized by the app. Before this fix,
+  `update-template.sh --refresh-managed` passed `REFRESH_MANAGED=1` as
+  `force` all the way down to `generate-runtime-foundations.sh --force`,
+  which silently overwrote the downstream's product-customized runtime
+  seeds with the template's generic stubs. This was discovered during the
+  first `1.23.0` replay to a production-scale repo, where ~989 lines of M1
+  host-install work in `runtime-foundation.sh` were erased; the product
+  content was restored from the pre-refresh commit. See maintainer proof
+  evidence for the forensic trail. **This fix is committed on source `main`
+  but is not yet published under a tag; the next release (whether `1.23.1` or
+  whichever label a maintainer chooses) should ship it.**
+
+## 1.23.0 (2026-04-14)
+
+**Git tag:** `v1.23.0` (annotated tag on the AIAST source repository `main` branch).
+
+### Cross-agent checkpointing capability
+
+- **`bootstrap/write-checkpoint.sh`:** new agent-neutral writer of mid-session
+  resume checkpoints. Any agent (Claude, Codex, Cursor, Gemini, Windsurf,
+  DeepSeek, Cline, Continue, Aider, PearAI, local models, or a human) can
+  persist the current phase, completed steps, in-progress step, ordered next
+  actions, blockers, resume files, resume command, and validation state into
+  `_system/checkpoints/LATEST.json` + `LATEST.md` with an append-only history
+  under `_system/checkpoints/history/`. Writes are atomic (tempfile + rename).
+  Supports five checkpoint kinds: `session-start`, `mid-task`, `handoff`,
+  `rate-limit-save`, `milestone`. Accepts `--from-json` for pre-built payloads
+  with flag overrides layered on top. Zero new runtime dependencies beyond
+  the `bash` + `python3` already required by the rest of the bootstrap layer.
+- **`bootstrap/resume-from-checkpoint.sh`:** new concise resume-briefing reader.
+  Emits a plain-text human briefing by default, JSON or Markdown on request,
+  and can list every historical checkpoint. Exit codes distinguish "no
+  checkpoint" (`3`) from "malformed checkpoint" (`4`) so scripts can branch
+  cleanly.
+- **`_system/CHECKPOINT_PROTOCOL.md`:** fully rewritten for mid-session
+  semantics (not only session-end). Documents the five checkpoint kinds,
+  required fields, writing and reading examples, file layout, rules
+  (no secrets, honest validation, specific resume files), and the
+  relationship between checkpoints, `WHERE_LEFT_OFF.md`, and
+  `HANDOFF_PROTOCOL.md`.
+- **`_system/checkpoints/README.md`:** seed doc describing the checkpoint
+  directory layout and the rules for every downstream install.
+- **Startup wiring:** `_system/CONTEXT_INDEX.md`, `_system/LOAD_ORDER.md`,
+  `_system/MASTER_SYSTEM_PROMPT.md`, and `_system/SYSTEM_AWARENESS_PROTOCOL.md`
+  now instruct every agent to run `bootstrap/resume-from-checkpoint.sh` on
+  cold start, to write a checkpoint before stopping for any reason, and to
+  persist `rate-limit-save` checkpoints before any command that could
+  exhaust the remaining token/time budget.
+- **`aiaast-capabilities.json`:** new `cross_agent_checkpointing` capability
+  flag and `checkpoint_protocol` / `checkpoint_writer` / `checkpoint_reader` /
+  `checkpoints_directory` markers.
+
+### Downstream self-healing for `bootstrap/update-template.sh`
+
+- **`bootstrap/update-template.sh`:** added a re-exec guard that detects drift
+  between the installed copy of the script and the source template copy.
+  When `--refresh-managed` is active and the two differ, the script copies
+  the source version to a tempfile and re-execs from there before touching
+  any managed files, preventing the bash parser corruption that previously
+  occurred when the refresh loop rewrote the currently-executing script.
+  Guarded by `AIAST_UPDATE_REEXEC` to prevent infinite re-exec loops, with
+  an `EXIT` trap that cleans up the tempfile. Downstreams running pre-fix
+  installed copies should run the **source** template's script directly
+  once to clear the hazard; subsequent updates use the installed copy
+  with the guard in place.
+
+### Release process
+
+- **Version markers:** `_system/.template-version`, `_system/.template-install.json`,
+  `_system/aiaast-capabilities.json`, and `AIAST_VERSION.md` all bumped to
+  `1.23.0` — minor bump because the checkpointing surfaces and scripts are
+  net-new additive capability.
+- **Validation:** `_TEMPLATE_FACTORY/run-maintainer-lane.sh` →
+  `maintainer_lane_ok`, `_TEMPLATE_FACTORY/run-automation-lane.sh` →
+  `automation_lane_ok`, `bootstrap/system-doctor.sh TEMPLATE --strict` → all
+  16 checks green, `bootstrap/check-system-awareness.sh TEMPLATE` →
+  `system_awareness_ok`.
+
+## 1.22.1 (2026-04-12)
+
+**Git tag:** `v1.22.1` (annotated tag on the AIAST source repository `main` branch).
+
+### Downstream sync and integrity corrections
+
+- **`bootstrap/update-template.sh`:** now repairs managed-file mode drift even
+  when downstream file contents already match the source template, so `+x`
+  bootstrap surfaces recover during refresh instead of staying silently wrong.
+- **`bootstrap/lib/aiaast-lib.sh`:** integrity manifests now enumerate the
+  managed installable surface instead of raw `find` output, eliminating
+  transient runtime and bytecode noise from the canonical manifest while adding
+  managed roots such as `distribution/`, `docs/`, `notes/`, `.credits-hidden`,
+  `LICENSE`, and `NOTICE`.
+
+### Proof-backed release closure
+
+- **`CandleCompass` downstream proof:** the first `1.22.0` replay exposed an
+  installed-doc boundary leak around absolute maintainer source-clone paths;
+  after sanitizing those docs and replaying the fixed source template, strict
+  validation and `system-doctor.sh` both passed.
+- **`DOWNSTREAM_PROOF_PLAYBOOK.md`:** now documents the forbidden
+  absolute-master-template-path failure mode and the required neutralized
+  wording for installed continuity docs.
+
+### Version alignment
+
+- Patch release so installable **semver** (`AIAST_VERSION.md`,
+  `_system/.template-version`, JSON markers, and plugin manifests
+  `aiast_min_version`) matches the proof-backed source tag **`v1.22.1`**.
+
+## 1.22.0 (2026-04-12)
+
+### Governance hardening
+
+- **`READ_BUNDLES.md`:** task-scoped bundle entrypoints so agents can load the smallest useful AIAST context instead of defaulting to the full load order.
+- **`TEMPLATE_CHANGE_IMPACT_POLICY.md`:** high-risk template change classes and required follow-through for precedence, host emission, repair, install, update, and validation surfaces.
+- **`SELF_HEALING_BOUNDARY.md`:** explicit separation between safe automatic repair and unsafe repair that requires review.
+- **`VERSION_SENSITIVE_RESEARCH_PROTOCOL.md`:** installable research-discipline contract for frameworks, packages, installers, platforms, APIs, and host tools that may change over time.
+
+### Maintainer promotion discipline
+
+- **Maintainer-only learning loop and promotion doctrine:** the master-repo meta workspace now governs how strong downstream patterns can be harvested back into AIAST without leaking app-specific truth.
+- **Maintainer-only enhancement review packet:** preservation ledger, donor review, and AIAST-vs-SACST import map grounded in the full local repo audit plus the donor read of `/home/whyte/.MyAdminZ/_SYS_AGENT_CORE_TEMPLATE`.
+- **`_TEMPLATE_FACTORY/check-template-impact.sh`** and **`check-promotion-readiness.sh`:** new factory checks for change-impact classification, follow-through requirements, donor provenance, and promotion gating.
+
+### Validation and generated-surface alignment
+
+- **`INSTRUCTION_PRECEDENCE_CONTRACT.md`**, **`instruction-precedence.json`**, **`PROMPT_EMISSION_CONTRACT.md`**, **`HOST_BUNDLE_CONTRACT.md`**, **`LOAD_ORDER.md`**, and **`REPO_OPERATING_PROFILE.*`:** aligned around bundle-aware loading, exact consistency surfaces, and stricter governance cross-references.
+- **Validators and generators:** `detect-instruction-conflicts.sh`, `validate-instruction-layer.sh`, `check-system-awareness.sh`, `generate-operating-profile.sh`, and `system-doctor.sh` now recognize the new governance surfaces directly.
+- **Generated artifacts:** host adapters, `_system/KEY.md`, `_system/SYSTEM_REGISTRY.json`, `_system/repo-operating-profile.json`, and `_system/INTEGRITY_MANIFEST.sha256` regenerated for the 1.22.0 surface.
+- **Proof:** `_TEMPLATE_FACTORY/run-maintainer-lane.sh` and `_TEMPLATE_FACTORY/run-automation-lane.sh` passed on 2026-04-12, including strict source validation, installed-repo smoke, update-template smoke, blueprint, host-bundle, packaging, runtime-foundation, campaign, and live-host proofs.
 
 ## 1.21.1 (2026-04-06)
+
+### Context efficiency
+
+- **Input prose compression (opt-in):** `bootstrap/compress-context-file.sh`, `/compress-context`, `compress-context-input` skill, `CONTEXT_BUDGET_STRATEGY.md` subsection (mechanics + invocation), factory-vendored `caveman-compress` under `_TEMPLATE_FACTORY/third_party/`. Tiered loading remains primary; only `docs/` and `notes/` prose paths are allowlisted.
+- **`docs/README.md`**, **`notes/README.md`**, and **`TROUBLESHOOTING.md`** — symmetry for optional longform trees; FAQ for “compress-context-file refuses my path”.
 
 ### Documentation
 
@@ -618,7 +788,7 @@
 
 - The neutral source template now validates cleanly in auto/template mode while installed repos still treat unresolved repo-owned placeholders as failures
 - Runtime-foundation validation now includes shell-sourceability checks for generated env defaults and executable smoke for install, repair, launch, and purge flows
-- Golden-example donor curation now records explicit review outcomes for `Immortality` and `Vetraxis` instead of leaving their deferral implicit
+- Golden-example donor curation now records explicit review outcomes for high-scoring candidates instead of leaving their deferral implicit
 
 ### Fixed
 
@@ -698,3 +868,4 @@
 - Bootstrap lifecycle now records install source, timestamps, and README placement
 - Drift and upgrade policy now use explicit template version markers instead of commit-message convention
 - Integrity manifests exclude app-owned state and project-local config surfaces
+tegrity manifests exclude app-owned state and project-local config surfaces

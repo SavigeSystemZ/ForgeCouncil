@@ -2,6 +2,47 @@
 
 Use this order to bootstrap quickly without wasting context.
 
+## Checkpoint-first rule
+
+Before anything else, on cold start check for an in-flight resume checkpoint:
+
+```bash
+bash bootstrap/resume-from-checkpoint.sh .
+```
+
+If a checkpoint exists (exit 0), paste or summarize the briefing at the top
+of your first turn, then work through its `next_actions` list. A checkpoint
+represents mid-session state from the previous agent (Claude, Codex, Cursor,
+Gemini, Windsurf, DeepSeek, Cline, Continue, Aider, PearAI, or a local model)
+and is fresher than `WHERE_LEFT_OFF.md`. When it disagrees with any other
+resume surface, the checkpoint wins because it is newer. See
+`_system/CHECKPOINT_PROTOCOL.md` for the full contract.
+
+If no checkpoint exists (exit 3), skip this step and continue with the
+bundle-first rule below. An agent that cannot run `bash` should open the
+LATEST.md file inside `_system/checkpoints/` (when one exists) directly
+instead.
+
+## Template sync gate (downstream repos)
+
+Immediately after the checkpoint rule, open `_system/TEMPLATE_SYNC_NOTICE.md`.
+
+- If **`Agent gate: PENDING_HEALTH_CHECK`** appears, the operating layer was
+  refreshed from the canonical AIAST template since the last human-reviewed
+  clear. Complete the checklist in that file (and in
+  `DOWNSTREAM_PRESERVATION_AND_SYNC_NOTICE_POLICY.md`) **before** product
+  feature work — typically `bootstrap/system-doctor.sh` and
+  `bootstrap/validate-system.sh --strict`.
+- If **`Agent gate: CLEARED`** or **`NOT_APPLICABLE_TEMPLATE_SOURCE`**, there
+  is no pending template-rollup health block.
+- After review: `bash bootstrap/clear-template-sync-notice.sh .`
+
+## Bundle-first rule
+
+Before defaulting to the full tier stack, check `_system/READ_BUNDLES.md` and
+pick the smallest useful bundle for the task. Use the full tiered load when the
+task is broad, the context is stale, or the work spans multiple subsystems.
+
 ## Tier 0 (optional orientation)
 
 If you are new to the repo, onboarding multiple roles, or need a **single map** of how surfaces connect, **review/validation order**, and **expansion paths**, read once:
@@ -58,7 +99,10 @@ If you are new to the repo, onboarding multiple roles, or need a **single map** 
 40. `_system/VALIDATION_GATES.md`
 41. `_system/HANDOFF_PROTOCOL.md`
 42. `_system/DEBUG_REPAIR_PLAYBOOK.md`
-43. `_system/CHECKPOINT_PROTOCOL.md`
+43. `_system/CHECKPOINT_PROTOCOL.md` — mid-session checkpointing, rate-limit and crash recovery, cross-agent resume
+43a. `_system/checkpoints/README.md` — checkpoint directory layout and rules (LATEST.md is generated at runtime)
+43b. `bootstrap/write-checkpoint.sh` — agent-neutral checkpoint writer
+43c. `bootstrap/resume-from-checkpoint.sh` — resume briefing reader
 44. `_system/REPO_BOUNDARY_AND_BACKUP.md`
 45. `_system/GIT_REMOTE_AND_SYNC_PROTOCOL.md` — remotes, SSH, fetch/pull/push when sharing work
 46. `_system/HOOK_AND_ORCHESTRATION_INDEX.md` — hooks, tool adapters, CI/GitHub, plugins, MCP companions
@@ -142,3 +186,18 @@ When the task is greenfield bootstrap, system evolution, prompt-authoring, skill
 If capacity is tight, load Tier 0 first, then `WHERE_LEFT_OFF.md`, `TODO.md`, `FIXME.md`, `PLAN.md`, and `PRODUCT_BRIEF.md`.
 
 For context-budget-constrained models, use `bootstrap/emit-tiered-context.sh . --tier <A|B|C|D>` or `--model <name>` to get the appropriate load sequence. See `_system/CONTEXT_BUDGET_STRATEGY.md` for tier definitions.
+
+When the task is installable AIAST evolution, self-healing, or version-sensitive
+tooling work, also load:
+
+110. `_system/READ_BUNDLES.md`
+111. `_system/TEMPLATE_CHANGE_IMPACT_POLICY.md`
+112. `_system/SELF_HEALING_BOUNDARY.md`
+113. `_system/VERSION_SENSITIVE_RESEARCH_PROTOCOL.md`
+114. `_system/WORKSPACE_AUTHORITY_AND_CONTAINMENT_PROTOCOL.md`
+115. `_system/PROJECT_IDENTITY_AND_SCOPE_PROTOCOL.md`
+116. `_system/INSTRUCTION_DOMAIN_ALIGNMENT_PROTOCOL.md`
+117. `_system/GLOBAL_REDIRECT_SHIM_POLICY.md`
+118. `_system/SCAVENGE_AND_DISCOVERY_AUTHORIZATION.md`
+119. `_system/SESSION_ENVIRONMENT_REPORT_CONTRACT.md`
+120. `_system/ORPHAN_META_SNAPSHOT_POLICY.md`

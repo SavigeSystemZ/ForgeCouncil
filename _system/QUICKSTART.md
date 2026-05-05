@@ -29,6 +29,8 @@ bash TEMPLATE/bootstrap/wizard.sh /path/to/your/repo
 
 ## How agents find the rules
 
+For a **single map** of how the major `_system/` surfaces connect (review order, validation order, expansion paths), read `_system/SYSTEM_ORCHESTRATION_GUIDE.md`.
+
 Every supported tool has an adapter file that points to `AGENTS.md`:
 
 | Tool | Adapter file |
@@ -57,14 +59,17 @@ Every supported tool has an adapter file that points to `AGENTS.md`:
 | `bootstrap/check-environment.sh .` | Check runtime prerequisites |
 | `bootstrap/discover-plugins.sh .` | List installed plugins |
 | `bootstrap/emit-tiered-context.sh . --tier B` | Get context load for smaller models |
+| `bootstrap/compress-context-file.sh . docs/FILE.md --dry-run` | Opt-in check for Caveman-style **input** prose compression (allowlisted paths only) |
+| Cursor **`/compress-context`** | Same workflow from chat; see `.cursor/commands/compress-context.md` |
 
 ## Where to look when something goes wrong
 
 - **Agent ignores rules**: check `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`
 - **Validation fails**: run `bootstrap/system-doctor.sh . --report`
-- **Missing files after upgrade**: run `bootstrap/install-missing-files.sh .`
+- **Missing files after upgrade**: run `bootstrap/install-missing-files.sh .` (add `--skip-onboarding-seeds` if the repo already has real product framing and you must not rewrite brief or working-file seeds)
 - **Agent hallucinates**: run `bootstrap/check-hallucination.sh .`
 - **Full troubleshooting**: see `_system/TROUBLESHOOTING.md`
+- **compress-context refuses a path**: see `_system/TROUBLESHOOTING.md` → *compress-context-file refuses my path or will not run*
 
 ## Key concepts
 

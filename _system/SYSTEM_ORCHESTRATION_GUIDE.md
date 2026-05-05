@@ -66,6 +66,8 @@ After **adding, renaming, or removing** managed files under `_system/`, `bootstr
 ## Optimization and efficiency
 
 - **Context budgeting:** `CONTEXT_BUDGET_STRATEGY.md`, `context-budget-profiles.json`.
+- **Optional concise assistant output (opt-in):** `.cursor/skills/concise-communication/SKILL.md` and `.cursor/commands/concise-session.md` — reduces **output** tokens when explicitly requested; not a default (handoff and requirements stay protected per the skill).
+- **Optional long prose compression for input (opt-in):** `.cursor/skills/compress-context-input/SKILL.md`, `.cursor/commands/compress-context.md`, and `bootstrap/compress-context-file.sh` — for human-edited markdown under `docs/` / `notes/` only; tiered loading stays primary; see `CONTEXT_BUDGET_STRATEGY.md`.
 - **Runtime and cost discipline:** `PERFORMANCE_BUDGET.md`, `AGENT_PERFORMANCE_GUIDE.md`.
 - **Prompt quality over time:** `PROMPT_EFFECTIVENESS_TRACKING.md`.
 

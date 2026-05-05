@@ -1,0 +1,6 @@
+---
+description: Universal AI Context Handoff
+globs: *
+---
+# Universal AI Context
+Always review `.ai/PROJECT_RULES.md` and `.ai/CURRENT_STATUS.md` to understand the current project state, rules, and objectives before generating code or modifying files. When finishing a major task, remind the user to update `.ai/CURRENT_STATUS.md`.

@@ -1,5 +1,7 @@
 # Prompts Index
 
+When authoring or reorganizing prompts, packs, or tiered context, read `_system/SYSTEM_ORCHESTRATION_GUIDE.md` once for how prompt surfaces relate to validation order, hooks, and expansion paths.
+
 ## Prompt templates
 
 - `_system/PROMPT_EMISSION_CONTRACT.md`
@@ -36,6 +38,8 @@
 - `_system/prompt-packs/M12_PERFORMANCE_OPTIMIZATION.md`
 - `_system/prompt-packs/M13_ACCESSIBILITY_AND_INCLUSION.md`
 - `_system/prompt-packs/M14_SECURITY_HARDENING.md`
+- `_system/prompt-packs/M15_WHOLE_REPO_ANALYSIS.md`
+- `_system/prompt-packs/M16_PLATFORM_PRODUCT_EXPANSION.md`
 
 ## Prompt effectiveness tracking
 
@@ -48,11 +52,12 @@
 - `_system/CONTEXT_BUDGET_STRATEGY.md` — 4-tier loading model (A/B/C/D) by context window
 - `_system/context-budget-profiles.json` — machine-readable model-to-tier mappings
 - `bootstrap/emit-tiered-context.sh` — emits tier-appropriate file lists for context-constrained models
+- `bootstrap/compress-context-file.sh` — **opt-in** input prose compression (allowlisted paths only); requires upstream caveman-compress and `claude` CLI; see `CONTEXT_BUDGET_STRATEGY.md` and `/compress-context`
 - `bootstrap/emit-auxiliary-brief.sh` — emits a markdown brief for optional parallel host CLI / IDE workers (`SUB_AGENT_HOST_DELEGATION.md`)
 
 ## Rules for all prompt packs
 
-- reference canonical docs by file name
+- reference canonical docs by file name; for a map of related OS surfaces, use `_system/SYSTEM_ORCHESTRATION_GUIDE.md`
 - follow `_system/PROMPT_EMISSION_CONTRACT.md`
 - state scope explicitly
 - require minimal diffs

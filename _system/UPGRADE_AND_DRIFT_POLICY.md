@@ -2,6 +2,10 @@
 
 How to keep installed repos current with the master AIAST template without losing app-specific state.
 
+For the **downstream preservation doctrine**, sync notice file, and mandatory
+agent health gate after installs/updates, read
+`DOWNSTREAM_PRESERVATION_AND_SYNC_NOTICE_POLICY.md`.
+
 For a single map of install vs upgrade vs repair entry points, read `INSTALLER_AND_UPGRADE_CONTRACT.md`.
 
 ## Version tracking
@@ -9,6 +13,16 @@ For a single map of install vs upgrade vs repair entry points, read `INSTALLER_A
 - `AIAST_VERSION.md` is the human-readable release marker for the template.
 - `_system/.template-version` is the installed machine-readable version marker.
 - `_system/.template-install.json` records source template path, timestamps, install mode, and system README placement.
+
+## Pinning the source template (release tags)
+
+The AIAST **source** repository publishes annotated release tags (for example **`v1.21.0`**) for reproducible milestones. When you want upgrades or drift checks to match a **documented** snapshot instead of whatever tip `main` happens to point at:
+
+1. In the machine-local clone you use as `--source` for `update-template.sh` / `detect-drift.sh`, fetch tags: `git fetch origin --tags`.
+2. Check out the tag: `git switch --detach v1.21.0` (or `git checkout v1.21.0`).
+3. Point `--source` at the `TEMPLATE/` directory inside that checkout.
+
+Using a moving `main` checkout is fine for bleeding-edge adoption; pinned tags are better for **reproducible** comparisons, support handoffs, and bug reports. Note which tag you used in `WHERE_LEFT_OFF.md` or upgrade notes when debugging drift.
 
 ## Upgrade path
 

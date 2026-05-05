@@ -49,3 +49,11 @@ Use this to recover from operating-system failures without guessing.
 - run `bootstrap/check-system-awareness.sh`
 - if structural drift exists, run `bootstrap/heal-system.sh --source <template-root>`
 - if only evidence is missing, repair the working files rather than making stronger claims
+
+### Over-eager self-healing
+
+- reload `_system/SELF_HEALING_BOUNDARY.md`
+- switch from automatic repair to explicit review if repo-owned truth may be
+  overwritten
+- keep user-directed behavior unless the repo’s own rules explicitly require
+  removal

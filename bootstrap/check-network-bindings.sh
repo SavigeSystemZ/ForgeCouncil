@@ -83,6 +83,8 @@ SKIP_DIRS = {
     ".mypy_cache", "mypy_cache", ".ruff_cache", ".pytest_cache",
     # Vendored template snapshots under an app repo; not app runtime surface.
     "_AI_AGENT_SYSTEM",
+    "_AI_AGENT_SYSTEM_TEMPLATE",
+    "_AIAST",
 }
 if not include_template_assets:
     SKIP_DIRS.update({"_system", "bootstrap"})
@@ -148,6 +150,9 @@ def is_safe_context(line: str, filepath: Path) -> bool:
     if '== "0.0.0.0"' in line or '!= "0.0.0.0"' in line or '= "0.0.0.0"' in line:
         return True
     if '== "::"' in line or '!= "::"' in line or '= "::"' in line:
+        return True
+    # Membership tests used to warn or reject wildcards (e.g. if bind in ("0.0.0.0", "::")).
+    if "in (" in line and "0.0.0.0" in line and ("'::'" in line or '"::"' in line):
         return True
     return False
 

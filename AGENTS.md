@@ -4,9 +4,17 @@ These rules are binding for every coding agent and tool operating in this reposi
 
 This repo is expected to carry its own local agent operating system. The system files live in `_system/`; the runtime application must remain independent from them.
 
+When this tree is used as the **canonical AIAST installable template root**
+(source for `bootstrap/update-template.sh` on other repos), it is the **master
+operating-layer copy**, not an application sandbox. Downstream app installs must
+follow `_system/DOWNSTREAM_PRESERVATION_AND_SYNC_NOTICE_POLICY.md` so
+project-specific instructions and continuity files stay preserve-first.
+
 ## Load first
 
-Read these files before making meaningful edits:
+Read these files before making meaningful edits.
+
+Optional single-map orientation (review order, validation order, how surfaces connect): `_system/SYSTEM_ORCHESTRATION_GUIDE.md`.
 
 1. `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`
 2. `_system/REPO_OPERATING_PROFILE.md`
@@ -14,30 +22,31 @@ Read these files before making meaningful edits:
 4. `_system/CONTEXT_INDEX.md`
 5. `_system/KEY.md`
 6. `_system/LOAD_ORDER.md`
-7. `_system/WORKING_FILES_GUIDE.md`
-8. `_system/TEMPLATE_NEUTRALITY_POLICY.md`
-9. `_system/MASTER_SYSTEM_PROMPT.md`
-10. `_system/PROJECT_RULES.md`
-11. `_system/EXECUTION_PROTOCOL.md`
-12. `_system/MULTI_AGENT_COORDINATION.md`
-13. `_system/AGENT_ROLE_CATALOG.md`
-14. `_system/VALIDATION_GATES.md`
-15. `_system/AGENT_DISCOVERY_MATRIX.md`
-16. `_system/MCP_CONFIG.md`
-17. `_system/SYSTEM_AWARENESS_PROTOCOL.md`
-18. `_system/HALLUCINATION_DEFENSE_PROTOCOL.md`
-19. `WHERE_LEFT_OFF.md`
-20. `TODO.md`
-21. `FIXME.md`
-22. `PLAN.md`
-23. `PRODUCT_BRIEF.md`
-24. `ROADMAP.md`
-25. `DESIGN_NOTES.md`
-26. `ARCHITECTURE_NOTES.md`
-27. `RESEARCH_NOTES.md`
-28. `TEST_STRATEGY.md`
-29. `RISK_REGISTER.md`
-30. `RELEASE_NOTES.md`
+7. `_system/READ_BUNDLES.md`
+8. `_system/WORKING_FILES_GUIDE.md`
+9. `_system/TEMPLATE_NEUTRALITY_POLICY.md`
+10. `_system/MASTER_SYSTEM_PROMPT.md`
+11. `_system/PROJECT_RULES.md`
+12. `_system/EXECUTION_PROTOCOL.md`
+13. `_system/MULTI_AGENT_COORDINATION.md`
+14. `_system/AGENT_ROLE_CATALOG.md`
+15. `_system/VALIDATION_GATES.md`
+16. `_system/AGENT_DISCOVERY_MATRIX.md`
+17. `_system/MCP_CONFIG.md`
+18. `_system/SYSTEM_AWARENESS_PROTOCOL.md`
+19. `_system/HALLUCINATION_DEFENSE_PROTOCOL.md`
+20. `WHERE_LEFT_OFF.md`
+21. `TODO.md`
+22. `FIXME.md`
+23. `PLAN.md`
+24. `PRODUCT_BRIEF.md`
+25. `ROADMAP.md`
+26. `DESIGN_NOTES.md`
+27. `ARCHITECTURE_NOTES.md`
+28. `RESEARCH_NOTES.md`
+29. `TEST_STRATEGY.md`
+30. `RISK_REGISTER.md`
+31. `RELEASE_NOTES.md`
 
 If context appears reset, incomplete, or stale, reload the canonical docs before continuing.
 
@@ -53,6 +62,9 @@ If context appears reset, incomplete, or stale, reload the canonical docs before
 - When host-level or orchestrator instructions exist, resolve them with `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`.
 - Repo-local runtime and product facts override generic host assumptions.
 - Host-level orchestration context must not silently overwrite repo-local truth.
+- `workspace_authority` (workspace authority) means the working-directory copy
+  is authoritative for downstream repos; parent/global surfaces are redirect
+  shims only.
 - Tool-specific entry files are tool overlays on top of the shared repo-local core.
 - The runtime system boundary is non-negotiable: runtime code must not depend on `_system/`.
 - In the master AIAST source repo, maintainer-only planning, research, handoff state, and future system-design files belong outside the installable tree in a separate master-repo-only meta workspace so installed repos inherit neutral working files.
@@ -66,11 +78,38 @@ If context appears reset, incomplete, or stale, reload the canonical docs before
 - If the system picture looks contradictory or suspicious, run `bootstrap/system-doctor.sh` before continuing.
 - Use `_system/REPO_OPERATING_PROFILE.md` as the compact machine-friendly summary when a host or upstream system needs quick repo ingestion.
 - Use `_system/KEY.md` when you need the exhaustive file-by-file map of the installable system instead of the shorter indexes.
+- Use `_system/READ_BUNDLES.md` before defaulting to the full load order when the
+  task maps cleanly to a smaller, bounded context bundle.
 - Use `_system/HOST_ADAPTER_POLICY.md`, `bootstrap/generate-host-adapters.sh`, and `bootstrap/check-host-adapter-alignment.sh` when tool-entry or adapter-load surfaces change.
+- Use `_system/AGENT_SURFACE_TAXONOMY.md` for canonical adapter file classes, naming, and placeholder rules.
+- Use `_system/AGENT_INIT_CONVERGENCE.md` when merging external init patterns into installable repo contracts.
 - Use `_system/HOST_BUNDLE_CONTRACT.md`, `bootstrap/emit-host-bundle.sh`, and `bootstrap/check-host-bundle.sh` when an external host cannot read repo-local paths directly or when host-bundle export surfaces change.
+- Use `_system/TEMPLATE_CHANGE_IMPACT_POLICY.md` when the task changes installable
+  AIAST contracts, validators, adapters, or lifecycle flows.
+- Use `_system/SELF_HEALING_BOUNDARY.md` before treating a repair as safe
+  automatic recovery.
+- Use `_system/WORKSPACE_AUTHORITY_AND_CONTAINMENT_PROTOCOL.md` and
+  `_system/PROJECT_IDENTITY_AND_SCOPE_PROTOCOL.md` before writes that could cross
+  repo boundaries.
+- If a user prompt looks like it belongs to a **different app or product vertical**
+  than this repository (wrong instructions pasted), read
+  `_system/INSTRUCTION_DOMAIN_ALIGNMENT_PROTOCOL.md` and reconcile against
+  `_system/PROJECT_DOMAIN_MANIFEST.json` and `_system/PROJECT_PROFILE.md` before
+  mutating files; halt off-domain work until explicitly confirmed per that protocol.
+- Use `_system/GLOBAL_REDIRECT_SHIM_POLICY.md` before placing parent/global
+  redirect files, and keep those files thin and non-authoritative.
+- Use `_system/SCAVENGE_AND_DISCOVERY_AUTHORIZATION.md` for allowed local
+  discovery scope and write constraints.
+- Use `_system/SESSION_ENVIRONMENT_REPORT_CONTRACT.md` and
+  `bootstrap/emit-session-environment.sh` to report environment and authority
+  state before significant writes.
+- Use `_system/ORPHAN_META_SNAPSHOT_POLICY.md` before creating or updating
+  orphan-branch continuity snapshots.
 - Never commit secrets, raw credentials, tokens, or machine-local policy files.
 - When designing login, registration, guest access, or dev-only admin seeding, follow
   `_system/AUTH_AND_ONBOARDING_PATTERNS.md` (env-based seeds only; no default accounts in git).
+- When a task depends on current framework, package, platform, distribution, or
+  API behavior, follow `_system/VERSION_SENSITIVE_RESEARCH_PROTOCOL.md`.
 - MCP tools are optional accelerators, not mandatory dependencies for normal progress.
 - The master template may include app-shaped files such as `PLAN.md` or `DESIGN_NOTES.md`, but in the master template they must stay app-agnostic until copied into a real repo.
 - Once the system is installed into a real repo, replace placeholders with repo-specific truth early and keep those files current.
@@ -107,6 +146,7 @@ If context appears reset, incomplete, or stale, reload the canonical docs before
 - Add or update tests for material behavior changes.
 - Use `_system/DESIGN_EXCELLENCE_FRAMEWORK.md` for UI quality and `_system/review-playbooks/` for structured reviews.
 - Use `_system/PROMPT_EMISSION_CONTRACT.md` when generating prompts for external tools or host systems.
+- Use `_system/OPERATOR_PROMPTING_PLAYBOOK.md` for execution-contract prompts, continuous-run protocol, and multi-agent orchestration patterns.
 - Use the host-bundle contract when external consumers need a self-contained prompt-and-context snapshot instead of live repo-path access.
 - Use the golden example pack for structure and quality level only; never copy donor-app product facts, ports, credentials, or runtime code into a different repo.
 - Keep the master template clean: do not let app-specific product facts, credentials, repo URLs, or environment details flow back into this source template.

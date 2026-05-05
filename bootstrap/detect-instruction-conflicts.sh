@@ -61,6 +61,8 @@ if not manifest_path.exists():
 
 manifest = json.loads(manifest_path.read_text())
 required_refs = manifest.get("required_adapter_references", [])
+required_consistency_surfaces = manifest.get("required_consistency_surfaces", [])
+consistency_surfaces = manifest.get("consistency_surfaces", [])
 canonical_terms = list((manifest.get("canonical_terms") or {}).keys())
 
 surface_patterns = [
@@ -82,6 +84,10 @@ surface_patterns = [
     "_system/REPO_OPERATING_PROFILE.md",
     "_system/LOAD_ORDER.md",
     "_system/AGENT_DISCOVERY_MATRIX.md",
+    "_system/READ_BUNDLES.md",
+    "_system/TEMPLATE_CHANGE_IMPACT_POLICY.md",
+    "_system/SELF_HEALING_BOUNDARY.md",
+    "_system/VERSION_SENSITIVE_RESEARCH_PROTOCOL.md",
 ]
 
 files: list[Path] = []
@@ -108,6 +114,12 @@ required_term_paths = [
     repo / "_system" / "INSTRUCTION_PRECEDENCE_CONTRACT.md",
     repo / "_system" / "REPO_OPERATING_PROFILE.md",
     repo / "_system" / "PROMPT_EMISSION_CONTRACT.md",
+]
+consistency_anchor_paths = [
+    repo / "AGENTS.md",
+    repo / "_system" / "CONTEXT_INDEX.md",
+    repo / "_system" / "LOAD_ORDER.md",
+    repo / "_system" / "REPO_OPERATING_PROFILE.md",
 ]
 
 path_token = re.compile(r"`([^`\n]+)`")
@@ -187,6 +199,18 @@ for path in required_term_paths:
     missing_terms = [term for term in canonical_terms if not any(variant in text for variant in term_variants(term))]
     if missing_terms:
         issues.append(f"{rel(path)} is missing canonical terminology markers: {', '.join(missing_terms)}")
+
+for surface in consistency_surfaces:
+    if not (repo / surface).exists():
+        issues.append(f"Missing consistency surface declared in precedence manifest: {surface}")
+
+for surface in required_consistency_surfaces:
+    for path in consistency_anchor_paths:
+        if not path.exists():
+            continue
+        text = path.read_text()
+        if surface not in text:
+            issues.append(f"{rel(path)} is missing required consistency-surface reference: {surface}")
 
 report_header = "Instruction Conflict Report"
 print(report_header)

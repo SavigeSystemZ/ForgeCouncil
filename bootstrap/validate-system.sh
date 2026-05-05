@@ -117,14 +117,22 @@ require_files \
   "TEST_STRATEGY.md" \
   "RISK_REGISTER.md" \
   "RELEASE_NOTES.md" \
+  "notes/README.md" \
+  "docs/README.md" \
   "_system/.template-version" \
   "_system/.template-install.json" \
   "_system/PROJECT_PROFILE.md" \
+  "_system/INSTRUCTION_DOMAIN_ALIGNMENT_PROTOCOL.md" \
+  "_system/PROJECT_DOMAIN_MANIFEST.json" \
+  "_system/PROJECT_DOMAIN_MANIFEST.template.json" \
+  "_system/schemas/project-domain-manifest.schema.json" \
   "_system/INSTRUCTION_PRECEDENCE_CONTRACT.md" \
   "_system/REPO_OPERATING_PROFILE.md" \
   "_system/CONTEXT_INDEX.md" \
+  "_system/SYSTEM_ORCHESTRATION_GUIDE.md" \
   "_system/KEY.md" \
   "_system/LOAD_ORDER.md" \
+  "_system/READ_BUNDLES.md" \
   "_system/HOST_ADAPTER_POLICY.md" \
   "_system/HOST_BUNDLE_CONTRACT.md" \
   "_system/host-adapter-manifest.json" \
@@ -141,6 +149,9 @@ require_files \
   "_system/PROJECT_RULES.md" \
   "_system/MEMORY_RULES.md" \
   "_system/EXECUTION_PROTOCOL.md" \
+  "_system/TEMPLATE_CHANGE_IMPACT_POLICY.md" \
+  "_system/SELF_HEALING_BOUNDARY.md" \
+  "_system/VERSION_SENSITIVE_RESEARCH_PROTOCOL.md" \
   "_system/MULTI_AGENT_COORDINATION.md" \
   "_system/AGENT_ROLE_CATALOG.md" \
   "_system/CHECKPOINT_PROTOCOL.md" \
@@ -163,6 +174,8 @@ require_files \
   "_system/SYSTEM_EVOLUTION_POLICY.md" \
   "_system/STANDARDS_CONFLICT_RESOLUTION.md" \
   "_system/UPGRADE_AND_DRIFT_POLICY.md" \
+  "_system/DOWNSTREAM_PRESERVATION_AND_SYNC_NOTICE_POLICY.md" \
+  "_system/TEMPLATE_SYNC_NOTICE.md" \
   "_system/INSTALLER_AND_UPGRADE_CONTRACT.md" \
   "_system/CODING_STANDARDS.md" \
   "_system/PERFORMANCE_BUDGET.md" \
@@ -296,6 +309,7 @@ require_files \
   "bootstrap/check-system-awareness.sh" \
   "bootstrap/check-hallucination.sh" \
   "bootstrap/check-install-boundary.sh" \
+  "bootstrap/check-delivery-gate-alignment.sh" \
   "bootstrap/check-host-adapter-alignment.sh" \
   "bootstrap/system-doctor.sh" \
   "bootstrap/heal-system.sh" \
@@ -321,6 +335,7 @@ require_files \
   "bootstrap/validate-plugin.sh" \
   "bootstrap/discover-plugins.sh" \
   "bootstrap/emit-tiered-context.sh" \
+  "bootstrap/compress-context-file.sh" \
   "bootstrap/emit-auxiliary-brief.sh" \
   "bootstrap/check-environment.sh" \
   "bootstrap/generate-diagnostic-report.sh" \
@@ -430,10 +445,12 @@ require_files \
   ".cursor/commands/code-quality-review.md" \
   ".cursor/commands/code-review.md" \
   ".cursor/commands/composer-session.md" \
+  ".cursor/commands/compress-context.md" \
   ".cursor/commands/debug.md" \
   ".cursor/commands/dependency-review.md" \
   ".cursor/commands/design-review.md" \
   ".cursor/commands/load-context.md" \
+  ".cursor/commands/concise-session.md" \
   ".cursor/commands/performance-review.md" \
   ".cursor/commands/release-readiness.md" \
   ".cursor/commands/session-start.md" \
@@ -455,6 +472,8 @@ require_files \
   ".cursor/skills/dependency-review/SKILL.md" \
   ".cursor/skills/design-review/SKILL.md" \
   ".cursor/skills/load-context/SKILL.md" \
+  ".cursor/skills/concise-communication/SKILL.md" \
+  ".cursor/skills/compress-context-input/SKILL.md" \
   ".cursor/skills/mcp-config/SKILL.md" \
   ".cursor/skills/performance-review/SKILL.md" \
   ".cursor/skills/prompt-pack-generator/SKILL.md" \
@@ -568,12 +587,44 @@ if [[ ${STRICT} -eq 1 ]]; then
   fi
 fi
 
-bash "${VALIDATOR_ROOT}/bootstrap/validate-instruction-layer.sh" "${TARGET}" --validator-root "${VALIDATOR_ROOT}" >/dev/null
-bash "${VALIDATOR_ROOT}/bootstrap/check-system-awareness.sh" "${TARGET}" >/dev/null
-bash "${VALIDATOR_ROOT}/bootstrap/check-repo-permissions.sh" "${TARGET}" >/dev/null
-bash "${VALIDATOR_ROOT}/bootstrap/check-runtime-foundations.sh" "${TARGET}" >/dev/null
-bash "${VALIDATOR_ROOT}/bootstrap/check-network-bindings.sh" "${TARGET}" --include-template-assets >/dev/null
-bash "${VALIDATOR_ROOT}/bootstrap/check-environment.sh" "${TARGET}" >/dev/null
-bash "${VALIDATOR_ROOT}/bootstrap/validate-mcp-health.sh" "${TARGET}" >/dev/null
+strict_gate_flag=()
+[[ ${STRICT} -eq 1 ]] && strict_gate_flag+=(--strict)
+
+# Sub-validators run quietly on success so CI logs stay readable; on failure,
+# print their full output (otherwise a root-vs-owner mismatch looks like a
+# silent exit 1 with no diagnostics).
+_run_aiaast_subvalidator() {
+  local label="$1"
+  shift
+  local tmp
+  tmp="$(mktemp 2>/dev/null || mktemp -t aiaast_validate.XXXXXX)"
+  if "$@" >"${tmp}" 2>&1; then
+    rm -f "${tmp}"
+    return 0
+  fi
+  echo "validate-system: sub-check '${label}' failed" >&2
+  cat "${tmp}" >&2
+  rm -f "${tmp}"
+  return 1
+}
+
+_run_aiaast_subvalidator "validate-instruction-layer" \
+  bash "${VALIDATOR_ROOT}/bootstrap/validate-instruction-layer.sh" "${TARGET}" --validator-root "${VALIDATOR_ROOT}"
+_run_aiaast_subvalidator "check-instruction-domain-alignment" \
+  bash "${VALIDATOR_ROOT}/bootstrap/check-instruction-domain-alignment.sh" "${TARGET}" --validate-manifest
+_run_aiaast_subvalidator "check-system-awareness" \
+  bash "${VALIDATOR_ROOT}/bootstrap/check-system-awareness.sh" "${TARGET}"
+_run_aiaast_subvalidator "check-repo-permissions" \
+  bash "${VALIDATOR_ROOT}/bootstrap/check-repo-permissions.sh" "${TARGET}"
+_run_aiaast_subvalidator "check-runtime-foundations" \
+  bash "${VALIDATOR_ROOT}/bootstrap/check-runtime-foundations.sh" "${TARGET}"
+_run_aiaast_subvalidator "check-network-bindings" \
+  bash "${VALIDATOR_ROOT}/bootstrap/check-network-bindings.sh" "${TARGET}" --include-template-assets
+_run_aiaast_subvalidator "check-delivery-gate-alignment" \
+  bash "${VALIDATOR_ROOT}/bootstrap/check-delivery-gate-alignment.sh" "${TARGET}" "${strict_gate_flag[@]}"
+_run_aiaast_subvalidator "check-environment" \
+  bash "${VALIDATOR_ROOT}/bootstrap/check-environment.sh" "${TARGET}"
+_run_aiaast_subvalidator "validate-mcp-health" \
+  bash "${VALIDATOR_ROOT}/bootstrap/validate-mcp-health.sh" "${TARGET}"
 
 echo "system_ok"

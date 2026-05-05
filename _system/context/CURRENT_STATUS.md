@@ -10,7 +10,7 @@
 
 ## Verified state
 
-- Latest known passing validation: bootstrap/update-template.sh /home/whyte/.MyAppZ/ForgeCouncil --source <template-root> -> pass
+- Latest known passing validation: bootstrap/update-template.sh /home/whyte/.MyAppZ/ForgeCouncil --source <template-root> --strict -> pass
 - Latest known failing validation: none recorded yet
 - Known degraded modes:
 - Current confidence level: Partial but structurally validated
@@ -24,7 +24,7 @@
 
 ## Freshness
 
-- Last updated: 2026-04-06T07:53:35Z
+- Last updated: 2026-05-05T05:51:47Z
 - Updated by: bootstrap lifecycle validation
 
 ## Usage rules
